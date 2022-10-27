@@ -37,15 +37,18 @@
 
 大家先看看软件的UI部分：
 我在android和ios模拟器上演示，因为我的移动端技术方案是reactNative。
+***
 
 ### 01： 对话列表
-
 这里我把联系人和对话列表合二一，因为社恐的人不需要联系人。
 
-整个模块稍微复杂一点的功能是动态更新，收到新的消息，列表会自动刷新。
+![联系人模块](https://raw.githubusercontent.com/Hezhong123/boatApp/main/mdImg/add.gif)
 
+整个模块稍微复杂一点的功能是动态更新，收到新的消息，列表会自动刷新。
+***
 
 ### 02：会话模块：
+![对话](https://github.com/Hezhong123/boatApp/blob/main/mdImg/im.gif?raw=true)
 
 群聊天，和个人对话大致差不多，
 亮点就是双语显示的界面。
@@ -55,16 +58,23 @@
 ✏️  词列：开启这个功能，可以看见从单词到译文的整个过程，加深记忆。
 
 🎧 跟读：开启这个功能，播放当前对话下的译文。
+***
 
 ### 03： 添加好友
+
+![添加好友](https://github.com/Hezhong123/boatApp/blob/main/mdImg/add.gif?raw=true)
+
 这里我使用了大量的表情,自动屏蔽一部分不年轻的人。
 
 * 🔍 搜索用户
 * 👋 打招呼
 * 👎 拒绝对话
 * 🤝 同意对话
+*** 
 
-### 04：我们
+### 04：我的
+
+![我的](https://github.com/Hezhong123/boatApp/blob/main/mdImg/me.gif?raw=true)
 
 现实用户基本信息：头像，昵称，ID ；
 * 点击头像修改头像，
@@ -72,14 +82,17 @@
 
 收藏列表： 收集平时会话的内容，有搜索功能。
 
+***
+
 ### 05：登陆
+![登陆](https://github.com/Hezhong123/boatApp/blob/main/mdImg/login.gif?raw=true)
 
 现在显示是短信登陆验证码，但是后面我可能会采用邮件验证码登陆。
 
 😭😭😭 主要是短信有点贵 ！！！
+*** 
 
-
-### 06： 即使通话
+### 06： 即时通话
 先用postMan测试后端的即时通讯部分，
 
 大概io信道有3条：
@@ -88,7 +101,7 @@
 * 群聊：1vN 群聊使用
 
 简单演示下，这是输入中文获得译文基本数据
-
+***
 
 ### 07：其他Api模块
 * 用户模块
