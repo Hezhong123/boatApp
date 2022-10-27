@@ -98,7 +98,10 @@
 ### 06： 即时通话
 先用postMan测试后端的即时通讯部分，
 
+![imApi](https://github.com/Hezhong123/boatApp/blob/main/mdImg/imApi.gif?raw=true)
+
 大概io信道有3条：
+
 * 联系人：用于对话列表更新
 * 对话：1v1对话使用
 * 群聊：1vN 群聊使用
@@ -107,6 +110,8 @@
 ***
 
 ### 07：其他Api模块
+![api接口](https://github.com/Hezhong123/boatApp/blob/main/mdImg/api.gif?raw=true)
+
 * 用户模块
 * 售出模块
 * 信道模块
