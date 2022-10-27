@@ -35,7 +35,7 @@ export function List({navigation}){
 
     useEffect(()=>{
         navigation.setOptions({
-            title:"小船ims",
+            title:"小船im",
             headerLeft: () => <Btn text={'📬'} fs={18} press={()=>navigation.navigate('Add')} />,
             headerRight: () => <Btn text={'😯'} fs={20} press={()=>navigation.navigate('Me')} />,
         })

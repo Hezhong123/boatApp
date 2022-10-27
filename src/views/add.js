@@ -16,11 +16,11 @@ export function Add({navigation}){
 
     const [query,setQuery] = useState(false)
 
-    // <Btn text={'🔍'} fs={20} press={()=>setQuery(!query)} />
+
     useEffect(()=>{
         navigation.setOptions({
             title:"新的朋友",
-            headerRight: () => {}
+            headerRight: () => <Btn text={'🔍'} fs={20} press={()=>setQuery(!query)} />
         })
     },[])
     return <View style={[styles.Add,C1]}>
