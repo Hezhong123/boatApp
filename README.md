@@ -31,12 +31,13 @@
 
 接下来的意思就是我会整个App的制作过程用文字｜视频的形式记录下来。
 
-* 哔哩哔哩 
-* YouTube
-* 抖音
+* [哔哩哔哩](https://space.bilibili.com/133278591) 
+* [YouTube](https://www.youtube.com/channel/UC7SjqRUqE-2r3XJ3274DiYQ)
+* [抖音](https://www.douyin.com/user/MS4wLjABAAAAzLXcL2vZ0JGJsFCzFbcgiQVBLFJQ_XM-AEBfEwvjdhc)
 
 大家先看看软件的UI部分：
 我在android和ios模拟器上演示，因为我的移动端技术方案是reactNative。
+
 ***
 
 ### 01： 对话列表
@@ -70,6 +71,8 @@
 * 👋 打招呼
 * 👎 拒绝对话
 * 🤝 同意对话
+
+
 *** 
 
 ### 04：我的
