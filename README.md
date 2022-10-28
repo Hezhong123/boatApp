@@ -23,7 +23,7 @@
 * android 模拟器
 * ios 模拟器
 
-## No1： 立项！ 出海、、
+## No1： 立项！ 造条小船出海去、、
 
 海：指的是困境。出海的意思自然就是走出困境的意思； 
 
@@ -113,7 +113,7 @@
 ![api接口](https://github.com/Hezhong123/boatApp/blob/main/mdImg/api.gif?raw=true)
 
 * 用户模块
-* 售出模块
+* 收藏模块
 * 信道模块
 * 工具（图片/声音上传，支付，短信，邮件）
 
