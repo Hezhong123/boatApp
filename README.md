@@ -113,7 +113,6 @@
 
 ### 07：其他Api模块
 ![api接口](https://github.com/Hezhong123/boatApp/blob/main/mdImg/api.gif?raw=true)
-
 * 用户模块
 * 收藏模块
 * 信道模块
