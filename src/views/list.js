@@ -1,4 +1,5 @@
 import {
+    ActivityIndicator,
     Button,
     FlatList,
     Image,
@@ -7,14 +8,16 @@ import {
     Text,
     TouchableOpacity,
     useColorScheme,
-    View
+    View,
 } from "react-native";
 import {Component, useEffect, useRef, useState} from "react";
 import * as React from "react";
 import {styles} from "../css";
 import {Btn} from "../component/btn";
 import {Portrait} from "../component/Portrait";
+import {_List, postUser} from "../Api";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function List({navigation}){
 
@@ -24,21 +27,30 @@ export function List({navigation}){
     const BbC = colorScheme == 'light' ? styles.lightBbC : styles.darkBbC
 
     const [load,setLoad] = useState(false)
+    const [list,setList] = useState(Array)
 
-    const Add = ()=>{
-        navigation.navigate('Add')
-    }
+    useEffect(  ()=>{
 
-    const Me = ()=>{
-        navigation.navigate('Me')
-    }
+        AsyncStorage.getItem('tokenIn').then( async tokenIn=>{
+            let time = Date.parse(new Date())/1000
+            if(time<tokenIn){
+                console.log('token', await AsyncStorage.getItem('token'))
+                _List(setList)
+            }else {
+                console.log('登陆过期')
+            }
 
-    useEffect(()=>{
+
+
+        })
+
+
         navigation.setOptions({
             title:"小船im",
             headerLeft: () => <Btn text={'📬'} fs={18} press={()=>navigation.navigate('Add')} />,
             headerRight: () => <Btn text={'😯'} fs={20} press={()=>navigation.navigate('Me')} />,
         })
+
 
         return ()=>{
             console.log('卸载信道')
@@ -46,24 +58,26 @@ export function List({navigation}){
     },[])
 
     return <View style={[styles.List,C1]}>
-        <FlatList data={list}
-                  ItemSeparatorComponent={()=><View style={[BbC,styles.listBbC]}></View>}
-                  refreshing={load}
-                  onRefresh={()=>{
-                      setLoad(true)
-                      setTimeout(()=>{
-                          setLoad(false)
-                      },300)
-                  }}
-                  renderItem={()=><TouchableOpacity style={[styles.ListRow]}
-                                                    onPress={()=>navigation.navigate('Im')}>
-                      <Portrait w={38} h={38} r={3} t={'😢'}/>
-                      <View style={[styles.ListLi]} >
-                          <Text style={[styles.T4,C2,styles.bold]}>联系人 </Text>
-                          <Text style={[styles.T5,C2,styles.bold,{opacity:0.6}]}>对话内容</Text>
-                      </View>
-                      <Text style={[styles.T6,C2,styles.bold,{marginRight:10,opacity:0.3}]}> 30分钟前 </Text>
-                  </TouchableOpacity>}/>
+
+        {list.length?<FlatList data={list}
+                               ItemSeparatorComponent={()=><View style={[BbC,styles.listBbC]}></View>}
+                               refreshing={load}
+                               onRefresh={()=>{
+                                   setLoad(true)
+                                   setTimeout(()=>{
+                                       setLoad(false)
+                                   },300)
+                               }}
+                               renderItem={()=><TouchableOpacity style={[styles.ListRow]}
+                                                                 onPress={()=>navigation.navigate('Im')}>
+                                   <Portrait w={38} h={38} r={3} t={'😢'}/>
+                                   <View style={[styles.ListLi]} >
+                                       <Text style={[styles.T4,C2,styles.bold]}>联系人 </Text>
+                                       <Text style={[styles.T5,C2,styles.bold,{opacity:0.6}]}>对话内容</Text>
+                                   </View>
+                                   <Text style={[styles.T6,C2,styles.bold,{marginRight:10,opacity:0.3}]}> 30分钟前 </Text>
+                               </TouchableOpacity>}/>:<Text>什么都么有</Text>}
+
 
 
     </View>

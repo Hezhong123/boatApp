@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {styles} from "../css";
 import {Portrait} from "../component/Portrait";
 import * as React from "react";
+import {_User} from "../Api";
 
 export function Me({navigation}){
     const colorScheme = useColorScheme();
@@ -15,16 +16,18 @@ export function Me({navigation}){
     const MsgColorTouchable = colorScheme == 'light' ? '#EAEAEA' : '#333C52'    //点击对话框
 
     const [load, setLoad] = useState(false)
+    const [user,setUser] = useState({})
 
     useEffect(()=>{
         console.log('加载我的')
-
+        _User(setUser)
         return ()=>{
             console.log('卸载我的')
         }
     },[])
     return <View style={[styles.Me,C1]}>
         {/*个人信息*/}
+
         <View style={styles.MeUse} >
             <TouchableHighlight
                 underlayColor={MsgColorTouchable}
@@ -32,7 +35,7 @@ export function Me({navigation}){
                     console.log('更换头像')
                     navigation.navigate('Login')
                 }}>
-                <Portrait w={52} h={52} r={50} t={'😢'}/>
+                <Portrait w={52} h={52} r={50} t={'😢'} url={user.avatar}/>
             </TouchableHighlight>
 
              <View style={styles.MeUseText}>
@@ -41,9 +44,9 @@ export function Me({navigation}){
                      onPress={()=>{
                      console.log('修改昵称')
                  }}>
-                     <Text style={[styles.T3,styles.bold,C2]}>用户昵称</Text>
+                     <Text style={[styles.T3,styles.bold,C2]}>{user.name}</Text>
                  </TouchableHighlight>
-                 <Text style={[styles.T5,C2,styles.bold,{opacity:0.9}]} >🆔 10002 </Text>
+                 <Text style={[styles.T5,C2,styles.bold,{opacity:0.9,marginTop:6}]} >🆔 {user.id} </Text>
              </View>
         </View>
 

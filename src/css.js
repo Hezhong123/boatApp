@@ -199,7 +199,6 @@ export const styles = StyleSheet.create({
 
     LoginRow: {
         padding: 20,
-
     },
     LoginRowColor: {
         color: '#878BE4'
@@ -207,8 +206,8 @@ export const styles = StyleSheet.create({
     LoginInputs: {
         marginTop:5,
         letterSpacing:2,
-        paddingTop:2,
-        paddingBottom:2,
+        paddingTop:5,
+        paddingBottom:5,
         paddingLeft:10,
         paddingRight:10,
         borderWidth: 1,
@@ -262,12 +261,6 @@ export const styles = StyleSheet.create({
         color: "#3F413C",
     },
 
-    //表情包按钮
-    aBtn: {
-        paddingLeft: 10,
-        paddingRight: 10,
-    },
-
     // 对话
     lightMsg: {
         backgroundColor: '#EAEAEA'
@@ -291,6 +284,11 @@ export const styles = StyleSheet.create({
         backgroundColor: "#404653",
     },
 
+    //表情包按钮
+    aBtn: {
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
 
     //字体
     bold: {

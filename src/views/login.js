@@ -1,8 +1,13 @@
-import {Text, TextInput, TouchableHighlight, useColorScheme, View} from "react-native";
-import {useEffect} from "react";
+import {Button, Text, TextInput, TouchableHighlight, useColorScheme, View} from "react-native";
+import {useEffect, useState} from "react";
 import {styles} from "../css";
+import {_Login} from "../Api";
+
+
 
 export function Login({navigation}){
+    const [tel,setTel] = useState(Number)
+
     useEffect(()=>{
         navigation.setOptions({
             headerShown:false,
@@ -26,13 +31,18 @@ export function Login({navigation}){
 
             <View style={{width:'60%',marginTop:30}}>
                 <Text style={[styles.T5,C2,styles.bold,{opacity:0.9}]}><Text style={styles.LoginRed}>* </Text>电话号码</Text>
-                <TextInput  style={[C2,styles.LoginInputs,Bbc,styles.T5,{marginBottom:6}]} />
-                <TouchableHighlight underlayColor={MsgColorTouchable}  onPress={()=>{
-                    console.log('登录')
+                <TextInput  style={[C2,styles.LoginInputs,Bbc,styles.T5,{marginBottom:6}]} value={tel} onChangeText={text=>setTel(text)} />
+                <TouchableHighlight underlayColor={MsgColorTouchable}  onPress={ ()=>{
+                    console.log('登录',tel)
+                    _Login(tel, cb => {
+                        console.log(cb)
+                    })
                 }} >
                     <Text style={[styles.T6,C2,styles.bold]}>重新获取 <Text style={styles.LoginYe}>38秒</Text></Text>
                 </TouchableHighlight>
             </View>
+
+
 
             <View style={{width:'30%',marginTop:20}}>
                 <Text style={[styles.T5,C2,styles.bold,{opacity:0.9}]}><Text style={styles.LoginRed}>* </Text>输入验证码</Text>
