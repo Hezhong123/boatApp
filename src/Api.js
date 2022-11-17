@@ -40,15 +40,14 @@ function _Post(api,data){
 
 //登陆
 export const _Login =  async (tel,cb)=>{
-    _Post('/user',{tel:"18487249198"}).then(res=>{
+    _Post('/user',{tel:tel}).then(res=>{
         AsyncStorage.setItem('token', res.token)
         AsyncStorage.setItem('tokenIn', String(res.expiresIn))
         cb(res)
     },err=>{
-
+        console.log('错误',cb)
     })
 }
-
 
 //获取信道
 export const _List = (set)=>{

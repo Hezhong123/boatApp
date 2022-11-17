@@ -1,9 +1,10 @@
 import {FlatList, Text, TextInput, TouchableHighlight, useColorScheme, View} from "react-native";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {styles} from "../css";
 import {Portrait} from "../component/Portrait";
 import * as React from "react";
 import {_User} from "../Api";
+import { useFocusEffect } from '@react-navigation/native';
 
 export function Me({navigation}){
     const colorScheme = useColorScheme();
@@ -17,14 +18,16 @@ export function Me({navigation}){
 
     const [load, setLoad] = useState(false)
     const [user,setUser] = useState({})
+    useFocusEffect(
+        useCallback(() => {
+            console.log('更新用户信息')
+            _User(setUser)
+            return () => {
+                console.log('离开我的')
+            };
+        }, [])
+    );
 
-    useEffect(()=>{
-        console.log('加载我的')
-        _User(setUser)
-        return ()=>{
-            console.log('卸载我的')
-        }
-    },[])
     return <View style={[styles.Me,C1]}>
         {/*个人信息*/}
 

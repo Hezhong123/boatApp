@@ -18,6 +18,10 @@ import {Portrait} from "../component/Portrait";
 import {_List, postUser} from "../Api";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from "@react-navigation/native";
+
+
+
 
 export function List({navigation}){
 
@@ -27,35 +31,34 @@ export function List({navigation}){
     const BbC = colorScheme == 'light' ? styles.lightBbC : styles.darkBbC
 
     const [load,setLoad] = useState(false)
-    const [list,setList] = useState(Array)
+    // const [list,setList] = useState(Array)
 
-    useEffect(  ()=>{
+    useFocusEffect(
+        React.useCallback(()=>{
 
-        AsyncStorage.getItem('tokenIn').then( async tokenIn=>{
-            let time = Date.parse(new Date())/1000
-            if(time<tokenIn){
-                console.log('token', await AsyncStorage.getItem('token'))
-                _List(setList)
-            }else {
-                console.log('登陆过期')
+            console.log('监听联系人列表')
+            AsyncStorage.getItem('tokenIn').then( async tokenIn=>{
+                let time = Date.parse(new Date())/1000
+                if(time<tokenIn){
+                    console.log('获取token', await AsyncStorage.getItem('token'))
+                    // _List(setList)
+                }else {
+                    console.log('登陆过期，重新登陆')
+                }
+            })
+
+            // 设置导航头
+            navigation.setOptions({
+                title:"小船im",
+                headerLeft: () => <Btn text={'📬'} fs={18} press={()=>navigation.navigate('Add')} />,
+                headerRight: () => <Btn text={'😯'} fs={20} press={()=>navigation.navigate('Me')} />,
+            })
+
+            return  ()=>{
+                console.log('卸载列表，断开链接')
             }
-
-
-
-        })
-
-
-        navigation.setOptions({
-            title:"小船im",
-            headerLeft: () => <Btn text={'📬'} fs={18} press={()=>navigation.navigate('Add')} />,
-            headerRight: () => <Btn text={'😯'} fs={20} press={()=>navigation.navigate('Me')} />,
-        })
-
-
-        return ()=>{
-            console.log('卸载信道')
-        }
-    },[])
+        },[])
+    )
 
     return <View style={[styles.List,C1]}>
 

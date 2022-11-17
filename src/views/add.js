@@ -67,7 +67,7 @@ export function Add({navigation}){
                         <Text style={[styles.T5,C2,styles.bold,{opacity:0.6}]}>🆔 {item.id}</Text>
                     </View>
                     <TouchableOpacity onPress={()=>{
-                        console.log('打招呼')
+                        console.log('打招呼',item)
                     }}>
                         <Text style={[styles.T2,C2,styles.bold,{marginRight:20}]}>👋</Text>
                     </TouchableOpacity>
