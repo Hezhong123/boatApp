@@ -151,7 +151,7 @@ export function Im({route, navigation}) {
     const [load, setLoad] = useState(false)
     const onRefresh = (e)=>{
         setLoad(true)
-        console.log('222', e )
+        console.log('下拉记载对话内容', e )
         setTimeout(()=>{
             setLoad(false  )
         },600)
