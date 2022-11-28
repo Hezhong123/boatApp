@@ -54,7 +54,8 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginLeft: 10,
-        borderRadius: 5
+        borderRadius: 5,
+        zIndex: 1
     },
     msgRowRight: {
         display: "flex",
@@ -71,19 +72,26 @@ export const styles = StyleSheet.create({
         paddingTop: 3,
         paddingBottom: 3,
         paddingLeft: 10,
-        paddingRight: 10,
+        paddingRight: 10
     },
     zh: {
-        letterSpacing: 1,
+        // letterSpacing: 1,
         borderBottomWidth: 1,
         borderBottomColor: '#A6BCEC',
-        paddingTop: 3,
-        paddingBottom: 5
+        paddingTop: 2,
+        paddingBottom: 3,
     },
     en: {
-        letterSpacing: 1,
-        paddingTop: 3,
-        paddingBottom: 5,
+        // letterSpacing: 1,
+        paddingTop: 2,
+        paddingBottom: 2,
+    },
+    time: {
+        marginLeft: -10,
+        opacity: 0.8,
+        fontSize: 11,
+        marginBottom:10,
+        textAlign: "center",
     },
     msgAudio: {
         marginLeft: 10,
@@ -93,10 +101,7 @@ export const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         borderRadius: 5,
-        paddingTop: 3,
-        paddingBottom: 3,
-        paddingLeft: 10,
-        paddingRight: 10,
+        padding: 5,
 
     },
     MsgTime: {
@@ -106,10 +111,10 @@ export const styles = StyleSheet.create({
         fontSize: 10,
         color: '#AFB1B7'
     },
-
     // 发送消息
     imSend: {
         flex: 1,
+        zIndex: 100,
         width: '100%',
         position: "absolute",
         bottom: 0,
@@ -194,7 +199,7 @@ export const styles = StyleSheet.create({
     // 登录
     Login: {
         flex: 1,
-        paddingTop:120,
+        paddingTop: 120,
     },
 
     LoginRow: {
@@ -204,30 +209,30 @@ export const styles = StyleSheet.create({
         color: '#878BE4'
     },
     LoginInputs: {
-        marginTop:5,
-        letterSpacing:2,
-        paddingTop:5,
-        paddingBottom:5,
-        paddingLeft:10,
-        paddingRight:10,
+        marginTop: 5,
+        letterSpacing: 2,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
         borderWidth: 1,
-        borderRadius:3,
+        borderRadius: 3,
     },
-    LoginYe:{
-        color:'#F9B719'
+    LoginYe: {
+        color: '#F9B719'
     },
-    LoginRed:{
-        color:'#F84848'
+    LoginRed: {
+        color: '#F84848'
     },
 
     // 添加好友
-    Add:{
-      flex:1
+    Add: {
+        flex: 1
     },
 
-    AddList:{
-        marginTop:20,
-        marginLeft:10,
+    AddList: {
+        marginTop: 20,
+        marginLeft: 10,
     },
 
     //头像
@@ -236,15 +241,60 @@ export const styles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     PortraitImg: {
-        position: "absolute"
+        position: "absolute",
+        zIndex: 1
     },
     PortraitText: {
         fontSize: 13,
         position: "absolute",
-        bottom: -2,
-        right: -3
+        bottom: -5,
+        right: -3,
+        zIndex: 3,
+    },
+    PortraitNum: {
+        width: 13,
+        height: 13,
+        fontWeight: "bold",
+        fontSize: 10,
+        textAlign: "center",
+        borderRadius: 5,
+        lineHeight: 13,
+        position: "absolute",
+        backgroundColor: "#E02020",
+        color: "#fff",
+        top: -2,
+        left: -5,
+        zIndex: 3
     },
 
+    //audio
+
+    audioModel: {
+        zIndex: 99,
+        width: '100%',
+        alignItems: "center",
+        // backgroundColor:"#333",
+        backgroundColor: "rgba(0,0,0,0.6)",
+        justifyContent: "center",
+        position: "absolute",
+        top: 0,
+    },
+
+    audioBody: {
+        alignItems: "center",
+        padding: 15,
+        borderRadius: 10,
+    },
+    audioIcon: {
+        width: 30,
+        height: 30
+    },
+    Send: {
+        padding: 3,
+        letterSpacing: 2,
+        borderRadius: 3,
+        // boxShadow:
+    },
     // 背景颜色
     darkC1: {
         backgroundColor: "#2B3140"

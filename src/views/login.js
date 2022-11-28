@@ -1,7 +1,7 @@
 import {Button, Text, TextInput, TouchableHighlight, useColorScheme, View} from "react-native";
 import {useEffect, useState} from "react";
 import {styles} from "../css";
-import {_Login} from "../Api";
+import {_Login} from "../_Api";
 
 
 export function Login({navigation}) {
@@ -35,9 +35,7 @@ export function Login({navigation}) {
                            onChangeText={text => setTel(text)}/>
                 <TouchableHighlight underlayColor={MsgColorTouchable} onPress={() => {
                     console.log('登录', tel)
-                    _Login(tel, cb => {
-                        console.log('dl', cb)
-                    })
+                    _Login(tel)
                 }}>
                     <Text style={[styles.T6, C2, styles.bold]}>重新获取 <Text style={styles.LoginYe}>38秒</Text></Text>
                 </TouchableHighlight>

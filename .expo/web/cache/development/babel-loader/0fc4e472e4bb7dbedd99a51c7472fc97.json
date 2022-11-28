@@ -1,0 +1,1 @@
+{"ast":null,"code":"export * from 'react-native-web/dist/modules/AssetRegistry';","map":{"version":3,"mappings":"AAAA,cAAc,6CAA6C","names":[],"sourceRoot":"","sources":["../src/AssetRegistry.web.ts"],"sourcesContent":["export * from 'react-native-web/dist/modules/AssetRegistry';\n"]},"metadata":{},"sourceType":"module"}

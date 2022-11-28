@@ -3,8 +3,8 @@ import {useCallback, useEffect, useState} from "react";
 import {styles} from "../css";
 import {Portrait} from "../component/Portrait";
 import * as React from "react";
-import {_User} from "../Api";
 import { useFocusEffect } from '@react-navigation/native';
+import {_User} from "../_Api";
 
 export function Me({navigation}){
     const colorScheme = useColorScheme();
@@ -23,7 +23,7 @@ export function Me({navigation}){
             console.log('更新用户信息')
             _User(setUser)
             return () => {
-                console.log('离开我的')
+                console.log('离开我的',)
             };
         }, [])
     );

@@ -15,7 +15,7 @@ import {Btn} from "../set";
 import { Audio } from 'expo-av';
 import {pickImage} from "../utils/oss";
 import {_listLI} from "../model/_list";
-import {AudioSound, Recording} from "../utils/audio";
+import {AudioSound, Recording} from "../utils/record";
 
 let m4a = 'https://boatlmtext.oss-cn-guangzhou.aliyuncs.com/obj_wonDkMOGw6XDiTHCmMOi_3058352428_28ac_5055_a810_16dd4fbad431d482ad28049b9e1b4f5f.m4a'
 
