@@ -1,4 +1,5 @@
 import {StyleSheet, useColorScheme} from 'react-native';
+import colors from "react-native/Libraries/NewAppScreen/components/Colors";
 
 
 export const styles = StyleSheet.create({
@@ -6,6 +7,31 @@ export const styles = StyleSheet.create({
     //联系人列表
     List: {
         flex: 1,
+    },
+    listTitle: {
+        marginRight: 10,
+        position: "relative",
+        width: 30,
+        height: 30,
+        alignItems: "center",
+        justifyContent: 'center'
+    },
+    listTitleT1: {
+        fontSize: 18,
+    },
+    listTitleT2: {
+        width: 13,
+        height: 13,
+        fontWeight: "bold",
+        fontSize: 10,
+        textAlign: "center",
+        borderRadius: 5,
+        lineHeight: 13,
+        backgroundColor: "#E02020",
+        color: "#fff",
+        position: "absolute",
+        right: -4,
+        top: -2,
     },
     ListRow: {
         display: "flex",
@@ -31,12 +57,40 @@ export const styles = StyleSheet.create({
         textAlign: "right",
     },
     listBbC: {
-        flex: 1,
-        height: 1,
-        marginRight: 10,
-        marginLeft: 10
+        width: "100%",
+        height: 1
     },
 
+    yan: {
+        height: 48,
+        flexDirection: "row",
+        paddingTop: 2,
+    },
+    yanIco: {
+        marginRight: 5,
+        marginLeft: 5,
+        marginBottom: 10,
+    },
+
+    listLogin: {
+        flex:1,
+        display: "flex",
+        alignItems: 'center',
+        paddingTop: 30,
+    },
+    listLoginImg: {
+        backgroundColor: "#333",
+        width: 300,
+        height: 200,
+    },
+    listBtn: {
+        letterSpacing: 4,
+        fontWeight: "bold",
+        fontSize: 16,
+        marginTop: 16,
+        color: "#5A8DFF",
+        textAlign: "center"
+    },
 
     // im对话
     Im: {
@@ -51,19 +105,39 @@ export const styles = StyleSheet.create({
     },
     msgRow: {
         display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: "column",
+        alignItems: "flex-start",
         marginLeft: 10,
         borderRadius: 5,
         zIndex: 1
     },
     msgRowRight: {
         display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: "column",
+        alignItems: "flex-end",
         justifyContent: "flex-end",
         marginRight: 20,
         marginBottom: 10,
+        position: "relative"
+    },
+    flot: {
+        marginTop: 1,
+        display: "flex",
+        flexDirection: "row",
+        borderRadius: 4,
+        opacity: 0.8,
+        zIndex: 100,
+    },
+    flotText: {
+        paddingTop: 3,
+        paddingBottom: 3,
+        paddingLeft: 5,
+        paddingRight: 5,
+        fontSize: 11,
+    },
+    flotHx: {
+        width: 1,
+        height: 19
     },
     msgText: {
         display: "flex",
@@ -90,7 +164,7 @@ export const styles = StyleSheet.create({
         marginLeft: -10,
         opacity: 0.8,
         fontSize: 11,
-        marginBottom:10,
+        marginBottom: 10,
         textAlign: "center",
     },
     msgAudio: {
@@ -111,14 +185,29 @@ export const styles = StyleSheet.create({
         fontSize: 10,
         color: '#AFB1B7'
     },
+    ims: {
+        flex: 1,
+    },
     // 发送消息
     imSend: {
-        flex: 1,
         zIndex: 100,
         width: '100%',
         position: "absolute",
         bottom: 0,
         left: 0,
+    },
+    imSendBtn: {
+        backgroundColor: "#5A8DFF",
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderRadius: 3,
+        color: "#fff",
+        fontSize: 12,
+        marginLeft: 10,
+        letterSpacing: 1,
+        fontWeight: "bold"
     },
     imFun: {
         display: "flex",
@@ -163,6 +252,20 @@ export const styles = StyleSheet.create({
         paddingRight: 5,
     },
 
+    Word: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.3)",
+        alignItems: "stretch",
+        justifyContent: 'flex-end'
+    },
+    Words: {
+        padding: 15,
+    },
+    WordBtn: {
+        textAlign: "right",
+        paddingRight: 15,
+        paddingBottom: 10
+    },
     // 我的
     Me: {
         flex: 1,
@@ -172,10 +275,12 @@ export const styles = StyleSheet.create({
     MeUse: {
         display: "flex",
         flexDirection: "row",
+        alignItems: "center",
         marginBottom: 30,
         marginLeft: 20
     },
     MeUseText: {
+        flex: 1,
         display: "flex",
         justifyContent: "center",
         marginLeft: 15
@@ -185,17 +290,67 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
-        borderBottomWidth: 1,
         paddingLeft: 15,
         paddingBottom: 5
+    },
+    vip: {
+        color: "#5A8DFF",
+        letterSpacing: 1,
+        marginRight: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#5A8DFF",
+        paddingLeft: 5,
+        paddingRight: 5,
+        paddingTop: 2,
+        paddingBottom: 2
     },
     MeInputs: {
         flex: 1,
         borderRadius: 3,
         marginLeft: 10,
-
+        marginRight: 10,
+        padding: 3,
+        backgroundColor: "#fff",
+        paddingTop: 6,
+        paddingBottom: 6,
     },
 
+    // 激活码
+    jMa: {
+        flex: 1,
+        paddingTop: 15,
+        paddingLeft: 15,
+    },
+    jMaSend: {
+        marginTop: 10,
+        marginBottom: 35,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    jMaInput: {
+        flex: 1,
+        borderRadius: 3,
+        padding: 5,
+        width: 200,
+        fontSize: 15,
+        letterSpacing: 2,
+    },
+    jMaBtn: {
+        marginLeft: 10,
+        marginRight: 15,
+        color: "#5A8DFF",
+        fontSize: 15,
+        fontWeight: "500",
+        textAlign: "center"
+    },
+    jMList: {
+        flex: 1,
+    },
+    jMLists: {
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
     // 登录
     Login: {
         flex: 1,
@@ -224,7 +379,21 @@ export const styles = StyleSheet.create({
     LoginRed: {
         color: '#F84848'
     },
-
+    loginBtn: {
+        backgroundColor: '#5A8DFF',
+        borderColor: "#fff",
+        // borderWidth:1,
+        lineHeight: 20,
+        fontSize: 15,
+        fontWeight: "bold",
+        padding: 5,
+        color: "#fff",
+        width: 80,
+        height: 30,
+        textAlign: "center",
+        marginTop: 20,
+        borderRadius: 5,
+    },
     // 添加好友
     Add: {
         flex: 1
@@ -235,19 +404,78 @@ export const styles = StyleSheet.create({
         marginLeft: 10,
     },
 
+    //添加群聊
+    imAdd: {
+        width: '100%',
+        backgroundColor: "rgba(0,0,0,0.6)",
+    },
+    imQ: {
+        flex: 1,
+    },
+    imOff: {
+        fontSize: 20,
+        position: "absolute",
+        top: -30,
+        right: 10
+    },
+    AddImg: {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "flex-start",
+        paddingLeft: 10,
+    },
+    addIm: {
+        marginRight: 5,
+        marginBottom: 10,
+        alignItems: "center",
+        maxWidth: 50,
+    },
+    addRow: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 10,
+    },
+    addInouts: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    addInput: {
+        flex: 1,
+        letterSpacing: 1,
+        backgroundColor: "#333",
+        padding: 5,
+        marginLeft: 5,
+        marginRight: 5,
+
+    },
+
     //头像
     Portrait: {
         position: "relative",
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
+    },
+    Portraits: {
+        width: 36,
+        height: 36,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        backgroundColor: 'none'
     },
     PortraitImg: {
         position: "absolute",
         zIndex: 1
     },
+    PortraitImgs: {
+        borderRadius: 2
+    },
     PortraitText: {
-        fontSize: 13,
+        fontSize: 15,
         position: "absolute",
-        bottom: -5,
+        bottom: -3,
         right: -3,
         zIndex: 3,
     },
@@ -266,24 +494,31 @@ export const styles = StyleSheet.create({
         left: -5,
         zIndex: 3
     },
-
-    //audio
-
-    audioModel: {
-        zIndex: 99,
-        width: '100%',
-        alignItems: "center",
-        // backgroundColor:"#333",
-        backgroundColor: "rgba(0,0,0,0.6)",
-        justifyContent: "center",
-        position: "absolute",
-        top: 0,
+    upName: {
+        flexDirection: "row"
     },
-
+    upNameInput: {
+        paddingLeft: 5,
+        paddingRight: 5,
+        fontSize: 13,
+        borderRadius: 5,
+        flex: 1,
+    },
+    //audio
+    audioModel: {
+        flex: 1,
+        width: '100%',
+        position: "absolute",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 99,
+    },
     audioBody: {
         alignItems: "center",
         padding: 15,
         borderRadius: 10,
+        backgroundColor: "#5A8DFF"
     },
     audioIcon: {
         width: 30,
@@ -295,6 +530,7 @@ export const styles = StyleSheet.create({
         borderRadius: 3,
         // boxShadow:
     },
+
     // 背景颜色
     darkC1: {
         backgroundColor: "#2B3140"
@@ -320,10 +556,10 @@ export const styles = StyleSheet.create({
     },
 
     lightNsgBcB: {
-        borderBottomColor: '#D9D9D9'
+        backgroundColor: '#e2e2e2'
     },
     darkNsgBcB: {
-        borderBottomColor: '#333C52'
+        backgroundColor: '#2f2f2f'
     },
 
 
@@ -340,6 +576,9 @@ export const styles = StyleSheet.create({
         paddingRight: 10,
     },
 
+    red: {
+        color: "#E02020",
+    },
     //字体
     bold: {
         fontWeight: "bold",
