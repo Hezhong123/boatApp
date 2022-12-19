@@ -12,8 +12,20 @@ export const timeIm = function (t) {
     }else if(dayValue<=3){
         result =parseInt(dayValue) + '天前'
     }else {
-        result = time.getMonth()+1+'月' + time.getDate()+'日'
+        result = time.getMonth()+1+'月' + time.getDate()+'日  '+time.getHours()+':'+time.getMinutes()
     }
     return result;
 
 };
+
+export const memberFun = (t)=>{
+    let now = new Date();
+    let time =  new Date(t)
+    if(time>now){
+        let dayValue = (time-now)/86400000 //日期差
+        return 'd-'+parseInt(dayValue)
+    }else {
+        return '激活'
+    }
+
+}
