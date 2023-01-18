@@ -1,19 +1,30 @@
 {
   "expo": {
-    "name": "BoatIm",
-    "slug": "BoatIm",
-    "version": "1.0.0",
+    "name": "小船IM",
+    "slug": "boatIm",
+    "version": "0.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F2F2F2"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-notifications"
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/5678a8d0-b78f-43cb-a552-5153d0a4edf1"
+      "url": "https://u.expo.dev/c69e9c95-3bb6-4a31-a39b-1d9e87d2c07d"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -24,20 +35,20 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#F2F2F2"
       },
-      "package": "com.hez2019.BoatIm"
+      "package": "com.hez2019.boatIm"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "5678a8d0-b78f-43cb-a552-5153d0a4edf1"
+        "projectId": "c69e9c95-3bb6-4a31-a39b-1d9e87d2c07d"
       }
     },
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
     }
   }
 }
