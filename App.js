@@ -20,41 +20,23 @@ const Stack = createNativeStackNavigator();
 function App() {
     const schemes = useColorScheme();
     useNotifications();
-    const [isConnected,setIsConnected] = useState(true)
-    useEffect(()=>{
-        NetInfo.fetch().then(state => {
-            // console.log('Connection type', state.type);
-            // console.log('Is connected?', state.isConnected);
-            setIsConnected(state.isConnected)
-        });
-    },[])
-
-    if(isConnected){
-        return (
-            <NavigationContainer ref={navigationRef}>
-                <StatusBar/>
-                <Stack.Navigator initialRouteName='index' screenOptions={{
-                    headerTintColor: headerColor(schemes),
-                    headerStyle: bColor(schemes)
-                }}>
-                    <Stack.Screen name="index" component={Index} options={{title: "小船Im"}}/>
-                    <Stack.Screen name="im" component={Im}/>
-                    <Stack.Screen name="me" component={Me}  options={{title: "我的"}} />
-                    <Stack.Screen name="login" component={Login} />
-                    <Stack.Screen name="add" component={Add}  options={{title: "新的朋友"}}/>
-                    <Stack.Screen name="adds" component={Adds}  options={{title: "管理群"}}/>
-                    <Stack.Screen name="ticket" component={Ticket}  options={{title: "激活码"}} />
-                </Stack.Navigator>
-            </NavigationContainer>
-        );
-    }else {
-        return <View style={[styles.isConnected, bColor(schemes)]}>
-            <Text style={[styles.T4,styles.bold, MstText(schemes)]} > 当前没有网络哟！！！</Text>
-        </View>
-    }
-
-
-
+    return (
+        <NavigationContainer ref={navigationRef}>
+            <StatusBar/>
+            <Stack.Navigator initialRouteName='index' screenOptions={{
+                headerTintColor: headerColor(schemes),
+                headerStyle: bColor(schemes)
+            }}>
+                <Stack.Screen name="index" component={Index} options={{title: "小船Im"}}/>
+                <Stack.Screen name="im" component={Im}/>
+                <Stack.Screen name="me" component={Me}  options={{title: "我的"}} />
+                <Stack.Screen name="login" component={Login} />
+                <Stack.Screen name="add" component={Add}  options={{title: "新的朋友"}}/>
+                <Stack.Screen name="adds" component={Adds}  options={{title: "管理群"}}/>
+                <Stack.Screen name="ticket" component={Ticket}  options={{title: "激活码"}} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    )
 }
 
 export default App;

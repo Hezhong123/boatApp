@@ -33,6 +33,8 @@ import {Record} from "../utils/record";
 import { Audio } from 'expo-av';
 import {Portrait} from "../components/Portrait";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {im_storage} from "../utils/storage";
+import NetInfo from "@react-native-community/netinfo";
 
 const socket = io(wss)
 
@@ -55,6 +57,13 @@ export function Im({route, navigation}) {
     const [msgArr, setMsgArr] = useState([])        //对话列表
     const msgRef = useRef(msgArr)
     msgRef.current = msgArr
+
+    const [imTitle,setImTitle] = useState('')   //对话标题
+    const imTitleRef = useRef(imTitle)
+    imTitleRef.current = imTitle
+    const [isConnected, setIsConnected] = useState(true)  //离线状态
+    const isConnectedRef = useRef(isConnected)
+    isConnectedRef.current  = isConnected
 
     const _ref = useRef(null)           //ScrollView 控制器
 
@@ -124,6 +133,17 @@ export function Im({route, navigation}) {
     useFocusEffect(
         useCallback(() => {
             AsyncStorage.getItem('user').then(storage => {
+                //没有网络同步离线消息
+                NetInfo.fetch().then(async state => {
+                    if (!state.isConnected) {
+                        let imString = await AsyncStorage.getItem(list)
+                        let im = JSON.parse(imString)
+                        setMsgArr(im.msgArr)
+                        navigation.setOptions({title: im.title})
+                        setMsgArr(im.msgArr)
+                    }
+                });
+
                 let user = JSON.parse(storage)
                 setUser(user)       //用户信息
                 if(!memberBoolean(user.member)){
@@ -155,10 +175,11 @@ export function Im({route, navigation}) {
                     }
                 });
 
-                //信道信息
+                // //信道信息
                 _ListId(list).then(cb => {
                     // console.log('信道', cb)
                     if (cb.imTitle) {
+                        setImTitle(cb.imTitle + `(${cb.userArr.length})`)
                         navigation.setOptions({
                             title: cb.imTitle + `(${cb.userArr.length})`,
                             headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold,]}
@@ -170,9 +191,11 @@ export function Im({route, navigation}) {
                         setTo(arr)      //群发对象
                     } else {
                         if (cb.userArr[0]._id == user._id) {
+                            setImTitle(cb.userArr[1].name)
                             navigation.setOptions({title: cb.userArr[1].name})
                             setTo([cb.userArr[1]._id])
                         } else {
+                            setImTitle(cb.userArr[0].name)
                             navigation.setOptions({title: cb.userArr[0].name})
                             setTo([cb.userArr[0]._id])
                         }
@@ -191,8 +214,11 @@ export function Im({route, navigation}) {
             return async () => {
                 await _Unread(list, userRef.current._id) //清除未读
                 await _ImTime(list) // 更新时间戳
+                if(isConnected){
+                    await im_storage(list,msgRef.current,imTitleRef.current)  //同步离线消息
+                }
                 socket.off(list)// 断开链接
-                console.log('断开当前会话')
+                console.log('断开当前会话',list)
             }
         }, [])
     )

@@ -60,8 +60,8 @@ export const fColor = (schemes) => {
 
 export const styles = StyleSheet.create({
     isConnected:{
-        flex: 1,
-        backgroundColor:"#333",
+        padding:5,
+        backgroundColor:"#E02020",
         alignItems:"center",
         justifyContent:"center"
     },
