@@ -18,6 +18,7 @@ import {memberFun} from "../utils/time";
 import {Audio} from "expo-av";
 import * as Clipboard from "expo-clipboard";
 import {MsgImg, upAvatar} from "../utils/oss";
+import {user_storage} from "../utils/storage";
 
 export function Me({navigation}){
     const schemes = useColorScheme();
@@ -32,11 +33,12 @@ export function Me({navigation}){
 
     //路由生命周期
     navigation.addListener('focus', async () => {
-        // console.log('更新用户信息',await _User)
-
-        setUser(await _User())
+        await user_storage()
+        await AsyncStorage.getItem('user').then(storage=>{
+            let user = JSON.parse(storage)
+            setUser(user)
+        })
         setStore([...await _StoreLi()])
-
         navigation.setOptions({
             title: "我的",
             headerRight: () => <Text style={[styles.T4, fColor(schemes), styles.bold,]} onPress={() => Alert.alert('退出登陆', '', [

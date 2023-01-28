@@ -10,6 +10,8 @@ import {timeIm} from "../utils/time";
 import {Portrait, Portraits} from "../components/Portrait";
 import * as Haptics from 'expo-haptics';
 import {io} from "socket.io-client";
+import { Asset } from 'expo-asset';
+import {user_storage} from "../utils/storage";
 
 const socket = io(wss)
 
@@ -32,16 +34,10 @@ export function Index({navigation}) {
                let time = Date.parse(new Date()) / 1000
                if (time < tokenIn) {
                    setLogin(true)
-
-                   //联系人列表
-                   setTimeout(async () => {
-                       setList([...await _List()])
-                   },100)
-
-                   //用户信息
-                   _User().then(user => {
-                       setUser(user)
-                       // console.log('user', user)
+                   await user_storage()
+                   await AsyncStorage.getItem('user').then(storage=>{
+                       let user = JSON.parse(storage)
+                       console.log('用户信息',user)
                        navigation.setOptions({
                            headerRight: () => <Pressable onPress={() => navigation.navigate('me')}
                                                          onLongPress={() => setEmoji(true)}>
@@ -51,7 +47,7 @@ export function Index({navigation}) {
 
                        // 接收信息
                        socket.on(user._id, async li => {
-                            //震动手机
+                           //震动手机
                            await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
                            let arr = listRef.current
                            arr.map((item, index) => {
@@ -62,8 +58,12 @@ export function Index({navigation}) {
                            })
                            setList([...arr])
                        })
-
                    })
+
+                   // 联系人列表
+                   setTimeout(async () => {
+                       setList([...await _List()])
+                   },100)
 
                    //获取非好友信道
                    _ListNull().then(cb => {

@@ -9,10 +9,10 @@ export const wss = "wss://www.boatim.top"
 export const oss = 'https://boatim.oss-cn-shanghai.aliyuncs.com'
 const instance = axios.create({
     baseURL: url,
-    timeout: 1000,
+    timeout: 3000,
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
     }
 });
 

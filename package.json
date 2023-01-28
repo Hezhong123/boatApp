@@ -26,7 +26,8 @@
     "react-native-safe-area-context": "4.4.1",
     "react-native-screens": "~3.18.0",
     "socket.io-client": "^4.5.4",
-    "@react-native-community/netinfo": "9.3.5"
+    "@react-native-community/netinfo": "9.3.5",
+    "expo-asset": "~8.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

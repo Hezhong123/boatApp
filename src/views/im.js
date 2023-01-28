@@ -24,7 +24,6 @@ import {
     _ListNull,
     _Msg, _OnColumn, _OnListen,
     _Unread,
-    _User,
     wss
 } from "../utils/Api";
 import {MsgImg, OssImage} from "../utils/oss";
@@ -33,6 +32,7 @@ import * as Haptics from "expo-haptics";
 import {Record} from "../utils/record";
 import { Audio } from 'expo-av';
 import {Portrait} from "../components/Portrait";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const socket = io(wss)
 
@@ -123,7 +123,8 @@ export function Im({route, navigation}) {
 
     useFocusEffect(
         useCallback(() => {
-            _User().then(user => {
+            AsyncStorage.getItem('user').then(storage => {
+                let user = JSON.parse(storage)
                 setUser(user)       //用户信息
                 if(!memberBoolean(user.member)){
                     _OnColumn(false).then(user => setUser(user))
