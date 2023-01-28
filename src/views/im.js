@@ -2,7 +2,7 @@
 import {
     Alert,
     FlatList,
-    Modal,
+    Modal, Platform,
     SafeAreaView,
     Text,
     TextInput, TouchableHighlight, TouchableOpacity,
@@ -10,11 +10,23 @@ import {
     useWindowDimensions,
     View
 } from "react-native";
-import {BbC, bColor, fColor, lightNsgBcB, MsgColor, MstText, styles} from "../css";
+import {BbC, bColor, fColor, lightNsgBcB, MsgColor, MsgColorTouchable, MstText, styles} from "../css";
 import {io} from "socket.io-client";
 import {useFocusEffect} from "@react-navigation/native";
 import {useCallback, useEffect, useRef, useState} from "react";
-import {_addStore, _DelIm, _ImTime, _ListId, _ListNull, _Msg, _Unread, _User, wss} from "../utils/Api";
+import {
+    _addStore,
+    _Column,
+    _DelIm,
+    _ImTime,
+    _Listen,
+    _ListId,
+    _ListNull,
+    _Msg, _OnColumn, _OnListen,
+    _Unread,
+    _User,
+    wss
+} from "../utils/Api";
 import {MsgImg, OssImage} from "../utils/oss";
 import {memberBoolean, timeIm} from "../utils/time";
 import * as Haptics from "expo-haptics";
@@ -47,6 +59,9 @@ export function Im({route, navigation}) {
     const _ref = useRef(null)           //ScrollView 控制器
 
     const [columnLi, setColumnLi] = useState([]) //词列
+    const columnRef = useRef(columnLi)
+    columnRef.current = columnLi
+
     const [input, setInput] = useState('')  //输入信息
     const [audioLoad, setAudioLoad] = useState()  //录制声音
     const [seconds, setSeconds] = useState(1)   //计时时长
@@ -56,34 +71,27 @@ export function Im({route, navigation}) {
 
     //播放声音
     const [sound, setSound] = useState();
-    const playSound = async (i, im) => {
-        setOnIm(i)
-        const {sound} = await Audio.Sound.createAsync({uri: im.url});
+    const playSound = async (url) => {
+        const {sound} = await Audio.Sound.createAsync({uri: url});
         setSound(sound);
         await sound.playAsync();
+    }
 
-        //播放跟读
-        // if (im.tIm == 1 && memberBoolean(user.member)) {
-        //     console.log('到期时间', 11)
-        //     if (im.url == 'null') {
-        //         _Listen(im._id, im.enQ, cb => {
-        //             console.log('本地跟读', cb.url)
-        //             let arr = msgRef.current
-        //             arr[i].url = cb.url
-        //             setMsgArr(arr)
-        //             audioFun(i, host + cb.url)
-        //         })
-        //     } else {
-        //         console.log('云端跟读', im.url)
-        //         audioFun(i, host + im.url)
-        //     }
-        // } else {
-        //     alertMember(2)
-        // }
-        //播放语音
-        // if (im.tIm == 3) {
-        //     audioFun(i, im.url)
-        // }
+    //点击播放
+    const soundFun = async (i, im) => {
+        setOnIm(i)
+        if (im.url == 'null') {
+            _Listen(im._id, im.enQ).then(async cb => {
+                let arr = msgRef.current
+                arr[i].url = cb.url
+                setMsgArr(arr)
+                console.log('无资源', cb.url)
+                await playSound(cb.url)
+            })
+        } else {
+            await playSound(im.url)
+            console.log('有资源跟读', im.url)
+        }
     }
 
     //消息撤回
@@ -116,9 +124,13 @@ export function Im({route, navigation}) {
         useCallback(() => {
             _User().then(user => {
                 setUser(user)       //用户信息
+                if(!memberBoolean(user.member)){
+                    _OnColumn(false).then(user => setUser(user))
+                    _OnListen(false).then(user =>setUser(user))
+                }
+                console.log('页面重启',list)
                 // 接收会话信息
                 socket.on(list, async (im) => {
-                    console.log('收到信息', im)
                     let arr = msgRef.current
                     if (im.tIm == 5) {
                         arr.map((item, index) => {
@@ -134,18 +146,17 @@ export function Im({route, navigation}) {
                     setMsgArr([...arr])
                     setTimeout(() => _ref.current.scrollToEnd({animated: true}),im.tIm==2?500:100)
                     //跟读信号
-                    console.log('跟读', im)
-                    if (user.listen && im.tIm == 1 && user._id == im.user._id) {
-                        playSound(arr.length - 1, im)
-                    }
-                    if (!user.listen) {
+                    // console.log('跟读', im)
+                    if(memberBoolean(user.member)&&im.url != 'null'){
+                        setOnIm(arr.length - 1)
                         await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+                        await playSound(im.url)
                     }
                 });
 
                 //信道信息
                 _ListId(list).then(cb => {
-                    console.log('信道', cb)
+                    // console.log('信道', cb)
                     if (cb.imTitle) {
                         navigation.setOptions({
                             title: cb.imTitle + `(${cb.userArr.length})`,
@@ -181,10 +192,22 @@ export function Im({route, navigation}) {
                 await _ImTime(list) // 更新时间戳
                 socket.off(list)// 断开链接
                 console.log('断开当前会话')
-
             }
         }, [])
     )
+
+    //更新播放器
+    useEffect(() => {
+        return sound
+            ? () => {
+                console.log('播放完毕');
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                sound.unloadAsync();
+            }
+            : undefined;
+    }, [sound])
+
+
     return (
         <View style={[styles.Im, bColor(schemes)]}>
             {/*录音推送*/}
@@ -247,7 +270,7 @@ export function Im({route, navigation}) {
                         <View key={'msg' + index}>
                             <RightMsg i={index}
                                       onIm={onIm}   //选中im
-                                      onSound={(i, im) => playSound(i, im)}     //播放译文
+                                      onSound={(i, im) =>soundFun(i, im)}     //播放译文
                                       omWord={(cd) => setWord(cd)}        //点击词典
                                       onHint={()=> alertHint(2)}//提示充值
                                       onRecall={(im) => recallFun(im)}   //撤回消息
@@ -262,43 +285,45 @@ export function Im({route, navigation}) {
                                      onIm={onIm}   //被选中im
                                      omWord={(cd) => setWord(cd)}        //点击词典
                                      onRecall={(im) => recallFun(im)}   //撤回消息
-                                     onSound={(i, im) => playSound(i, im)}  //播放声音
+                                     onSound={(i, im) => soundFun(i, im)}  //播放声音
                                      onHint={()=>alertHint(2)}      //提示充值
                                      user={user}       //用户信息
                                      data={item}/>
                         </View>}
                     keyExtractor={item => item._id}
-                    ListFooterComponent={() => Platform.OS == 'android' ? <View style={{height: 50}}></View> :
-                        <View style={{height: 20}}></View>}
+                    ListFooterComponent={() => Platform.OS == 'android' ? <View style={{height: 70}}></View> :
+                        <View style={{height: 40}}></View>}
                 />
             </SafeAreaView>
 
             <View style={[styles.imSend]}>
+
+
+
+                <View style={styles.imFun}>
+                    <TouchableOpacity style={user.column ? '' : {opacity: 0.3}}
+                                      onPress={() => memberBoolean(user.member) ? _OnColumn(!userRef.current.column).then(cb=>{
+                                          setUser(cb)
+                                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                                      }) : alertHint(1)}>
+                        <Text style={{fontSize: 17, marginLeft: 5}}> ✍️ </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={user.listen ? '' : {opacity: 0.3}}
+                                      onPress={() => memberBoolean(user.member) ? _OnListen(!userRef.current.listen).then(cb=>{
+                                          setUser(cb)
+                                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                                      }) : alertHint(2)}>
+                        <Text style={{fontSize: 17, marginLeft: 5}}> 🎧️ </Text>
+                    </TouchableOpacity>
+
+                </View>
 
                 {/*词列*/}
                 <View style={styles.imWord}>
                     {columnLi.map((item, index) =>
                         <Text key={'iw' + index} style={styles.imWords}> {item} </Text>
                     )}
-                </View>
-
-                <View style={styles.imFun}>
-                    <TouchableOpacity style={user.column ? '' : {opacity: 0.3}}
-                                      onPress={() => memberBoolean(user.member) ? _onColumn(!userRef.current.column, user => {
-                                          setUser(user)
-                                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                                      }) : alertHint(1)}>
-                        <Text style={{fontSize: 17, marginLeft: 5}}> ✍️ </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={user.column ? '' : {opacity: 0.3}}
-                                      onPress={() => memberBoolean(user.member) ? _onListen(!userRef.current.column, user => {
-                                          setUser(user)
-                                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                                      }) : alertHint(2)}>
-                        <Text style={{fontSize: 17, marginLeft: 5}}> 🎧️ </Text>
-                    </TouchableOpacity>
-
                 </View>
 
                 {/*发送消息*/}
@@ -320,25 +345,43 @@ export function Im({route, navigation}) {
                                onFocus={({nativeEvent: {target}}) => setTimeout(()=>{
                                    _ref.current.scrollToEnd({animated: true})
                                },100)}   //调整位置
-                               onTextInput={({nativeEvent: {text, previousText, range: {start, end}}}) => {
-                                   let reg = /[^\u0000-\u00FF]/
-                                   //词裂功能
-                                   if (reg.test(text.trim()) && user.column) {
-                                       console.log('词列', text)
-                                       // _Column(text, cb => {
-                                       //     let columnArr = columnRef.current  //词列
-                                       //     columnArr.push(cb)
-                                       //     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                                       //     setColumnLi([...columnArr])
-                                       // })
+                               onTextInput={({nativeEvent: {text, previousText, range: {start, end}}}) =>{
+
+                                   if(Platform.OS =='ios'){
+                                       // console.log('ios词列', text)
+                                       let reg = /[^\u0000-\u00FF]/
+                                       if (reg.test(text.trim()) && user.column) {
+                                           _Column(text).then(cb => {
+                                               let columnArr = columnRef.current  //词列
+                                               columnArr.push(cb)
+                                               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                                               setColumnLi([...columnArr])
+                                           })
+                                       }
                                    }
                                    //重制词列
                                    if (start == 0) {
                                        console.log('重置词列')
-                                       // setColumnLi([...[]])
+                                       setColumnLi([...[]])
                                    }
+                                   return
                                }}
-                               onChangeText={text => setInput(text)}/>
+                               onChangeText={text =>{
+                                   if(Platform.OS =='android'){
+                                       let str = text.substr(-(text.length - input.length))
+                                       console.log('android词列',str)
+                                       let regA = /[^\u0000-\u00FF]/
+                                       if (regA.test(str.trim()) && user.column) {
+                                           _Column(str).then(cb => {
+                                               let columnArr = columnRef.current  //词列
+                                               columnArr.push(cb)
+                                               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                                               setColumnLi([...columnArr])
+                                           })
+                                       }
+                                   }
+                                   setInput(text)
+                               }}/>
                     {input.length ? <TouchableOpacity onPress={() => {
                         setInput('')
                         let imData = {
@@ -476,7 +519,7 @@ function RightMsg(props) {
                     </TouchableHighlight> : ''}
                     <TouchableOpacity
                         style={[styles.msgText, {backgroundColor: '#5A8DFF', maxWidth: (0.6 * window.width)}]}
-                        onPress={() => memberBoolean(user.member)?onSound(i, data):onHint()} onLongPress={() => {
+                        onPress={() => memberBoolean(user.member)?onSound(i,data):onHint(i,data)} onLongPress={() => {
                         setShow(true)
                         setTimeout(() => {
                             setShow(false)

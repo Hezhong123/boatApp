@@ -1,6 +1,6 @@
 import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, Text, useColorScheme, View} from 'react-native';
-import {bColor, fColor, headerColor, styles} from "./src/css";
+import {bColor, fColor, headerColor, MstText, styles} from "./src/css";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {NavigationContainer} from "@react-navigation/native";
 import {Index} from "./src/views";
@@ -12,36 +12,55 @@ import {Add} from "./src/views/add";
 import {Login} from "./src/views/login";
 import {Me} from "./src/views/me";
 import {Adds} from "./src/views/adds";
+import NetInfo from '@react-native-community/netinfo';
+import {useEffect, useState} from "react";
 
 const Stack = createNativeStackNavigator();
 
 function App() {
     const schemes = useColorScheme();
     useNotifications();
+    const [isConnected,setIsConnected] = useState(true)
+    useEffect(()=>{
+        NetInfo.fetch().then(state => {
+            // console.log('Connection type', state.type);
+            // console.log('Is connected?', state.isConnected);
+            setIsConnected(state.isConnected)
+        });
+    },[])
 
-    return (
-        <NavigationContainer ref={navigationRef}>
-            <StatusBar/>
-            <Stack.Navigator initialRouteName='index' screenOptions={{
-                headerTintColor: headerColor(schemes),
-                headerStyle: bColor(schemes)
-            }}>
-                <Stack.Screen name="index" component={Index} options={{title: "小船Im"}}/>
-                <Stack.Screen name="im" component={Im}/>
-                <Stack.Screen name="me" component={Me}  options={{title: "我的"}} />
-                <Stack.Screen name="login" component={Login} />
-                <Stack.Screen name="add" component={Add}  options={{title: "新的朋友"}}/>
-                <Stack.Screen name="adds" component={Adds}  options={{title: "管理群"}}/>
-                <Stack.Screen name="ticket" component={Ticket}  options={{title: "激活码"}} />
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
+    if(isConnected){
+        return (
+            <NavigationContainer ref={navigationRef}>
+                <StatusBar/>
+                <Stack.Navigator initialRouteName='index' screenOptions={{
+                    headerTintColor: headerColor(schemes),
+                    headerStyle: bColor(schemes)
+                }}>
+                    <Stack.Screen name="index" component={Index} options={{title: "小船Im"}}/>
+                    <Stack.Screen name="im" component={Im}/>
+                    <Stack.Screen name="me" component={Me}  options={{title: "我的"}} />
+                    <Stack.Screen name="login" component={Login} />
+                    <Stack.Screen name="add" component={Add}  options={{title: "新的朋友"}}/>
+                    <Stack.Screen name="adds" component={Adds}  options={{title: "管理群"}}/>
+                    <Stack.Screen name="ticket" component={Ticket}  options={{title: "激活码"}} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        );
+    }else {
+        return <View style={[styles.isConnected, bColor(schemes)]}>
+            <Text style={[styles.T4,styles.bold, MstText(schemes)]} > 当前没有网络哟！！！</Text>
+        </View>
+    }
+
+
+
 }
 
 export default App;
 
 
-// adb install application-a9738822-c436-4d82-a94c-a00a4233362e.apk
+// adb install application-3fabca0f-17b2-4a3b-9a67-ebbadadb3793.apk
 
 // eas build --profile preview
 

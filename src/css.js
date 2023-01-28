@@ -59,6 +59,12 @@ export const fColor = (schemes) => {
 }
 
 export const styles = StyleSheet.create({
+    isConnected:{
+        flex: 1,
+        backgroundColor:"#333",
+        alignItems:"center",
+        justifyContent:"center"
+    },
     //联系人列表
     List: {
         flex: 1,

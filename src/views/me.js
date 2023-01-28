@@ -11,13 +11,13 @@ import {
 } from "react-native";
 import {BbC, bColor, fColor, lightNsgBcB, MsgColor, MsgColorTouchable, MstText, placeholderColor, styles} from "../css";
 import {useEffect, useRef, useState} from "react";
-import {_StoreDel, _StoreLi, _StoreQuery, _User, url} from "../utils/Api";
+import {_Name, _StoreDel, _StoreLi, _StoreQuery, _User, url} from "../utils/Api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Portrait} from "../components/Portrait";
 import {memberFun} from "../utils/time";
 import {Audio} from "expo-av";
 import * as Clipboard from "expo-clipboard";
-import {MsgImg} from "../utils/oss";
+import {MsgImg, upAvatar} from "../utils/oss";
 
 export function Me({navigation}){
     const schemes = useColorScheme();
@@ -110,9 +110,7 @@ export function Me({navigation}){
                     onPress={() => Alert.alert('替换头像', '', [
                         {
                             text: '换头像',
-                            onPress: () => upAvatar(user.id, cb => {
-                                setUser(cb)
-                            })
+                            onPress: () => upAvatar(user.id).then(user=>setUser(user))
                         },
                         {
                             text: '取消',
@@ -134,7 +132,7 @@ export function Me({navigation}){
                                            {
                                                text: '确定',
                                                onPress: () => {
-                                                   _name(text, newUser => setUser(newUser))
+                                                   _Name(text).then(newUser=> setUser(newUser))
                                                    setUpName(false)
                                                }
                                            },
@@ -227,6 +225,7 @@ export function Me({navigation}){
                 </View>}
             />:<Text style={[styles.T5,styles.bold,{marginTop:5,textAlign: "center"},MstText(schemes)]}> 没有收藏 </Text>}
 
+            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > v-0.0.2 </Text>
         </View>
     )
 }

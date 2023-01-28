@@ -1,16 +1,18 @@
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// export const ip = '192.168.0.101:3000'
-export const url = "https://boatim.xldkeji.com"
-export const wss = "wss://boatim.xldkeji.com"
+// export const url = 'http://192.168.2.187:3000'
+// export const wss = 'http://192.168.2.187:3000'
+
+export const url = "https://www.boatim.top"
+export const wss = "wss://www.boatim.top"
 export const oss = 'https://boatim.oss-cn-shanghai.aliyuncs.com'
 const instance = axios.create({
     baseURL: url,
-    timeout: 3000,
+    timeout: 1000,
     headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
     }
 });
 
@@ -21,7 +23,7 @@ export const _User = ()=> new Promise(async (user) => {
     instance.get('/user').then(res => {
         user(res.data)
     }, err => {
-        console.log('用户信息1', err)
+        console.log('用户信息', err)
     })
 })
 
@@ -53,6 +55,23 @@ export const _Emoji = (item)=> new Promise(async emoji=>{
     instance.put(`user/emoji/${item}`).then(res => {
         // console.log('更新未读',res)
         emoji(res.data)
+    })
+})
+
+//修改头像
+export const _Avatar = (url)=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.put(`user/avatar`, {'url': url}).then(res => {
+        cb(res.data)
+    })
+})
+
+//修改昵称
+export const _Name =  (name)=> new  Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.put(`user/name/${name}`).then(res => {
+        // console.log('更新未读',res)
+        cb(res.data)
     })
 })
 
@@ -196,6 +215,43 @@ export const _Msg= (list,page)=>new Promise(cb=>{
     })
 })
 
+//词裂
+export const _Column= (q)=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.post(`list/column/${q}`).then(enQ => {
+        cb(enQ.data)
+    })
+})
+
+//跟读
+export const _Listen = (im,enQ)=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.post(`list/listen`, {
+        im: im,
+        enQ: enQ
+    }).then(res => {
+        cb(res.data)
+    })
+})
+
+//开关词裂
+export const _OnColumn =  (boolean)=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.put(`user/column/${boolean}`).then(res => {
+        console.log('开关词裂', res.data)
+        cb(res.data)
+    })
+})
+
+//开关跟读
+export const _OnListen = (boolean) => new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.put(`user/listen/${boolean}`).then(res => {
+        console.log('开关跟读', boolean, res.data)
+        cb(res.data)
+    })
+})
+
 // 跟新时间戳
 export const _ImTime = (list)=> new Promise(async cb => {
     instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
@@ -221,9 +277,85 @@ export const _Unread = (list,user) => new Promise(async cb => {
 export const _addStore = (obj)=> new Promise(async cb => {
     instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
     instance.post(`store`, obj).then(res=>{
-        cb()
+        cb(res.data)
     },err=>{
         console.log('收藏失败', err)
     })
 })
 
+// 退出群聊
+export const _QuitIms =(list,id)=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.post(`/list/quitIms/${list}/${id}`).then(res => {
+        cb(res.data)
+    }, err => {
+        console.log('最近联系人', err)
+    })
+})
+
+
+// 修改群名称
+export const _NameIms =(list,name)=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.put(`/list/nameIms/${list}`,{name:name}).then(res => {
+        cb(res.data)
+    }, err => {
+        console.log('最近联系人', err)
+    })
+})
+
+//解散群
+export const _OutIms = (list) => new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.delete(`/list/outIms/${list}`).then(res => {
+        cb(res.data)
+    }, err => {
+        console.log('最近联系人', err)
+    })
+})
+
+
+// 最近联系人
+export const _Contact = ()=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.post('/list/contact').then(res => {
+        cb(res.data)
+    }, err => {
+        console.log('最近联系人', err)
+    })
+})
+
+//搜索用户
+export const _Quser = (key) => new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.get(`/user/query?key=${key}`).then(res => {
+        console.log('搜索用户', res.data)
+        cb(res.data)
+    })
+})
+
+//加入群聊
+export const _AddIms = async (list,id,)=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.post(`/list/addIms/${list}/${id}`).then(res => {
+        cb(res.data)
+    }, err => {
+        console.log('最近联系人', err)
+    })
+})
+
+// 激活码使用记录
+export const _Activation =  ()=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.get(`activation`).then(res => {
+        cb(res.data)
+    })
+})
+
+//使用激活码
+export const _Ticket =  (Ma)=> new Promise(async cb => {
+    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
+    instance.post(`activation/ticket`, {'ticketMa': Ma}).then(res => {
+        cb(res.data)
+    })
+})

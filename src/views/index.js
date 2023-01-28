@@ -110,6 +110,10 @@ export function Index({navigation}) {
 
     if (login) {
         return <View style={[styles.List, bColor(schemes)]}>
+            {/*<Button title={'清楚token'} onPress={async () => {*/}
+            {/*    await AsyncStorage.removeItem('token')*/}
+            {/*    await AsyncStorage.removeItem('tokenIn')*/}
+            {/*}} />*/}
             {/*选择表情包*/}
             {emoji ? <View style={styles.yan}>
                 <FlatList

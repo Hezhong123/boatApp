@@ -2,7 +2,7 @@ import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {ActivityIndicator, Image, Text, TouchableOpacity, useWindowDimensions, View} from "react-native";
-import {_DelIm, _ListNull, oss} from "./Api";
+import {_Avatar, _DelIm, _ListNull, oss} from "./Api";
 
 
 export const OssImage = (props) => {
@@ -56,17 +56,18 @@ export const OssImage = (props) => {
 
 
 //更新头像
-export const upAvatar = async (userID,cb) => {
-    let imgName = userID+Math.random().toString(36).substring(2);
+export const upAvatar = async (userID) => new Promise(async user => {
+    let imgName = userID + Math.random().toString(36).substring(2);
     let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: "Images",
-        quality: 0.5,
+        allowsEditing: true,
+        aspect: [3, 3],
+        quality: 0.1,
     });
-    if (result.assets){
+    if (result.assets) {
         const formData = new FormData()
-        console.log('选择图片', res)
         let data = {
-            uri : result.assets[0].uri,
+            uri: result.assets[0].uri,
             type: "image/jpeg"
         }
         formData.append('key', `user/${imgName}.png`)
@@ -75,26 +76,21 @@ export const upAvatar = async (userID,cb) => {
         formData.append('policy', 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0wMVQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==')
         formData.append('success_action_status', 201)
         formData.append('file', data)
-        axios.post(oss, formData,{
-            headers:{
+        axios.post(oss, formData, {
+            headers: {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(res => {
-            let url= `${oss}/user/${imgName}.png`
-            // console.log('上传头像', res.data)
-            // _avatar(url,user=>{
-            //     console.log('用户信息', user )
-            //     cb(user)
-            // })
+            let url = `${oss}/user/${imgName}.png`
+            _Avatar(url).then(cb=>{user(cb)})
         }, err => {
             console.log('上传头像失败', err)
         })
     }
-}
+})
 
-
-export //图像裁切
-function MsgImg(props) {
+//图像裁切
+export function MsgImg(props) {
     const [w, setW] = useState(200)
     const [h, setH] = useState(200)
     const window = useWindowDimensions();
