@@ -28,6 +28,7 @@ const useNotifications = () => {
             let user =  await _User()
             console.log('handler', handler)
             if (handler == 'background') {
+                navigation.navigate('index')
                 socket.on(user._id, async im => {
                     console.log('离线推送', im)
                     await pushNotifications( im.imType == 1? im.user.name:im.imTitle, im.text, im._id)

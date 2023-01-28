@@ -120,6 +120,7 @@ export function Im({route, navigation}) {
             }
         ])
     }
+
     useFocusEffect(
         useCallback(() => {
             _User().then(user => {
@@ -128,7 +129,6 @@ export function Im({route, navigation}) {
                     _OnColumn(false).then(user => setUser(user))
                     _OnListen(false).then(user =>setUser(user))
                 }
-                console.log('页面重启',list)
                 // 接收会话信息
                 socket.on(list, async (im) => {
                     let arr = msgRef.current
