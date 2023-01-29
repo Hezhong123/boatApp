@@ -9,10 +9,9 @@ export const wss = "wss://www.boatim.top"
 export const oss = 'https://boatim.oss-cn-shanghai.aliyuncs.com'
 const instance = axios.create({
     baseURL: url,
-    timeout: 3000,
     headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
     }
 });
 
@@ -238,7 +237,7 @@ export const _Listen = (im,enQ)=> new Promise(async cb => {
 export const _OnColumn =  (boolean)=> new Promise(async cb => {
     instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
     instance.put(`user/column/${boolean}`).then(res => {
-        console.log('开关词裂', res.data)
+        // console.log('开关词裂', res.data)
         cb(res.data)
     })
 })
@@ -247,7 +246,7 @@ export const _OnColumn =  (boolean)=> new Promise(async cb => {
 export const _OnListen = (boolean) => new Promise(async cb => {
     instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
     instance.put(`user/listen/${boolean}`).then(res => {
-        console.log('开关跟读', boolean, res.data)
+        // console.log('开关跟读', boolean, res.data)
         cb(res.data)
     })
 })

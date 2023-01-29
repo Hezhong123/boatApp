@@ -23,34 +23,14 @@ const useNotifications = () => {
         //     }
         // );
 
-
-        AppState.addEventListener("change", async (handler) => {
-            let user =  await _User()
-            console.log('handler', handler)
-            if (handler == 'background') {
-                navigation.navigate('index')
-                socket.on(user._id, async im => {
-                    console.log('离线推送', im)
-                    await pushNotifications( im.imType == 1? im.user.name:im.imTitle, im.text, im._id)
-                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
-                })
-                setUserId(user._id)
-            }
-            if (handler == 'active') {
-                console.log('断开链接')
-                socket.off(user._id)// 断开链接
-            }
-        })
-
         notificationListener.current = Notifications.addNotificationResponseReceivedListener(res => {
                 let nav = res.notification.request.content.data
-                console.log('addNotificationResponseReceivedListener',nav);
+                // console.log('addNotificationResponseReceivedListener',nav);
                 navigation.navigate(nav.url,{list:nav.list});
             });
 
         return () =>{
             Notifications.removeNotificationSubscription(notificationListener);
-            socket.off(userId)// 断开链接
         }
 
 

@@ -2,7 +2,7 @@
   "expo": {
     "name": "小船IM",
     "slug": "boatIm",
-    "version": "0.0.3",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",

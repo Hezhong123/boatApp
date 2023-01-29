@@ -1,6 +1,6 @@
 // 会话
 import {
-    Alert,
+    Alert, AppState,
     FlatList,
     Modal, Platform,
     SafeAreaView,
@@ -23,7 +23,7 @@ import {
     _ListId,
     _ListNull,
     _Msg, _OnColumn, _OnListen,
-    _Unread,
+    _Unread, _User,
     wss
 } from "../utils/Api";
 import {MsgImg, OssImage} from "../utils/oss";
@@ -33,7 +33,6 @@ import {Record} from "../utils/record";
 import { Audio } from 'expo-av';
 import {Portrait} from "../components/Portrait";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {im_storage} from "../utils/storage";
 import NetInfo from "@react-native-community/netinfo";
 
 const socket = io(wss)
@@ -132,20 +131,22 @@ export function Im({route, navigation}) {
 
     useFocusEffect(
         useCallback(() => {
-            AsyncStorage.getItem('user').then(storage => {
-                //没有网络同步离线消息
-                NetInfo.fetch().then(async state => {
-                    if (!state.isConnected) {
-                        let imString = await AsyncStorage.getItem(list)
-                        let im = JSON.parse(imString)
-                        setMsgArr(im.msgArr)
-                        navigation.setOptions({title: im.title})
-                        setMsgArr(im.msgArr)
-                    }
-                });
+            //没有网络同步离线消息
+            NetInfo.fetch().then(async state => {
+                setIsConnected(state.isConnected)
+                if (!state.isConnected) {
+                    let imString = await AsyncStorage.getItem(list)
+                    let im = JSON.parse(imString)
+                    setMsgArr(im.msgArr)
+                    let user = await AsyncStorage.getItem('user')
+                    setUser(JSON.parse(user))
+                    navigation.setOptions({title: im.title})
+                }
+            });
 
-                let user = JSON.parse(storage)
+           _User().then(user => {
                 setUser(user)       //用户信息
+                //服务到期自动关停
                 if(!memberBoolean(user.member)){
                     _OnColumn(false).then(user => setUser(user))
                     _OnListen(false).then(user =>setUser(user))
@@ -175,7 +176,7 @@ export function Im({route, navigation}) {
                     }
                 });
 
-                // //信道信息
+                //信道信息
                 _ListId(list).then(cb => {
                     // console.log('信道', cb)
                     if (cb.imTitle) {
@@ -214,11 +215,16 @@ export function Im({route, navigation}) {
             return async () => {
                 await _Unread(list, userRef.current._id) //清除未读
                 await _ImTime(list) // 更新时间戳
-                if(isConnected){
-                    await im_storage(list,msgRef.current,imTitleRef.current)  //同步离线消息
-                }
                 socket.off(list)// 断开链接
-                console.log('断开当前会话',list)
+                console.log('断开IM',list)
+                if(isConnectedRef.current){    //同步离线消息
+                    let storage = {
+                        title:imTitleRef.current,
+                        msgArr:msgRef.current
+                    }
+                    console.log('同步Im离线消息',list)
+                    await AsyncStorage.setItem(list, JSON.stringify(storage))
+                }
             }
         }, [])
     )

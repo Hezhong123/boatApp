@@ -1,5 +1,16 @@
 //首页联系人
-import {Alert, Button, FlatList, Image, Pressable, Text, TouchableOpacity, useColorScheme, View} from "react-native";
+import {
+    Alert,
+    AppState,
+    Button,
+    FlatList,
+    Image,
+    Pressable,
+    Text,
+    TouchableOpacity,
+    useColorScheme,
+    View
+} from "react-native";
 import {bColor, fColor, MstText, styles} from "../css";
 import {pushNotifications} from "../utils/useNotifications";
 import {_DelIm, _Emoji, _List, _ListNull, _User, wss} from "../utils/Api";
@@ -10,9 +21,8 @@ import {timeIm} from "../utils/time";
 import {Portrait, Portraits} from "../components/Portrait";
 import * as Haptics from 'expo-haptics';
 import {io} from "socket.io-client";
-import {Asset} from 'expo-asset';
-import {list_storage, user_storage} from "../utils/storage";
 import NetInfo from "@react-native-community/netinfo";
+import navigation from "../utils/rootNavigation";
 
 const socket = io(wss)
 
@@ -22,7 +32,7 @@ export function Index({navigation}) {
     const [login, setLogin] = useState(true)     //登陆状态
     const [list, setList] = useState(Array)      //联系人列表
     const listRef = useRef(list)
-
+    listRef.current = list
 
     const [emoji, setEmoji] = useState(false)      //设置表情
     const [user, setUser] = useState({}) //用户信息
@@ -33,28 +43,40 @@ export function Index({navigation}) {
 
     const [refresh, setRefresh] = useState(false) //加载更新
     const [isConnected, setIsConnected] = useState(true)
+    const isConnectedRef = useRef(isConnected)
+    isConnectedRef.current = isConnected
 
-    //路由生命周期
+    const [handler, setHandler] = useState('active')   //前后台
+    const handlerRef = useRef(handler)
+    handlerRef.current = handler
+
+    //前后台监听
+    useEffect(() => {
+        AppState.addEventListener("change", async (handler) => {
+            setHandler(handler)
+        })
+    }, [])
+
+    // 路由生命周期
     useFocusEffect(
         useCallback(() => {
+            //没有网络同步离线消息
+            NetInfo.fetch().then(async state => {
+                setIsConnected(state.isConnected)
+                if (!state.isConnected) {
+                    let listString = await AsyncStorage.getItem('list')
+                    let list = JSON.parse(listString)
+                    setList([...list])
+                }
+            });
+
+            // 加载基本信息
             AsyncStorage.getItem('tokenIn').then(async tokenIn => {
-
-                //没有网络同步离线消息
-                NetInfo.fetch().then(async state => {
-                    if (!state.isConnected) {
-                        setIsConnected(state.isConnected)
-                        let listString = await AsyncStorage.getItem('list')
-                        let list = JSON.parse(listString)
-                        setList([...list])
-                    }
-                });
-
                 let time = Date.parse(new Date()) / 1000
                 if (time < tokenIn) {
                     setLogin(true)
-                    await AsyncStorage.getItem('user').then(storage => {
-                        let user = JSON.parse(storage)
-                        // console.log('用户信息',user)
+                    _User().then(user => {
+                        // console.log('用户信息', user)
                         setUser(user)
                         navigation.setOptions({
                             headerRight: () => <Pressable onPress={() => navigation.navigate('me')}
@@ -65,6 +87,13 @@ export function Index({navigation}) {
 
                         // 接收信息
                         socket.on(user._id, async li => {
+                            // 切换到后台监听信息
+                            console.log('li', handlerRef.current)
+                            if (handlerRef.current == 'background') {
+                                await pushNotifications(li.imType == 1 ? li.user.name : li.imTitle, li.text, li._id)
+                                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
+                                navigation.navigate('index')
+                            }
                             //震动手机
                             await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
                             let arr = listRef.current
@@ -79,8 +108,9 @@ export function Index({navigation}) {
                     })
 
                     // 联系人列表
-                    let listData = await _List()
-                    setList(listData)
+                    setTimeout(async () => {
+                        setList(await _List())
+                    }, 100)
 
                     //获取非好友信道
                     _ListNull().then(cb => {
@@ -99,10 +129,15 @@ export function Index({navigation}) {
                     setLogin(false)
                 }
             })
+
             return async () => {
-                await list_storage(listRef.current)
+                console.log('退出联系人', userRef.current._id, listRef.current.length)
+                //同步离线消息
+                if (isConnectedRef.current) {
+                    await AsyncStorage.setItem('list', JSON.stringify(listRef.current))
+                    await AsyncStorage.setItem('user', JSON.stringify(userRef.current))
+                }
                 socket.off(userRef.current._id)
-                console.log('退出联系人',userRef.current._id)
             };
         }, [])
     );
@@ -128,6 +163,10 @@ export function Index({navigation}) {
 
     if (login) {
         return <View style={[styles.List, bColor(schemes)]}>
+            {/*<Button title={'清楚token'} onPress={async () => {*/}
+            {/*    await AsyncStorage.removeItem('token')*/}
+            {/*    await AsyncStorage.removeItem('tokenIn')*/}
+            {/*}}/>*/}
             {/*选择表情包*/}
             {emoji ? <View style={styles.yan}>
                 <FlatList
@@ -151,6 +190,7 @@ export function Index({navigation}) {
                 />
             </View> : ''}
 
+            {/*网络中断提示*/}
             {isConnected ? '' : <View style={[styles.isConnected]}>
                 <Text style={[styles.T5, styles.bold, {color: '#fff'}]}> 当前没有网络哟！！！</Text>
             </View>}

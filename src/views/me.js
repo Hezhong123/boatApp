@@ -18,7 +18,6 @@ import {memberFun} from "../utils/time";
 import {Audio} from "expo-av";
 import * as Clipboard from "expo-clipboard";
 import {MsgImg, upAvatar} from "../utils/oss";
-import {user_storage} from "../utils/storage";
 
 export function Me({navigation}){
     const schemes = useColorScheme();
@@ -33,11 +32,7 @@ export function Me({navigation}){
 
     //路由生命周期
     navigation.addListener('focus', async () => {
-        await user_storage()
-        await AsyncStorage.getItem('user').then(storage=>{
-            let user = JSON.parse(storage)
-            setUser(user)
-        })
+        setUser(await _User())
         setStore([...await _StoreLi()])
         navigation.setOptions({
             title: "我的",
@@ -227,7 +222,7 @@ export function Me({navigation}){
                 </View>}
             />:<Text style={[styles.T5,styles.bold,{marginTop:5,textAlign: "center"},MstText(schemes)]}> 没有收藏 </Text>}
 
-            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > v-0.0.4 </Text>
+            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > preview-0.0.1 </Text>
         </View>
     )
 }

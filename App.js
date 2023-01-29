@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 
 function App() {
     const schemes = useColorScheme();
-    useNotifications();
+    useNotifications()
     return (
         <NavigationContainer ref={navigationRef}>
             <StatusBar/>
