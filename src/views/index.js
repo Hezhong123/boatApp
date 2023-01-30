@@ -76,7 +76,6 @@ export function Index({navigation}) {
                 if (time < tokenIn) {
                     setLogin(true)
                     _User().then(user => {
-                        // console.log('用户信息', user)
                         setUser(user)
                         navigation.setOptions({
                             headerRight: () => <Pressable onPress={() => navigation.navigate('me')}

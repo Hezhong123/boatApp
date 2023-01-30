@@ -30,8 +30,7 @@
     "expo-asset": "~8.7.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
-    "axios": "^1.2.2"
+    "@babel/core": "^7.12.9"
   },
   "private": true
 }

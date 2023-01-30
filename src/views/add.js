@@ -76,7 +76,7 @@ export function Add({navigation}){
                                     {
                                         text: "ok",
                                         onPress: () => _ListNull().then(list => {
-                                            console.log('非好友信道',list)
+                                            // console.log('非好友信道',list)
                                             setNullList(list)
                                         })    //获取非好友信道
                                     }
@@ -136,11 +136,11 @@ export function Add({navigation}){
                 <TouchableOpacity onPress={()=>Alert.alert("通过好友请求", "", [{
                     text: "取消", onPress: () => console.log("Ask me later pressed")
                 }, {
-                    text: "通过", style: 'cancel', onPress: () => _AddIm(item._id).then(cb => {
-                        _ListNull().then(cb=>{
-                            setNullList([...cb ])
+                    text: "通过", style: 'cancel', onPress: () => _AddIm(item._id).then(cb =>
+                        _ListNull().then(listNull=>{
+                            setNullList(listNull)
                         })
-                    })
+                    )
                 }])}>
                     <Text style={{fontSize:20,marginRight:10}}> ✅ </Text>
                 </TouchableOpacity>
@@ -150,7 +150,9 @@ export function Add({navigation}){
                 }, {
                     text: "删除",
                     style: "destructive",
-                    onPress: () => _DelIm(item._id).then(cd=>{})
+                    onPress: () => _DelIm(item._id).then(cd=>{
+                        console.log('拒绝申请',cd)
+                    })
                 }])}>
                     <Text style={{fontSize:20,marginRight:10}}> 🚫 </Text>
                 </TouchableOpacity>

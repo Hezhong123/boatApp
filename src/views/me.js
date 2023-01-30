@@ -59,7 +59,7 @@ export function Me({navigation}){
         setStore([])
         let arr = store
         _StoreQuery(text).then(cb => {
-            console.log('搜索收藏', cb)
+            // console.log('搜索收藏', cb)
             if(cb.length){
                 setStore(cb)
             }else {
@@ -222,7 +222,7 @@ export function Me({navigation}){
                 </View>}
             />:<Text style={[styles.T5,styles.bold,{marginTop:5,textAlign: "center"},MstText(schemes)]}> 没有收藏 </Text>}
 
-            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > preview-0.0.1 </Text>
+            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > preview-0.0.2 </Text>
         </View>
     )
 }

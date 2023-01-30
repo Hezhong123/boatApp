@@ -82,7 +82,7 @@ export const upAvatar = async (userID) => new Promise(async user => {
             }
         }).then(res => {
             let url = `${oss}/user/${imgName}.png`
-            _Avatar(url).then(cb=>{user(cb)})
+            _Avatar(url).then(cb=>user(cb))
         }, err => {
             console.log('上传头像失败', err)
         })

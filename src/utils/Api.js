@@ -17,344 +17,556 @@ const instance = axios.create({
 
 
 //用户信息
-export const _User = ()=> new Promise(async (user) => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get('/user').then(res => {
-        user(res.data)
-    }, err => {
-        console.log('用户信息', err)
-    })
-})
+export const _User = async () => {
+    return fetch(`${url}/user`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+    }).then((responseJson) => {
+            return responseJson.json()
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
 
 //获取非好友联系人
-export const _ListNull = ()=> new Promise(async list => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get('/list/null').then(res => {
-        list(res.data)
-    }, err => {
-        console.log('获取非好友联系人错误', err)
-    })
-})
+export const _ListNull = async () => {
+    return fetch(`${url}/list/null`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+    }).then((responseJson) => {
+            return responseJson.json()
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
 
 //获取联系人
-export const _List = ()=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get(`list`).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('获取信道错误', err)
-    })
-})
-
+export const _List = async () => {
+    return fetch(`${url}/list`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+    }).then((responseJson) => {
+            return responseJson.json()
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
 
 
 //修改表情包
-export const _Emoji = (item)=> new Promise(async emoji=>{
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.put(`user/emoji/${item}`).then(res => {
-        // console.log('更新未读',res)
-        emoji(res.data)
-    })
-})
+export const _Emoji = async (item) => {
+    return fetch(`${url}/user/emoji/${item}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+    }).then((responseJson) => {
+            return responseJson.json()
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
 
 //修改头像
-export const _Avatar = (url)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.put(`user/avatar`, {'url': url}).then(res => {
-        cb(res.data)
-    })
-})
+export const _Avatar = async (imgUrl) => {
+    return fetch(`${url}/user/avatar`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+            'url': imgUrl
+        })
+    }).then((responseJson) => {
+            return responseJson.json()
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
 
 //修改昵称
-export const _Name =  (name)=> new  Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.put(`user/name/${name}`).then(res => {
-        // console.log('更新未读',res)
-        cb(res.data)
-    })
-})
+export const _Name = async (name) => {
+    return fetch(`${url}/user/name/${name}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+            return responseJson.json()
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
 
 //收藏列表
-export const _StoreLi = ()=> new Promise(async li => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get(`store`).then(res => {
-        // console.log('收藏信息',res)
-        li(res.data)
-    },err=>{
+export const _StoreLi = async () => {
+    return fetch(`${url}/store`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error(error);
+    });
+}
 
-    })
-})
 
 //搜索收藏内容
-export const _StoreQuery = (text) => new Promise(async li => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get(`store/${text}`).then(res => {
-        li(res.data)
-    },err=>{
-        console.log('查询收藏错误', err)
-    })
-})
+export const _StoreQuery = async (text) => {
+    return fetch(`${url}/store/${text}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error(error);
+    });
+}
 
 //删除收藏
-export const _StoreDel  = (id) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.delete(`store/${id}`).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('移除收藏错误', err)
-    })
-})
+export const _StoreDel =  async (id) => {
+    return fetch(`${url}/store/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.text()
+    }).catch((error) => {
+        console.error(error);
+    });
+}
 
-
-//获取图形验证码
-export const _Graphic = (tel) => new Promise(cb=>{
-    instance.get(`user/graphic/${tel}`,).then(res => {
-        cb(res.data)
-    },err=>{
-        console.log('获取图形验证码失败', err)
-    })
-})
 
 //获取短信验证码
-export const _Sms = (tel) => new Promise(cb=>{
-    instance.post(`user/sms`, {
-        tel: tel
-    }).then(res => {
-        cb(res.data)
-    },err=>{
-        console.log('获取短信失败', err)
-    })
-})
+export const _Sms = async (tel) => {
+    return fetch(`${url}/user/sms`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+            tel: tel
+        })
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error(error);
+    });
+}
+
 
 // 短信登陆
-export const _SmsLogin = (tel, sms) => new Promise(cb=>{
-    instance.post(`user/smsLogin`, {
-        sms: sms,
-        tel: tel
-    }).then(async res => {
-        if (res.data == '请核对验证码') {
-            cb(res.data)
-        } else {
-            await AsyncStorage.setItem('token', res.data.token)
-            await AsyncStorage.setItem('tokenIn', String(res.data.expiresIn))
-            cb(res.data)
-        }
-
-    })
-})
+export const _SmsLogin = async (tel, sms) => {
+    return fetch(`${url}/user/smsLogin`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            sms: sms,
+            tel: tel
+        })
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error(error);
+    });
+}
 
 //搜索用户
-export const _Query = async (key) => new Promise(async (cb) => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get(`/user/query?key=${key}`).then(res => {
-        console.log('搜索用户', res.data)
-        cb(res.data)
-    })
-})
+export const _Query = async (key) =>{
+    return fetch(`${url}/user/query?key=${key}`,{
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+    }).then((responseJson)=>{
+        return responseJson.json()
+    }).catch((error) => {
+        console.error(error);
+    });
+}
 
 //添加好友
-export const _AddList =(userId) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post('list/im', {userId: userId}).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('添加失败', err)
-    })
-})
+export const _AddList = async (userId) => {
+    return fetch(`${url}/list/im`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+            userId: userId
+        })
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error(error);
+    });
+}
+
 
 //同意申请
-export const _AddIm =(list) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.put(`list/addIM/${list}`).then(res => {
-        console.log('同意申请', res.data)
-        cb(res.data)
-    }, err => {
-        console.log('通过申请失败', err)
-    })
-})
+export const _AddIm = async (list) => {
+    return fetch(`${url}/list/addIM/${list}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.status
+    }).catch((error) => {
+        console.error(error);
+    });
+}
+
 
 
 //拒绝申请
-export const _DelIm = (list) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.delete(`list/delIM/${list}`).then(res => {
-        console.log('拒绝申请', res.data)
-        cb(res.data)
-    }, err => {
-        console.log('拒绝申请失败', err)
-    })
-})
+export const _DelIm = async (list) => {
+    return fetch(`${url}/list/delIM/${list}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.status
+    }).catch((error) => {
+        console.error('拒绝申请',error);
+    });
+}
 
 //创建群聊
-export const _Ims = (title)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post('list/ims', {title: title}).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('添加失败', err)
+export const _Ims = async (title) => {
+    return fetch(`${url}/list/ims`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+        body:JSON.stringify({
+            title: title
+        })
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('创建群聊', error);
     })
-})
+}
 
-//新到内容
-export const _ListId = (id) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get(`/list/obj/${id}`).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('错误', err)
+
+
+
+//信道内容
+export const _ListId = async (id) => {
+    return fetch(`${url}/list/obj/${id}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('信道内容', error);
     })
-})
+}
+
 
 // 加载对话内容
-export const _Msg= (list,page)=>new Promise(cb=>{
-    instance.get(`list/msg/${list}/${page}`).then(res=>{
-        cb(res.data.reverse())
-    },err=>{
-        console.log('加载对话', err)
+export const _Msg = async (list, page) => {
+    return fetch(`${url}/list/msg/${list}/${page}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('信道内容', error);
     })
-})
+}
 
 //词裂
-export const _Column= (q)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post(`list/column/${q}`).then(enQ => {
-        cb(enQ.data)
+export const _Column = async (q) => {
+    return fetch(`${url}/list/column/${q}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.text()
+    }).catch((error) => {
+        console.error('词裂', error);
     })
-})
+}
 
 //跟读
-export const _Listen = (im,enQ)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post(`list/listen`, {
-        im: im,
-        enQ: enQ
-    }).then(res => {
-        cb(res.data)
+export const _Listen = async (im, enQ) => {
+    return fetch(`${url}/list/listen`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+        body:JSON.stringify({
+            im: im,
+            enQ: enQ
+        })
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('跟读', error);
     })
-})
+}
 
 //开关词裂
-export const _OnColumn =  (boolean)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.put(`user/column/${boolean}`).then(res => {
-        // console.log('开关词裂', res.data)
-        cb(res.data)
+export const _OnColumn = async (boolean) => {
+    return fetch(`${url}/user/column/${boolean}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('开关词裂', error);
     })
-})
+}
 
 //开关跟读
-export const _OnListen = (boolean) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.put(`user/listen/${boolean}`).then(res => {
-        // console.log('开关跟读', boolean, res.data)
-        cb(res.data)
+export const _OnListen = async (boolean) => {
+    return fetch(`${url}/user/listen/${boolean}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('开关跟读', error);
     })
-})
+}
 
 // 跟新时间戳
-export const _ImTime = (list)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post(`list/time/${list}`).then(res => {
-        cb()
-    },err=>{
-        console.log('跟新时间戳错误', err)
+export const _ImTime = async (list) => {
+    return fetch(`${url}/list/time/${list}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.status
+    }).catch((error) => {
+        console.error('跟新时间戳', error);
     })
-})
+}
 
 // 更新未读
-export const _Unread = (list,user) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.put(`list/unread/${list}/${user}`).then(res => {
-        console.log('更新未读', res.data)
-        cb()
-    },err=>{
-        console.log('更新未读', err)
+export const _Unread = async (list, user) => {
+    return fetch(`${url}/list/unread/${list}/${user}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.status
+    }).catch((error) => {
+        console.error('更新未读', error);
     })
-})
+}
 
 //新建收藏
-export const _addStore = (obj)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post(`store`, obj).then(res=>{
-        cb(res.data)
-    },err=>{
-        console.log('收藏失败', err)
+export const _addStore = async (obj) => {
+    return fetch(`${url}/store`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+        body:JSON.stringify(obj)
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('新建收藏', error);
     })
-})
+}
 
 // 退出群聊
-export const _QuitIms =(list,id)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post(`/list/quitIms/${list}/${id}`).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('最近联系人', err)
+export const _QuitIms = async (list, id) => {
+    return fetch(`${url}/list/quitIms/${list}/${id}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.status
+    }).catch((error) => {
+        console.error('退出群聊', error);
     })
-})
+}
 
 
 // 修改群名称
-export const _NameIms =(list,name)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.put(`/list/nameIms/${list}`,{name:name}).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('最近联系人', err)
+export const _NameIms = async (list, name) => {
+    return fetch(`${url}/list/nameIms/${list}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+        body:JSON.stringify({name: name})
+    }).then((responseJson) => {
+        return responseJson.status
+    }).catch((error) => {
+        console.error('修改群名称', error);
     })
-})
+}
+
 
 //解散群
-export const _OutIms = (list) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.delete(`/list/outIms/${list}`).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('最近联系人', err)
-    })
-})
+export const _OutIms = async (list) => {
+    return fetch(`${url}/list/outIms/${list}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.status
+    }).catch((error) => {
+        console.error('解散群',error);
+    });
+}
 
 
 // 最近联系人
-export const _Contact = ()=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post('/list/contact').then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('最近联系人', err)
+export const _Contact = async () => {
+    return fetch(`${url}/list/contact`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('最近联系人', error);
     })
-})
+}
 
-//搜索用户
-export const _Quser = (key) => new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get(`/user/query?key=${key}`).then(res => {
-        console.log('搜索用户', res.data)
-        cb(res.data)
-    })
-})
 
 //加入群聊
-export const _AddIms = async (list,id,)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post(`/list/addIms/${list}/${id}`).then(res => {
-        cb(res.data)
-    }, err => {
-        console.log('最近联系人', err)
+export const _AddIms = async (list, id,) => {
+    return fetch(`${url}/list/addIms/${list}/${id}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('加入群聊', error);
     })
-})
+}
 
 // 激活码使用记录
-export const _Activation =  ()=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.get(`activation`).then(res => {
-        cb(res.data)
+export const _Activation = async () => {
+    return fetch(`${url}/activation`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('加入群聊', error);
     })
-})
+}
 
 //使用激活码
-export const _Ticket =  (Ma)=> new Promise(async cb => {
-    instance.defaults.headers['authorization'] = `Bearer ${await AsyncStorage.getItem('token')}`;
-    instance.post(`activation/ticket`, {'ticketMa': Ma}).then(res => {
-        cb(res.data)
+export const _Ticket = async (Ma) => {
+    return fetch(`${url}/activation/ticket`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        }
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('加入群聊', error);
     })
-})
+}
+

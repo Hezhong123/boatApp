@@ -2,6 +2,8 @@ import {Alert, Text, TextInput, TouchableOpacity, useColorScheme, View} from "re
 import {BbC, bColor, fColor, inputBorderColor, styles} from "../css";
 import {useRef, useState} from "react";
 import {_Sms, _SmsLogin} from "../utils/Api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export function Login({navigation}) {
     const schemes = useColorScheme();
 
@@ -54,47 +56,53 @@ export function Login({navigation}) {
                     onSubmitEditing={({nativeEvent: {text, eventCount, target}}) => {
                         let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
                         if (myreg.test(text)) {
-                            mFun()      //计时器起
-                            setCodeBoolean(true)
-
+                            _Sms(text).then(r => {
+                                console.log('短信', r)
+                                mFun()      //计时器起
+                                setCodeBoolean(true)
+                            })
                         } else {
                             Alert.alert('号码错误', '输入的电话格式不对')
                         }
                     }}
-                    onChangeText={text => setTel(text)}/>
+                    onChangeText={text => setTel(text)}></TextInput>
             </View>
 
-            {codeBoolean?<View style={{width: '40%', marginTop: 20}}>
-                <Text style={[styles.T5, fColor(schemes), styles.bold, {opacity: 0.9}]}><Text style={styles.LoginRed}>* </Text>输入短信验证码</Text>
-                <TextInput style={[fColor(schemes), styles.LoginInputs, inputBorderColor(schemes), styles.T5, {marginBottom: 6}]}
-                           keyboardType={'numeric'}
-                           value={code}
-                           onChangeText={(text)=>setCode(text)}/>
+            {codeBoolean ? <View style={{width: '40%', marginTop: 20}}>
+                <Text style={[styles.T5, fColor(schemes), styles.bold, {opacity: 0.9}]}><Text
+                    style={styles.LoginRed}>* </Text>输入短信验证码</Text>
+                <TextInput
+                    style={[fColor(schemes), styles.LoginInputs, inputBorderColor(schemes), styles.T5, {marginBottom: 6}]}
+                    keyboardType={'numeric'}
+                    value={code}
+                    onChangeText={(text) => setCode(text)}/>
 
                 <View>
-                    {m?<Text style={[styles.T6, fColor(schemes), styles.bold,styles.LoginYe]}>{m}秒</Text>:
-                        <TouchableOpacity onPress={() =>{
+                    {m ? <Text style={[styles.T6, fColor(schemes), styles.bold, styles.LoginYe]}>{m}秒</Text> :
+                        <TouchableOpacity onPress={() => {
                             setCodeBoolean(true)
                             mFun()
                         }}>
                             <Text style={[styles.T6, fColor(schemes), styles.bold]}>重新获取 </Text>
                         </TouchableOpacity>}
                 </View>
-            </View>:''}
+            </View> : ''}
 
             {/*短信登陆*/}
-            {codeBoolean?<TouchableOpacity onPress={() => {
-                _SmsLogin(tel,code).then( cb=> {
+            {codeBoolean ? <TouchableOpacity onPress={() => {
+                _SmsLogin(tel, code).then(async cb => {
                     console.log('登陆信息', cb)
                     if (cb == '请核对验证码') {
                         Alert.alert(cb)
                     } else {
+                        await AsyncStorage.setItem('token', cb.token)
+                        await AsyncStorage.setItem('tokenIn', String(cb.expiresIn))
                         navigation.navigate('index')
                     }
                 })
             }}>
-                <Text style={styles.loginBtn}>登  陆</Text>
-            </TouchableOpacity>:''}
+                <Text style={styles.loginBtn}>登 陆</Text>
+            </TouchableOpacity> : ''}
 
 
         </View>

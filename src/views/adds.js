@@ -9,14 +9,14 @@ import {
     _ListId,
     _ListNull,
     _NameIms,
-    _OutIms,
+    _OutIms, _Query,
     _QuitIms,
     _Quser,
     _User
 } from "../utils/Api";
 import {Portrait} from "../components/Portrait";
 
-export function Adds({route,navigation}){
+export function Adds({route, navigation}) {
     const schemes = useColorScheme();
     const {list} = route.params;
 
@@ -30,45 +30,47 @@ export function Adds({route,navigation}){
 
 
     useFocusEffect(
-        useCallback(()=>{
+        useCallback(() => {
             //用户信息
             _User().then(user => setUser(user))
             //权限
-            _ListId(list).then(cb=>{
+            _ListId(list).then(cb => {
                 setUsers(cb.userArr)
                 setImUser(cb.user)
                 setTitle(cb.imTitle)
                 if (cb.user == userRef.current._id) {
                     navigation.setOptions({
                         title: "管理",
-                        headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold, styles.red]} onPress={
-                            () => Alert.alert('解散群会话', '', [
-                                {
-                                    text: '确定',
-                                    onPress: () => _OutIms(list).then(cb => {
-                                        navigation.navigate('index')
-                                    })
-                                },
+                        headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold, styles.red]}
+                                                 onPress={
+                                                     () => Alert.alert('解散群会话', '', [
+                                                         {
+                                                             text: '确定',
+                                                             onPress: () => _OutIms(list).then(cb => {
+                                                                 navigation.navigate('index')
+                                                             })
+                                                         },
 
-                                {
-                                    text: '取消'
-                                }
-                            ])
-                        }>解散</Text>
+                                                         {
+                                                             text: '取消'
+                                                         }
+                                                     ])
+                                                 }>解散</Text>
                     })
                 } else {
                     navigation.setOptions({
                         title: "退出",
-                        headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold, styles.red]} onPress={
-                            () => Alert.alert('退出群聊', '', [
-                                {
-                                    text: '退出',
-                                    onPress: () => _QuitIms(list, userRef.current._id).then(cb=>navigation.navigate('index'))
-                                },
-                                {
-                                    text: '取消'
-                                }
-                            ])}>退出</Text>
+                        headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold, styles.red]}
+                                                 onPress={
+                                                     () => Alert.alert('退出群聊', '', [
+                                                         {
+                                                             text: '退出',
+                                                             onPress: () => _QuitIms(list, userRef.current._id).then(cb => navigation.navigate('index'))
+                                                         },
+                                                         {
+                                                             text: '取消'
+                                                         }
+                                                     ])}>退出</Text>
                     })
                 }
             })
@@ -80,7 +82,7 @@ export function Adds({route,navigation}){
             })
 
 
-        },[]))
+        }, []))
 
     //最近联系人更新
     const upUsers = (users, user) => {
@@ -100,14 +102,15 @@ export function Adds({route,navigation}){
                 <View style={styles.addInouts}>
                     <TextInput defaultValue={title}
                                placeholderTextColor={placeholderColor(schemes)}
-                               returnKeyType={"done"} style={[styles.addInput, MsgColor(schemes), MstText(schemes), styles.T5]}
+                               returnKeyType={"done"}
+                               style={[styles.addInput, MsgColor(schemes), MstText(schemes), styles.T5]}
                                onSubmitEditing={({nativeEvent: {text, eventCount, target}}) => Alert.alert(
                                    '修改群名称', '将群名称修改为:' + text,
                                    [
                                        {
                                            'text': '确定',
-                                           onPress:()=>_NameIms(list,text).then(cb=>{
-                                              Alert.alert('修改成功')
+                                           onPress: () => _NameIms(list, text).then(cb => {
+                                               Alert.alert('修改成功')
                                            })
                                        },
                                        {
@@ -179,16 +182,16 @@ export function Adds({route,navigation}){
                     <TextInput placeholder={'可通过id、昵称、电话查找朋友'}
                                placeholderTextColor={placeholderColor(schemes)}
                                returnKeyType={"search"}
-                               style={[styles.addInput,fColor(schemes), MsgColor(schemes), MstText(schemes), styles.T5]}
+                               style={[styles.addInput, fColor(schemes), MsgColor(schemes), MstText(schemes), styles.T5]}
                                onSubmitEditing={async ({
                                                            nativeEvent: {
                                                                text,
                                                                eventCount,
                                                                target
                                                            }
-                                                       }) => await _Quser(text).then(cb => {
+                                                       }) => await _Query(text).then(cb => {
                                    if (cb.length) {
-                                       console.log('搜索内容',cb)
+                                       console.log('搜索内容', cb)
                                        setNews(cb)
                                    } else {
                                        Alert.alert('搜索结果', '没找到你的朋友、')
@@ -205,8 +208,8 @@ export function Adds({route,navigation}){
                                 text: '取消',
                             }, {
                                 text: '添加',
-                                onPress: () => _AddIms(list, item._id).then(cb=>{
-                                    _ListId(list).then(cb=>setUsers(cb.userArr))
+                                onPress: () => _AddIms(list, item._id).then(cb => {
+                                    _ListId(list).then(cb => setUsers(cb.userArr))
                                 })
                             }
                         ])}
@@ -215,7 +218,10 @@ export function Adds({route,navigation}){
                             <Portrait w={30} h={30} r={5} t={item.emoji} url={item.avatar}/>
                             <View style={[styles.ListLi]}>
                                 <Text style={[styles.T6, fColor(schemes), styles.bold]}>{item.name}</Text>
-                                <Text style={[styles.T6, fColor(schemes), styles.bold, {opacity: 0.8, marginTop: 3,}]}>🆔{item.id}</Text>
+                                <Text style={[styles.T6, fColor(schemes), styles.bold, {
+                                    opacity: 0.8,
+                                    marginTop: 3,
+                                }]}>🆔{item.id}</Text>
                             </View>
                             <Text style={[styles.T2, fColor(schemes), styles.bold, {marginRight: 16}]}>✅</Text>
                         </View>}
