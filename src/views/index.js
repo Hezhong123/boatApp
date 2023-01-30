@@ -127,17 +127,21 @@ export function Index({navigation}) {
                     let list = JSON.parse(listString)
                     console.log(list)
                     setList([...list])
+                    setUser({})
                 }
             });
 
             return async () => {
                 console.log('退出联系人', userRef.current._id, listRef.current.length)
-                //同步离线消息
-                if (isConnectedRef.current) {
-                    await AsyncStorage.setItem('list', JSON.stringify(listRef.current))
-                    await AsyncStorage.setItem('user', JSON.stringify(userRef.current))
+                if(isConnectedRef.current){
+                    //同步离线消息
+                    if (isConnectedRef.current) {
+                        await AsyncStorage.setItem('list', JSON.stringify(listRef.current))
+                        await AsyncStorage.setItem('user', JSON.stringify(userRef.current))
+                    }
+                    socket.off(userRef.current._id)
                 }
-                socket.off(userRef.current._id)
+
             };
         }, [])
     );

@@ -4,6 +4,7 @@ import {_AddIm, _AddList, _DelIm, _Ims, _ListNull, _Query, _User} from "../utils
 import {useCallback, useRef, useState} from "react";
 import {Portrait} from "../components/Portrait";
 import {useFocusEffect} from "@react-navigation/native";
+import NetInfo from "@react-native-community/netinfo";
 
 export function Add({navigation}){
     const schemes = useColorScheme();
@@ -18,24 +19,27 @@ export function Add({navigation}){
     //路由生命周期
     useFocusEffect(
         useCallback( () => {
-            _User().then(user => setUser(user))
-            _ListNull().then(cb=> setNullList([...cb ]))
+            NetInfo.fetch().then(state =>{
+                if(state.isConnected){
+                    _User().then(user => setUser(user))
+                    _ListNull().then(cb=> setNullList([...cb ]))
 
-            navigation.setOptions({
-                title: "新的对话",
-                headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold,]}
-                                         onPress={() => Alert.alert('创建群聊', '创建后，点击管理就能添加好友、', [
-                                             {
-                                                 text: '取消'
-                                             },
-                                             {
-                                                 text: "创建",
-                                                 onPress: () => _Ims(userRef.current.name + '的群聊').then(cb => {
-                                                     navigation.navigate('im', {list: cb._id})
-                                                 })
-                                             }])}>➕群聊</Text>
+                    navigation.setOptions({
+                        title: "新的对话",
+                        headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold,]}
+                                                 onPress={() => Alert.alert('创建群聊', '创建后，点击管理就能添加好友、', [
+                                                     {
+                                                         text: '取消'
+                                                     },
+                                                     {
+                                                         text: "创建",
+                                                         onPress: () => _Ims(userRef.current.name + '的群聊').then(cb => {
+                                                             navigation.navigate('im', {list: cb._id})
+                                                         })
+                                                     }])}>➕群聊</Text>
+                    })
+                }
             })
-
         },[])
     )
 

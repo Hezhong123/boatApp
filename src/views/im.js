@@ -212,11 +212,11 @@ export function Im({route, navigation}) {
             });
 
             return async () => {
-                await _Unread(list, userRef.current._id) //清除未读
-                await _ImTime(list) // 更新时间戳
-                socket.off(list)// 断开链接
                 console.log('断开IM',list)
                 if(isConnectedRef.current){    //同步离线消息
+                    await _Unread(list, userRef.current._id) //清除未读
+                    await _ImTime(list) // 更新时间戳
+                    socket.off(list)// 断开链接
                     let storage = {
                         title:imTitleRef.current,
                         msgArr:msgRef.current
