@@ -1,12 +1,11 @@
 import * as ImagePicker from "expo-image-picker";
-import axios from "axios";
 import {useEffect, useState} from "react";
 import {ActivityIndicator, Image, Text, TouchableOpacity, useWindowDimensions, View} from "react-native";
 import {_Avatar, _DelIm, _ListNull, oss} from "./Api";
 
 
 export const OssImage = (props) => {
-    const {userID,cb} = props
+    const {userID, cb} = props
     const [load, setLoad] = useState(false)     //加载动画、
 
     const upImg = async () => {
@@ -17,7 +16,7 @@ export const OssImage = (props) => {
             quality: 0.5,
         });
 
-        if(result.assets){
+        if (result.assets) {
             const formData = new FormData()
             let data = {
                 uri: result.assets[0].uri,
@@ -29,31 +28,25 @@ export const OssImage = (props) => {
             formData.append('policy', 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0wMVQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==')
             formData.append('success_action_status', 201)
             formData.append('file', data)
-            axios.post(oss, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(res => {
-                // console.log('上传图片', res.data)
+            fetch(oss, {
+                method: 'POST',
+                body: formData
+            }).then((responseJson) => {
+                setLoad(false)
                 cb(`${oss}/img/${imgName}.png`)
-                setLoad(false)
-            }, err => {
-                console.log('上传图片失败', err)
-                setLoad(false)
-            })
-        }else {
+            }).catch((error) => {
+                    console.error('上传图片', error);
+                });
+        } else {
             setLoad(false)
         }
     }
-
     return <View>
-        {load?<ActivityIndicator/>:<TouchableOpacity onPress={()=>upImg()}>
-            <Text style={{fontSize:20,marginRight:10}}>📷️</Text>
+        {load ? <ActivityIndicator/> : <TouchableOpacity onPress={() => upImg()}>
+            <Text style={{fontSize: 20, marginRight: 10}}>📷️</Text>
         </TouchableOpacity>}
     </View>
-
 }
-
 
 //更新头像
 export const upAvatar = async (userID) => new Promise(async user => {
@@ -76,16 +69,16 @@ export const upAvatar = async (userID) => new Promise(async user => {
         formData.append('policy', 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0wMVQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==')
         formData.append('success_action_status', 201)
         formData.append('file', data)
-        axios.post(oss, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then(res => {
+
+        fetch(oss, {
+            method: 'POST',
+            body: formData
+        }).then((responseJson) => {
             let url = `${oss}/user/${imgName}.png`
-            _Avatar(url).then(cb=>user(cb))
-        }, err => {
-            console.log('上传头像失败', err)
-        })
+            _Avatar(url).then(cb => user(cb))
+        }).catch((error) => {
+            console.error('上传头像失败', error);
+        });
     }
 })
 

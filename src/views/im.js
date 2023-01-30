@@ -134,83 +134,82 @@ export function Im({route, navigation}) {
             //没有网络同步离线消息
             NetInfo.fetch().then(async state => {
                 setIsConnected(state.isConnected)
-                if (!state.isConnected) {
+                if (state.isConnected) {
+                    _User().then(user => {
+                        setUser(user)       //用户信息
+                        //服务到期自动关停
+                        if(!memberBoolean(user.member)){
+                            _OnColumn(false).then(user => setUser(user))
+                            _OnListen(false).then(user =>setUser(user))
+                        }
+                        // 接收会话信息
+                        socket.on(list, async (im) => {
+                            let arr = msgRef.current
+                            if (im.tIm == 5) {
+                                arr.map((item, index) => {
+                                    if (im.q == item._id) {
+                                        arr.splice(index, 1)
+                                    }
+                                })
+                                setMsgArr([...arr])
+                                return
+                            }
+
+                            arr.push(im)
+                            setMsgArr([...arr])
+                            setTimeout(() => _ref.current.scrollToEnd({animated: true}),im.tIm==2?500:100)
+                            //跟读信号
+                            // console.log('跟读', im)
+                            if(memberBoolean(user.member)&&im.url != 'null'){
+                                setOnIm(arr.length - 1)
+                                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+                                await playSound(im.url)
+                            }
+                        });
+
+                        //信道信息
+                        _ListId(list).then(cb => {
+                            // console.log('信道', cb)
+                            if (cb.imTitle) {
+                                setImTitle(cb.imTitle + `(${cb.userArr.length})`)
+                                navigation.setOptions({
+                                    title: cb.imTitle + `(${cb.userArr.length})`,
+                                    headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold,]}
+                                                             onPress={() => navigation.navigate('adds', {'list': list})}
+                                    >管理</Text>
+                                })
+                                let arr = []
+                                cb.userArr.map(item => arr.push(item._id))
+                                setTo(arr)      //群发对象
+                            } else {
+                                if (cb.userArr[0]._id == user._id) {
+                                    setImTitle(cb.userArr[1].name)
+                                    navigation.setOptions({title: cb.userArr[1].name})
+                                    setTo([cb.userArr[1]._id])
+                                } else {
+                                    setImTitle(cb.userArr[0].name)
+                                    navigation.setOptions({title: cb.userArr[0].name})
+                                    setTo([cb.userArr[0]._id])
+                                }
+                            }
+                        })
+
+                        // 加载对话内容
+                        _Msg(list, page).then(cd => {
+                            console.log('滚动对话、、', cd.length)
+                            setMsgArr(cd)
+                            cd.length ? setTimeout(() => _ref.current.scrollToEnd({animated: true}), 200) : ''
+                        })
+                    })
+                }else {
+                    let user = await AsyncStorage.getItem('user')
+                    setUser(JSON.parse(user))
                     let imString = await AsyncStorage.getItem(list)
                     let im = JSON.parse(imString)
                     setMsgArr(im.msgArr)
-                    let user = await AsyncStorage.getItem('user')
-                    setUser(JSON.parse(user))
                     navigation.setOptions({title: im.title})
                 }
             });
-
-           _User().then(user => {
-                setUser(user)       //用户信息
-                //服务到期自动关停
-                if(!memberBoolean(user.member)){
-                    _OnColumn(false).then(user => setUser(user))
-                    _OnListen(false).then(user =>setUser(user))
-                }
-                // 接收会话信息
-                socket.on(list, async (im) => {
-                    let arr = msgRef.current
-                    if (im.tIm == 5) {
-                        arr.map((item, index) => {
-                            if (im.q == item._id) {
-                                arr.splice(index, 1)
-                            }
-                        })
-                        setMsgArr([...arr])
-                        return
-                    }
-
-                    arr.push(im)
-                    setMsgArr([...arr])
-                    setTimeout(() => _ref.current.scrollToEnd({animated: true}),im.tIm==2?500:100)
-                    //跟读信号
-                    // console.log('跟读', im)
-                    if(memberBoolean(user.member)&&im.url != 'null'){
-                        setOnIm(arr.length - 1)
-                        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-                        await playSound(im.url)
-                    }
-                });
-
-                //信道信息
-                _ListId(list).then(cb => {
-                    // console.log('信道', cb)
-                    if (cb.imTitle) {
-                        setImTitle(cb.imTitle + `(${cb.userArr.length})`)
-                        navigation.setOptions({
-                            title: cb.imTitle + `(${cb.userArr.length})`,
-                            headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold,]}
-                                                     onPress={() => navigation.navigate('adds', {'list': list})}
-                            >管理</Text>
-                        })
-                        let arr = []
-                        cb.userArr.map(item => arr.push(item._id))
-                        setTo(arr)      //群发对象
-                    } else {
-                        if (cb.userArr[0]._id == user._id) {
-                            setImTitle(cb.userArr[1].name)
-                            navigation.setOptions({title: cb.userArr[1].name})
-                            setTo([cb.userArr[1]._id])
-                        } else {
-                            setImTitle(cb.userArr[0].name)
-                            navigation.setOptions({title: cb.userArr[0].name})
-                            setTo([cb.userArr[0]._id])
-                        }
-                    }
-                })
-
-                // 加载对话内容
-                _Msg(list, page).then(cd => {
-                    console.log('滚动对话、、', cd.length)
-                    setMsgArr(cd)
-                    cd.length ? setTimeout(() => _ref.current.scrollToEnd({animated: true}), 200) : ''
-                })
-            })
-
 
             return async () => {
                 await _Unread(list, userRef.current._id) //清除未读

@@ -29,7 +29,7 @@ export const _User = async () => {
             return responseJson.json()
         })
         .catch((error) => {
-            console.error(error);
+            console.error('用户信息',error);
         });
 }
 
@@ -46,7 +46,7 @@ export const _ListNull = async () => {
             return responseJson.json()
         })
         .catch((error) => {
-            console.error(error);
+            console.error('获取非好友联系人',error);
         });
 }
 
@@ -64,7 +64,7 @@ export const _List = async () => {
             return responseJson.json()
         })
         .catch((error) => {
-            console.error(error);
+            console.error('获取联系人',error);
         });
 }
 

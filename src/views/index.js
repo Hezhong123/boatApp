@@ -63,71 +63,72 @@ export function Index({navigation}) {
             //没有网络同步离线消息
             NetInfo.fetch().then(async state => {
                 setIsConnected(state.isConnected)
-                if (!state.isConnected) {
+                if (state.isConnected) {
+                    // 加载基本信息
+                    AsyncStorage.getItem('tokenIn').then(async tokenIn => {
+                        let time = Date.parse(new Date()) / 1000
+                        if (time < tokenIn) {
+                            setLogin(true)
+                            _User().then(user => {
+                                setUser(user)
+                                navigation.setOptions({
+                                    headerRight: () => <Pressable onPress={() => navigation.navigate('me')}
+                                                                  onLongPress={() => setEmoji(true)}>
+                                        <Text style={{fontSize: 23}}>{user.emoji}</Text>
+                                    </Pressable>,
+                                })
+
+                                // 接收信息
+                                socket.on(user._id, async li => {
+                                    // 切换到后台监听信息
+                                    console.log('li', handlerRef.current)
+                                    if (handlerRef.current == 'background') {
+                                        await pushNotifications(li.imType == 1 ? li.user.name : li.imTitle, li.text, li._id)
+                                        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
+                                        navigation.navigate('index')
+                                    }
+                                    //震动手机
+                                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+                                    let arr = listRef.current
+                                    arr.map((item, index) => {
+                                        if (item._id == li._id) {
+                                            arr.splice(index, 1)
+                                            arr.unshift(li)
+                                        }
+                                    })
+                                    setList([...arr])
+                                })
+                            })
+
+                            // 联系人列表
+                            setTimeout(async () => {
+                                setList(await _List())
+                            }, 100)
+
+                            //获取非好友信道
+                            _ListNull().then(cb => {
+                                let lists = cb.length
+                                // console.log('获取非好友信道', cb.length)
+                                navigation.setOptions({
+                                    headerLeft: () => <TouchableOpacity style={styles.listTitle}
+                                                                        onPress={() => navigation.navigate('add')}>
+                                        <Text style={styles.listTitleT1}>📬</Text>
+                                        {lists ? <Text style={styles.listTitleT2}>{lists}</Text> : ''}
+                                    </TouchableOpacity>
+                                })
+                            })
+
+                        } else {
+                            setLogin(false)
+                        }
+                    })
+                }else {
                     let listString = await AsyncStorage.getItem('list')
                     let list = JSON.parse(listString)
+                    console.log(list)
                     setList([...list])
                 }
             });
-
-            // 加载基本信息
-            AsyncStorage.getItem('tokenIn').then(async tokenIn => {
-                let time = Date.parse(new Date()) / 1000
-                if (time < tokenIn) {
-                    setLogin(true)
-                    _User().then(user => {
-                        setUser(user)
-                        navigation.setOptions({
-                            headerRight: () => <Pressable onPress={() => navigation.navigate('me')}
-                                                          onLongPress={() => setEmoji(true)}>
-                                <Text style={{fontSize: 23}}>{user.emoji}</Text>
-                            </Pressable>,
-                        })
-
-                        // 接收信息
-                        socket.on(user._id, async li => {
-                            // 切换到后台监听信息
-                            console.log('li', handlerRef.current)
-                            if (handlerRef.current == 'background') {
-                                await pushNotifications(li.imType == 1 ? li.user.name : li.imTitle, li.text, li._id)
-                                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
-                                navigation.navigate('index')
-                            }
-                            //震动手机
-                            await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-                            let arr = listRef.current
-                            arr.map((item, index) => {
-                                if (item._id == li._id) {
-                                    arr.splice(index, 1)
-                                    arr.unshift(li)
-                                }
-                            })
-                            setList([...arr])
-                        })
-                    })
-
-                    // 联系人列表
-                    setTimeout(async () => {
-                        setList(await _List())
-                    }, 100)
-
-                    //获取非好友信道
-                    _ListNull().then(cb => {
-                        let lists = cb.length
-                        // console.log('获取非好友信道', cb.length)
-                        navigation.setOptions({
-                            headerLeft: () => <TouchableOpacity style={styles.listTitle}
-                                                                onPress={() => navigation.navigate('add')}>
-                                <Text style={styles.listTitleT1}>📬</Text>
-                                {lists ? <Text style={styles.listTitleT2}>{lists}</Text> : ''}
-                            </TouchableOpacity>
-                        })
-                    })
-
-                } else {
-                    setLogin(false)
-                }
-            })
 
             return async () => {
                 console.log('退出联系人', userRef.current._id, listRef.current.length)

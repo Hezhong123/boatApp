@@ -221,8 +221,7 @@ export function Me({navigation}){
                              storeUp={async () => setStore([...await _StoreLi()])}/>
                 </View>}
             />:<Text style={[styles.T5,styles.bold,{marginTop:5,textAlign: "center"},MstText(schemes)]}> 没有收藏 </Text>}
-
-            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > preview-0.0.2 </Text>
+            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > preview-0.0.3 </Text>
         </View>
     )
 }
