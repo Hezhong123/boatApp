@@ -197,7 +197,7 @@ export function Im({route, navigation}) {
                         // 加载对话内容
                         _Msg(list, page).then(cd => {
                             console.log('滚动对话、、', cd.length)
-                            setMsgArr(cd)
+                            setMsgArr(cd.reverse())
                             cd.length ? setTimeout(() => _ref.current.scrollToEnd({animated: true}), 200) : ''
                         })
                     })
