@@ -1,4 +1,3 @@
-import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // export const url = 'http://192.168.2.187:3000'
@@ -7,13 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const url = "https://www.boatim.top"
 export const wss = "wss://www.boatim.top"
 export const oss = 'https://boatim.oss-cn-shanghai.aliyuncs.com'
-const instance = axios.create({
-    baseURL: url,
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-});
 
 
 //用户信息

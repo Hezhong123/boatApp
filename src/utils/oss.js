@@ -15,8 +15,9 @@ export const OssImage = (props) => {
             mediaTypes: "Images",
             quality: 0.5,
         });
-
+        console.log('选择图片',result)
         if (result.assets) {
+            console.log('图片选择',result)
             const formData = new FormData()
             let data = {
                 uri: result.assets[0].uri,
@@ -69,7 +70,6 @@ export const upAvatar = async (userID) => new Promise(async user => {
         formData.append('policy', 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0wMVQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==')
         formData.append('success_action_status', 201)
         formData.append('file', data)
-
         fetch(oss, {
             method: 'POST',
             body: formData

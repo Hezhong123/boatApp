@@ -2,8 +2,7 @@ import {Audio} from 'expo-av';
 import {useEffect, useRef, useState} from "react";
 import {ActivityIndicator, Button, Pressable, Text, View} from "react-native";
 import {styles} from "../css";
-import axios from "axios";
-import {oss} from "./Api";
+import {_Avatar, oss} from "./Api";
 
 
 export const Record = (props) => {
@@ -54,18 +53,28 @@ export const Record = (props) => {
             formData.append('file', data)
             setLoad(true)
 
-            await axios.post(oss, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(res => {
-                console.log('上传语音', res.data)
+            fetch(oss, {
+                method: 'POST',
+                body: formData
+            }).then((responseJson) => {
                 setLoad(false)
                 cb(`https://boatim.oss-cn-shanghai.aliyuncs.com/m4a/${audioName}.m4a`)
-            }, err => {
-                setLoad(false)
-                console.log('上传语音失败', err)
-            })
+            }).catch((error) => {
+                console.error('上传头像失败', error);
+            });
+
+            // await axios.post(oss, formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            // }).then(res => {
+            //     console.log('上传语音', res.data)
+            //     setLoad(false)
+            //     cb(`https://boatim.oss-cn-shanghai.aliyuncs.com/m4a/${audioName}.m4a`)
+            // }, err => {
+            //     setLoad(false)
+            //     console.log('上传语音失败', err)
+            // })
         }else {
             stop('null')
         }

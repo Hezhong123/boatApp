@@ -117,7 +117,6 @@ export function Index({navigation}) {
                                     </TouchableOpacity>
                                 })
                             })
-
                         } else {
                             setLogin(false)
                         }

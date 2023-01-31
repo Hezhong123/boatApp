@@ -1,4 +1,3 @@
-// 会话
 import {
     Alert, AppState,
     FlatList,
@@ -30,10 +29,13 @@ import {MsgImg, OssImage} from "../utils/oss";
 import {memberBoolean, timeIm} from "../utils/time";
 import * as Haptics from "expo-haptics";
 import {Record} from "../utils/record";
-import { Audio } from 'expo-av';
+import {Audio} from 'expo-av';
 import {Portrait} from "../components/Portrait";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
+import {Asset} from "expo-asset";
+import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
 
 const socket = io(wss)
 
@@ -57,12 +59,12 @@ export function Im({route, navigation}) {
     const msgRef = useRef(msgArr)
     msgRef.current = msgArr
 
-    const [imTitle,setImTitle] = useState('')   //对话标题
+    const [imTitle, setImTitle] = useState('')   //对话标题
     const imTitleRef = useRef(imTitle)
     imTitleRef.current = imTitle
     const [isConnected, setIsConnected] = useState(true)  //离线状态
     const isConnectedRef = useRef(isConnected)
-    isConnectedRef.current  = isConnected
+    isConnectedRef.current = isConnected
 
     const _ref = useRef(null)           //ScrollView 控制器
 
@@ -138,9 +140,9 @@ export function Im({route, navigation}) {
                     _User().then(user => {
                         setUser(user)       //用户信息
                         //服务到期自动关停
-                        if(!memberBoolean(user.member)){
+                        if (!memberBoolean(user.member)) {
                             _OnColumn(false).then(user => setUser(user))
-                            _OnListen(false).then(user =>setUser(user))
+                            _OnListen(false).then(user => setUser(user))
                         }
                         // 接收会话信息
                         socket.on(list, async (im) => {
@@ -157,10 +159,10 @@ export function Im({route, navigation}) {
 
                             arr.push(im)
                             setMsgArr([...arr])
-                            setTimeout(() => _ref.current.scrollToEnd({animated: true}),im.tIm==2?500:100)
+                            setTimeout(() => _ref.current.scrollToEnd({animated: true}), im.tIm == 2 ? 500 : 100)
                             //跟读信号
                             // console.log('跟读', im)
-                            if(memberBoolean(user.member)&&im.url != 'null'){
+                            if (memberBoolean(user.member) && im.url != 'null') {
                                 setOnIm(arr.length - 1)
                                 await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
                                 await playSound(im.url)
@@ -201,7 +203,7 @@ export function Im({route, navigation}) {
                             cd.length ? setTimeout(() => _ref.current.scrollToEnd({animated: true}), 200) : ''
                         })
                     })
-                }else {
+                } else {
                     let user = await AsyncStorage.getItem('user')
                     setUser(JSON.parse(user))
                     let imString = await AsyncStorage.getItem(list)
@@ -212,16 +214,16 @@ export function Im({route, navigation}) {
             });
 
             return async () => {
-                console.log('断开IM',list)
-                if(isConnectedRef.current){    //同步离线消息
+                console.log('断开IM', list)
+                if (isConnectedRef.current) {    //同步离线消息
                     await _Unread(list, userRef.current._id) //清除未读
                     await _ImTime(list) // 更新时间戳
                     socket.off(list)// 断开链接
                     let storage = {
-                        title:imTitleRef.current,
-                        msgArr:msgRef.current
+                        title: imTitleRef.current,
+                        msgArr: msgRef.current
                     }
-                    console.log('同步Im离线消息',list)
+                    console.log('同步Im离线消息', list)
                     await AsyncStorage.setItem(list, JSON.stringify(storage))
                 }
             }
@@ -243,12 +245,16 @@ export function Im({route, navigation}) {
     return (
         <View style={[styles.Im, bColor(schemes)]}>
             {/*录音推送*/}
-            {audioLoad ? <View style={[styles.audioModel, {height: input.length ? window.height : window.height - 300}]}>
-                <View style={[styles.audioBody]}>
-                    <Text style={[styles.T1, {fontWeight: '600', color: "#fff"}]}>{seconds} "</Text>
-                    <Text style={[styles.T5, styles.bold, styles.Send, {marginTop: 5, color: "#fff"}]}>松手即可发送</Text>
-                </View>
-            </View> : ''}
+            {audioLoad ?
+                <View style={[styles.audioModel, {height: input.length ? window.height : window.height - 300}]}>
+                    <View style={[styles.audioBody]}>
+                        <Text style={[styles.T1, {fontWeight: '600', color: "#fff"}]}>{seconds} "</Text>
+                        <Text style={[styles.T5, styles.bold, styles.Send, {
+                            marginTop: 5,
+                            color: "#fff"
+                        }]}>松手即可发送</Text>
+                    </View>
+                </View> : ''}
 
             {/*词典*/}
             <Modal
@@ -266,7 +272,10 @@ export function Im({route, navigation}) {
                                 marginBottom: 10
                             }, MstText(schemes)]}>{item.key} </Text>
                             {item.value.map((items, i) => <View key={'wodrs' + i}>
-                                <Text style={[styles.T5, MstText(schemes), {marginBottom: 10, opacity: 0.8}]}>{items} </Text>
+                                <Text style={[styles.T5, MstText(schemes), {
+                                    marginBottom: 10,
+                                    opacity: 0.8
+                                }]}>{items} </Text>
                             </View>)}
                             <View style={[BbC(schemes), styles.listBbC]}></View>
                         </TouchableOpacity>)}
@@ -302,9 +311,9 @@ export function Im({route, navigation}) {
                         <View key={'msg' + index}>
                             <RightMsg i={index}
                                       onIm={onIm}   //选中im
-                                      onSound={(i, im) =>soundFun(i, im)}     //播放译文
+                                      onSound={(i, im) => soundFun(i, im)}     //播放译文
                                       omWord={(cd) => setWord(cd)}        //点击词典
-                                      onHint={()=> alertHint(2)}//提示充值
+                                      onHint={() => alertHint(2)}//提示充值
                                       onRecall={(im) => recallFun(im)}   //撤回消息
                                       user={user}       //用户信息
                                       data={item}/>
@@ -318,7 +327,7 @@ export function Im({route, navigation}) {
                                      omWord={(cd) => setWord(cd)}        //点击词典
                                      onRecall={(im) => recallFun(im)}   //撤回消息
                                      onSound={(i, im) => soundFun(i, im)}  //播放声音
-                                     onHint={()=>alertHint(2)}      //提示充值
+                                     onHint={() => alertHint(2)}      //提示充值
                                      user={user}       //用户信息
                                      data={item}/>
                         </View>}
@@ -331,10 +340,9 @@ export function Im({route, navigation}) {
             <View style={[styles.imSend]}>
 
 
-
                 <View style={styles.imFun}>
                     <TouchableOpacity style={user.column ? '' : {opacity: 0.3}}
-                                      onPress={() => memberBoolean(user.member) ? _OnColumn(!userRef.current.column).then(cb=>{
+                                      onPress={() => memberBoolean(user.member) ? _OnColumn(!userRef.current.column).then(cb => {
                                           setUser(cb)
                                           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
                                       }) : alertHint(1)}>
@@ -342,7 +350,7 @@ export function Im({route, navigation}) {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={user.listen ? '' : {opacity: 0.3}}
-                                      onPress={() => memberBoolean(user.member) ? _OnListen(!userRef.current.listen).then(cb=>{
+                                      onPress={() => memberBoolean(user.member) ? _OnListen(!userRef.current.listen).then(cb => {
                                           setUser(cb)
                                           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
                                       }) : alertHint(2)}>
@@ -374,12 +382,11 @@ export function Im({route, navigation}) {
                     <TextInput value={input}
                                multiline={true}
                                style={[styles.imInputSend, styles.T5, MsgColor(schemes), MstText(schemes)]}
-                               onFocus={({nativeEvent: {target}}) => setTimeout(()=>{
+                               onFocus={({nativeEvent: {target}}) => setTimeout(() => {
                                    _ref.current.scrollToEnd({animated: true})
-                               },100)}   //调整位置
-                               onTextInput={({nativeEvent: {text, previousText, range: {start, end}}}) =>{
-
-                                   if(Platform.OS =='ios'){
+                               }, 100)}   //调整位置
+                               onTextInput={({nativeEvent: {text, previousText, range: {start, end}}}) => {
+                                   if (Platform.OS == 'ios') {
                                        // console.log('ios词列', text)
                                        let reg = /[^\u0000-\u00FF]/
                                        if (reg.test(text.trim()) && user.column) {
@@ -398,10 +405,10 @@ export function Im({route, navigation}) {
                                    }
                                    return
                                }}
-                               onChangeText={text =>{
-                                   if(Platform.OS =='android'){
+                               onChangeText={text => {
+                                   if (Platform.OS == 'android') {
                                        let str = text.substr(-(text.length - input.length))
-                                       console.log('android词列',str)
+                                       console.log('android词列', str)
                                        let regA = /[^\u0000-\u00FF]/
                                        if (regA.test(str.trim()) && user.column) {
                                            _Column(str).then(cb => {
@@ -458,9 +465,31 @@ export function Im({route, navigation}) {
     )
 }
 
+async function downloadImg(url) {
+    if (Platform.OS == 'android') {
+        ImagePicker.requestMediaLibraryPermissionsAsync().then(async res => {
+            if (res.canAskAgain) {
+                let img = await Asset.fromModule(url)
+                let {localUri} = await img.downloadAsync()
+                const bent = await MediaLibrary.saveToLibraryAsync(localUri)
+                Alert.alert('保存成功')
+                console.log('保存图片到相册', bent)
+            } else {
+                Alert.alert('不被你允许')
+            }
+        })
+    } else {
+        let img = await Asset.fromModule(url)
+        let {localUri} = await img.downloadAsync()
+        const bent = await MediaLibrary.saveToLibraryAsync(localUri)
+        Alert.alert('保存成功')
+        console.log('保存图片到相册', bent)
+    }
+}
+
 // 左边信息
 function LeftMsg(props) {
-    const {onIm, onSound, data, i, omWord,user,onHint} = props
+    const {onIm, onSound, data, i, omWord, user, onHint} = props
     const schemes = useColorScheme();
     const window = useWindowDimensions();
     const [show, setShow] = useState(false) //操作键
@@ -470,12 +499,13 @@ function LeftMsg(props) {
             return <View style={[styles.msgRow]}>
                 <View style={[{flexDirection: "row", alignItems: "center"}]}>
                     <TouchableOpacity style={[styles.msgText, {maxWidth: (0.6 * window.width)}, MsgColor(schemes)]}
-                                      onPress={() =>memberBoolean(user.member)? onSound(i, data):onHint()} onLongPress={() => {
-                        setShow(true)
-                        setTimeout(() => {
-                            setShow(false)
-                        }, 3000)
-                    }}>
+                                      onPress={() => memberBoolean(user.member) ? onSound(i, data) : onHint()}
+                                      onLongPress={() => {
+                                          setShow(true)
+                                          setTimeout(() => {
+                                              setShow(false)
+                                          }, 3000)
+                                      }}>
                         <Text style={[styles.T5, MstText(schemes), styles.en, {opacity: 0.8}]}>{data.q}</Text>
                         <Text style={[styles.T6, MstText(schemes), styles.en, {opacity: 0.8}]}>{data.enQ}</Text>
                     </TouchableOpacity>
@@ -498,7 +528,7 @@ function LeftMsg(props) {
                             user: data.user._id,
                             q: data.q,
                             enQ: data.enQ
-                        }).then(cb=>setShow(false))
+                        }).then(cb => setShow(false))
 
                     }}>
                         <Text style={[styles.flotText, MstText(schemes)]}>收藏 </Text>
@@ -514,7 +544,18 @@ function LeftMsg(props) {
             </View>
             break;
         case 2:
-            return <TouchableHighlight style={[styles.msgRow]}>
+            return <TouchableHighlight
+                style={[styles.msgRow]}
+                onPress={() => Alert.alert('操作图片', '将图片下载到本地', [
+                    {
+                        text: "下载",
+                        onPress: async () => downloadImg(data.url)
+                    },
+                    {
+                        text: "取消"
+                    }
+                ])}
+            >
                 <MsgImg url={data.url}/>
             </TouchableHighlight>
             break;
@@ -537,7 +578,7 @@ function LeftMsg(props) {
 
 // 右边信息
 function RightMsg(props) {
-    const {onIm, data, i, onSound, omWord, onRecall,user,onHint} = props
+    const {onIm, data, i, onSound, omWord, onRecall, user, onHint} = props
     const schemes = useColorScheme();
     const window = useWindowDimensions();
     const [show, setShow] = useState(false)
@@ -551,12 +592,13 @@ function RightMsg(props) {
                     </TouchableHighlight> : ''}
                     <TouchableOpacity
                         style={[styles.msgText, {backgroundColor: '#5A8DFF', maxWidth: (0.6 * window.width)}]}
-                        onPress={() => memberBoolean(user.member)?onSound(i,data):onHint(i,data)} onLongPress={() => {
-                        setShow(true)
-                        setTimeout(() => {
-                            setShow(false)
-                        }, 3000)
-                    }}>
+                        onPress={() => memberBoolean(user.member) ? onSound(i, data) : onHint(i, data)}
+                        onLongPress={() => {
+                            setShow(true)
+                            setTimeout(() => {
+                                setShow(false)
+                            }, 3000)
+                        }}>
                         <Text style={[styles.T5, {color: "#fff"}]}>{data.q}</Text>
                         <Text style={[styles.T6, styles.en, {color: "#fff"}, {opacity: 0.8}]}>{data.enQ}</Text>
                     </TouchableOpacity>
@@ -606,15 +648,20 @@ function RightMsg(props) {
             break;
         case 2:
             return <View style={[styles.msgRowRight]}>
-                <TouchableHighlight onLongPress={() => Alert.alert('撤回这张图片', '消息撤回后，将不可见', [
-                    {
-                        text: "确定",
-                        onPress: () => onRecall(data._id)
-                    },
-                    {
-                        text: "取消"
-                    }
-                ])}>
+                <TouchableHighlight
+                    onPress={() => Alert.alert('操作图片', '可以撤回图片，或下载到相册', [
+                        {
+                            text: '撤回',
+                            onPress: () => onRecall(data._id)
+                        },
+                        {
+                            text: "下载",
+                            onPress: async () => downloadImg(data.url)
+                        },
+                        {
+                            text: "取消"
+                        }
+                    ])}>
                     <MsgImg url={data.url}/>
                 </TouchableHighlight>
             </View>
