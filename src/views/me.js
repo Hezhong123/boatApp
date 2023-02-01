@@ -213,7 +213,7 @@ export function Me({navigation}){
             <View style={{flex:1}}>
                 <Text style={[styles.T5,styles.bold,{marginTop:5,textAlign: "center"},MstText(schemes)]}> 没有收藏 </Text>
             </View>}
-            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > 测试版-0.0.4 </Text>
+            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > 内测版-0.0.1 </Text>
         </View>
     )
 }
