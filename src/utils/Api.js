@@ -7,21 +7,14 @@ export const url = "https://www.boatim.top"
 export const wss = "wss://www.boatim.top"
 export const oss = 'https://boatim.oss-cn-shanghai.aliyuncs.com'
 
-const headers = async () => {
-    return {
-        'Accept': '*/*',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
-    }
-}
 
 //用户信息
 export const _User = async () => {
     return fetch(`${url}/user`, {
         method: 'GET',
         headers:{
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -38,8 +31,8 @@ export const _ListNull = async () => {
     return fetch(`${url}/list/null`, {
         method: 'GET',
         headers:{
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -57,8 +50,8 @@ export const _List = async () => {
     return fetch(`${url}/list`, {
         method: 'GET',
         headers:{
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -76,8 +69,8 @@ export const _Emoji = async (item) => {
     return fetch(`${url}/user/emoji/${item}`, {
         method: 'PUT',
         headers:{
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -94,8 +87,8 @@ export const _Avatar = async (imgUrl) => {
     return fetch(`${url}/user/avatar`, {
         method: 'PUT',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         },
         body: JSON.stringify({
@@ -115,8 +108,8 @@ export const _Name = async (name) => {
     return fetch(`${url}/user/name/${name}`, {
         method: 'PUT',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -133,8 +126,8 @@ export const _StoreLi = async () => {
     return fetch(`${url}/store`, {
         method: 'GET',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -151,8 +144,8 @@ export const _StoreQuery = async (text) => {
     return fetch(`${url}/store/${text}`, {
         method: 'GET',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -168,8 +161,8 @@ export const _StoreDel =  async (id) => {
     return fetch(`${url}/store/${id}`, {
         method: 'DELETE',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -186,8 +179,8 @@ export const _Sms = async (tel) => {
     return fetch(`${url}/user/sms`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8'
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
         },
         body:JSON.stringify({
             tel: tel
@@ -206,8 +199,8 @@ export const _SmsLogin = async (tel, sms) => {
     return fetch(`${url}/user/smsLogin`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8'
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             sms: sms,
@@ -226,8 +219,8 @@ export const _Query = async (key) =>{
     return fetch(`${url}/user/query?key=${key}`,{
         method: 'GET',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         },
     }).then((responseJson)=>{
@@ -243,8 +236,8 @@ export const _AddList = async (userId) => {
     return fetch(`${url}/list/im`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         },
         body: JSON.stringify({
@@ -264,8 +257,8 @@ export const _AddIm = async (list) => {
     return fetch(`${url}/list/addIM/${list}`, {
         method: 'PUT',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -283,8 +276,8 @@ export const _DelIm = async (list) => {
     return fetch(`${url}/list/delIM/${list}`, {
         method: 'DELETE',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -300,8 +293,8 @@ export const _Ims = async (title) => {
     return fetch(`${url}/list/ims`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         },
         body:JSON.stringify({
@@ -323,8 +316,8 @@ export const _ListId = async (id) => {
     return fetch(`${url}/list/obj/${id}`, {
         method: 'GET',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -341,8 +334,8 @@ export const _Msg = async (list, page) => {
     return fetch(`${url}/list/msg/${list}/${page}`, {
         method: 'GET',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -358,8 +351,8 @@ export const _Column = async (q) => {
     return fetch(`${url}/list/column/${q}`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -375,8 +368,8 @@ export const _Listen = async (im, enQ) => {
     return fetch(`${url}/list/listen`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         },
         body:JSON.stringify({
@@ -396,8 +389,8 @@ export const _OnColumn = async (boolean) => {
     return fetch(`${url}/user/column/${boolean}`, {
         method: 'PUT',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -413,8 +406,8 @@ export const _OnListen = async (boolean) => {
     return fetch(`${url}/user/listen/${boolean}`, {
         method: 'PUT',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -430,8 +423,8 @@ export const _ImTime = async (list) => {
     return fetch(`${url}/list/time/${list}`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -447,8 +440,8 @@ export const _Unread = async (list, user) => {
     return fetch(`${url}/list/unread/${list}/${user}`, {
         method: 'PUT',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -464,8 +457,8 @@ export const _addStore = async (obj) => {
     return fetch(`${url}/store`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         },
         body:JSON.stringify(obj)
@@ -482,8 +475,8 @@ export const _QuitIms = async (list, id) => {
     return fetch(`${url}/list/quitIms/${list}/${id}`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -500,8 +493,8 @@ export const _NameIms = async (list, name) => {
     return fetch(`${url}/list/nameIms/${list}`, {
         method: 'PUT',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         },
         body:JSON.stringify({name: name})
@@ -519,8 +512,8 @@ export const _OutIms = async (list) => {
     return fetch(`${url}/list/outIms/${list}`, {
         method: 'DELETE',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -537,8 +530,8 @@ export const _Contact = async () => {
     return fetch(`${url}/list/contact`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -555,8 +548,8 @@ export const _AddIms = async (list, id,) => {
     return fetch(`${url}/list/addIms/${list}/${id}`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -572,8 +565,8 @@ export const _Activation = async () => {
     return fetch(`${url}/activation`, {
         method: 'GET',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -589,8 +582,8 @@ export const _Ticket = async (Ma) => {
     return fetch(`${url}/activation/ticket/${Ma}`, {
         method: 'GET',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         }
     }).then((responseJson) => {
@@ -606,8 +599,8 @@ export const _UseTicket = async (ticketId) => {
     return fetch(`${url}/activation/use_ticket`, {
         method: 'POST',
         headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
             'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
         },
         body:JSON.stringify({

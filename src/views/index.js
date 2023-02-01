@@ -74,7 +74,9 @@ export function Index({navigation}) {
                                 setUser(user)
                                 navigation.setOptions({
                                     headerRight: () => user.name ?
-                                        <TouchableOpacity onPress={() => navigation.navigate('me')}>
+                                        <TouchableOpacity
+                                            onPress={() => navigation.navigate('me')}
+                                            onLongPress={()=>setEmoji(true)}>
                                             <Portrait w={28} h={28} r={3} url={user.avatar} t={user.emoji}/>
                                         </TouchableOpacity>
                                         : <ActivityIndicator size="small" color="#5A8DFF"/>
@@ -179,11 +181,11 @@ export function Index({navigation}) {
                         onPress={() => {
                             _Emoji(item).then(item => {
                                 navigation.setOptions({
-                                    headerRight: () => <Pressable
+                                    headerRight: () => <TouchableOpacity
                                         onPress={() => navigation.navigate('me')}
-                                        onLongPress={() => setEmoji(true)}>
-                                        <Text style={{fontSize: 23}}>{item.emoji}</Text>
-                                    </Pressable>,
+                                        onLongPress={()=>setEmoji(true)}>
+                                        <Portrait w={28} h={28} r={3} url={item.avatar} t={item.emoji}/>
+                                    </TouchableOpacity>,
                                 })
                                 setEmoji(false)
                             })
@@ -203,8 +205,8 @@ export function Index({navigation}) {
                           style={[bColor(schemes), styles.listBbC]}></View>}
                       refreshing={refresh}
                       onRefresh={async () => {
-                          setUser(await _User())
                           setRefresh(true)
+                          setUser(await _User())
                           _List().then(async res => {
                               await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
                               setList(res)

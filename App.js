@@ -42,7 +42,9 @@ function App() {
 export default App;
 
 
-// adb install application-3fabca0f-17b2-4a3b-9a67-ebbadadb3793.apk
+
+
+// adb install application-6c8bc218-7d80-40c5-8296-aec9374856c3.apk
 
 // eas build --profile preview
 
