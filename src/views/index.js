@@ -1,5 +1,6 @@
 //首页联系人
 import {
+    ActivityIndicator,
     Alert,
     AppState,
     Button,
@@ -11,18 +12,17 @@ import {
     useColorScheme,
     View
 } from "react-native";
-import {bColor, fColor, MstText, styles} from "../css";
+import {bColor, fColor, MsgColor, MstText, styles} from "../css";
 import {pushNotifications} from "../utils/useNotifications";
 import {_DelIm, _Emoji, _List, _ListNull, _User, wss} from "../utils/Api";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useFocusEffect} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {timeIm} from "../utils/time";
+import {memberBoolean, timeIm} from "../utils/time";
 import {Portrait, Portraits} from "../components/Portrait";
 import * as Haptics from 'expo-haptics';
 import {io} from "socket.io-client";
 import NetInfo from "@react-native-community/netinfo";
-import navigation from "../utils/rootNavigation";
 
 const socket = io(wss)
 
@@ -30,7 +30,7 @@ export function Index({navigation}) {
     const schemes = useColorScheme();
     const [graphic, setGraphic] = useState('获取验证码')
     const [login, setLogin] = useState(true)     //登陆状态
-    const [list, setList] = useState(Array)      //联系人列表
+    const [list, setList] = useState([])      //联系人列表
     const listRef = useRef(list)
     listRef.current = list
 
@@ -70,12 +70,14 @@ export function Index({navigation}) {
                         if (time < tokenIn) {
                             setLogin(true)
                             _User().then(user => {
+                                // console.log('user', user)
                                 setUser(user)
                                 navigation.setOptions({
-                                    headerRight: () => <Pressable onPress={() => navigation.navigate('me')}
-                                                                  onLongPress={() => setEmoji(true)}>
-                                        <Text style={{fontSize: 23}}>{user.emoji}</Text>
-                                    </Pressable>,
+                                    headerRight: () => user.name ?
+                                        <TouchableOpacity onPress={() => navigation.navigate('me')}>
+                                            <Portrait w={28} h={28} r={3} url={user.avatar} t={user.emoji}/>
+                                        </TouchableOpacity>
+                                        : <ActivityIndicator size="small" color="#5A8DFF"/>
                                 })
 
                                 // 接收信息
@@ -102,7 +104,17 @@ export function Index({navigation}) {
 
                             // 联系人列表
                             setTimeout(async () => {
-                                setList(await _List())
+                                _List().then(res => {
+                                    if (res.length) {
+                                        setList(res)
+                                    } else {
+                                        setRefresh(true)
+                                        setTimeout(() => {
+                                            setRefresh(false)
+                                            Alert.alert('网络链接错误')
+                                        }, 5000)
+                                    }
+                                })
                             }, 100)
 
                             //获取非好友信道
@@ -121,7 +133,7 @@ export function Index({navigation}) {
                             setLogin(false)
                         }
                     })
-                }else {
+                } else {
                     let listString = await AsyncStorage.getItem('list')
                     let list = JSON.parse(listString)
                     console.log(list)
@@ -132,7 +144,7 @@ export function Index({navigation}) {
 
             return async () => {
                 console.log('退出联系人', userRef.current._id, listRef.current.length)
-                if(isConnectedRef.current){
+                if (isConnectedRef.current) {
                     //同步离线消息
                     if (isConnectedRef.current) {
                         await AsyncStorage.setItem('list', JSON.stringify(listRef.current))
@@ -163,13 +175,8 @@ export function Index({navigation}) {
     const emojiArr = ["😀", "😁", "😂", "🤣", "😃", "😅", "😉", "😊", "😋", "😎", "😍", "😘", "😗", "🙂", "🤗", "🤔", "😐",
         "😶", "🙄", "😏", "😣", "😥", "🤐", "😪", "😫", "😴", "😌", "😛", "😜", "🤤", "😒", "😔", "😕", "🤑", "😢", "😭"]
 
-
     if (login) {
         return <View style={[styles.List, bColor(schemes)]}>
-            {/*<Button title={'清楚token'} onPress={async () => {*/}
-            {/*    await AsyncStorage.removeItem('token')*/}
-            {/*    await AsyncStorage.removeItem('tokenIn')*/}
-            {/*}}/>*/}
             {/*选择表情包*/}
             {emoji ? <View style={styles.yan}>
                 <FlatList
@@ -197,62 +204,76 @@ export function Index({navigation}) {
             {isConnected ? '' : <View style={[styles.isConnected]}>
                 <Text style={[styles.T5, styles.bold, {color: '#fff'}]}> 当前没有网络哟！！！</Text>
             </View>}
-
             {/*联系人列表*/}
-            {list ? <FlatList data={list}
-                              ItemSeparatorComponent={() => <View style={[bColor(schemes), styles.listBbC]}></View>}
-                              refreshing={refresh}
-                              onRefresh={() => {
+            <FlatList data={list}
+                      ItemSeparatorComponent={() => <View
+                          style={[bColor(schemes), styles.listBbC]}></View>}
+                      refreshing={refresh}
+                      onRefresh={async () => {
+                          setUser(await _User())
+                          setRefresh(true)
+                          _List().then(async res => {
+                              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
+                              if (res.length) {
+                                  setList(res)
+                                  setRefresh(false)
+                              } else {
                                   setRefresh(true)
-                                  _List().then(async list => {
-                                      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
+                                  setTimeout(() => {
                                       setRefresh(false)
-                                      setList([...list])
+                                      Alert.alert('网络链接错误')
+                                  }, 5000)
+                              }
+                          })
+                      }}
+                      renderItem={({item}) => <TouchableOpacity
+                          style={[styles.ListRow]}
+                          onPress={() => navigation.navigate('im', {list: item._id})}
+                          onLongPress={() => item.imType == 1 ? Alert.alert('移除联系人', '移除后所有的消息，都将不可见', [
+                              {
+                                  text: '确定',
+                                  onPress: () => _DelIm(item._id, async cb => {
+                                      setList([...await _List()])
                                   })
-                              }}
-                              renderItem={({item}) => <TouchableOpacity
-                                  style={[styles.ListRow]}
-                                  onPress={() => navigation.navigate('im', {list: item._id})}
-                                  onLongPress={() => item.imType == 1 ? Alert.alert('移除联系人', '移除后所有的消息，都将不可见', [
-                                      {
-                                          text: '确定',
-                                          onPress: () => _DelIm(item._id, async cb => {
-                                              setList([...await _List()])
-                                          })
-                                      },
-                                      {
-                                          text: '取消'
-                                      }
-                                  ]) : ''}
-                              >
-                                  {item.imType == '2' ?
-                                      <Portraits imgArr={item.userArr} unread={unreadFun(item.unread, user._id)}/>
-                                      : <Portrait w={38} h={38} r={3}
-                                                  t={user.id == item.userArr[0].id ? item.userArr[1].emoji : item.userArr[0].emoji}
-                                                  url={user.id == item.userArr[0].id ? item.userArr[1].avatar : item.userArr[0].avatar}
-                                                  unread={unreadFun(item.unread, user._id)}/>}
-                                  <View style={[styles.ListLi]}>
-                                      {item.imType == '2' ?
-                                          <Text
-                                              style={[styles.T4, fColor(schemes), styles.bold]}>{item.imTitle}</Text> :
-                                          <Text
-                                              style={[styles.T4, fColor(schemes), styles.bold]}>{user.id == item.userArr[0].id ? item.userArr[1].name : item.userArr[0].name}</Text>
-                                      }
-                                      <Text style={[styles.T5, fColor(schemes), styles.bold, {opacity: 0.6}]}
-                                            numberOfLines={1}>{item.text}</Text>
-                                  </View>
-                                  <Text style={[styles.T6, fColor(schemes), styles.bold, {
-                                      marginRight: 10,
-                                      opacity: 0.3
-                                  }]}>{timeIm(item.updatedAt)}</Text>
-                              </TouchableOpacity>}/> : <Text>什么都么有</Text>}
+                              },
+                              {
+                                  text: '取消'
+                              }
+                          ]) : ''}
+                      >
+                          {item.imType == '2' ?
+                              <Portraits imgArr={item.userArr}
+                                         unread={unreadFun(item.unread, user._id)}/>
+                              : <Portrait w={38} h={38} r={3}
+                                          t={user.id == item.userArr[0].id ? item.userArr[1].emoji : item.userArr[0].emoji}
+                                          url={user.id == item.userArr[0].id ? item.userArr[1].avatar : item.userArr[0].avatar}
+                                          unread={unreadFun(item.unread, user._id)}/>}
+                          <View style={[styles.ListLi]}>
+                              {item.imType == '2' ?
+                                  <Text
+                                      style={[styles.T4, fColor(schemes), styles.bold]}>{item.imTitle}</Text> :
+                                  <Text
+                                      style={[styles.T4, fColor(schemes), styles.bold]}>{user.id == item.userArr[0].id ? item.userArr[1].name : item.userArr[0].name}</Text>
+                              }
+                              <Text style={[styles.T5, fColor(schemes), styles.bold, {opacity: 0.6}]}
+                                    numberOfLines={1}>{item.text}</Text>
+                          </View>
+                          <Text style={[styles.T6, fColor(schemes), styles.bold, {
+                              marginRight: 10,
+                              opacity: 0.3
+                          }]}>{timeIm(item.updatedAt)}</Text>
+                      </TouchableOpacity>}/>
+            {/*<View style={[styles.listLogin, bColor(schemes)]}>*/}
+            {/*    {user.name?<View>*/}
+            {/*        <Image style={styles.listLoginImg}/>*/}
+            {/*        <TouchableOpacity onPress={() => navigation.navigate('add')}>*/}
+            {/*            <Text style={styles.listBtn}> 去添加好友 </Text>*/}
+            {/*        </TouchableOpacity>*/}
+            {/*    </View>:<ActivityIndicator size="small" color="#5A8DFF"/>}*/}
+            {/*</View>*/}
         </View>
     } else {
         return <View style={[styles.listLogin, bColor(schemes)]}>
-            <Button title={'清楚token'} onPress={async () => {
-                await AsyncStorage.removeItem('token')
-                await AsyncStorage.removeItem('tokenIn')
-            }}/>
             <Image style={styles.listLoginImg}/>
             <TouchableOpacity onPress={() => navigation.navigate('login')}>
                 <Text style={styles.listBtn}> 登陆使用 </Text>

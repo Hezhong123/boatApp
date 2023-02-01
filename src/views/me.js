@@ -158,18 +158,7 @@ export function Me({navigation}){
                 </View>
 
                 <Text style={[styles.T5, styles.bold, styles.vip, {borderWidth: 0}]}
-                      onPress={() => Alert.alert('激活码',
-                          '【词裂】提高词汇与句法，【跟读】加强听力口语', [
-                              {
-                                  text: '激活码',
-                                  onPress: () => navigation.navigate('ticket')
-                              },
-                              {
-                                  text: '取消',
-                                  onPress: () => {
-                                  }
-                              },
-                          ])}>{memberFun(user.member)}</Text>
+                      onPress={() =>navigation.navigate('ticket')}>{memberFun(user.member)}</Text>
             </View>
 
             {/*搜索收藏*/}
@@ -220,8 +209,11 @@ export function Me({navigation}){
                              onSound={(i,url)=>playSound(i,url)}
                              storeUp={async () => setStore([...await _StoreLi()])}/>
                 </View>}
-            />:<Text style={[styles.T5,styles.bold,{marginTop:5,textAlign: "center"},MstText(schemes)]}> 没有收藏 </Text>}
-            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > preview-0.0.4 </Text>
+            />:
+            <View style={{flex:1}}>
+                <Text style={[styles.T5,styles.bold,{marginTop:5,textAlign: "center"},MstText(schemes)]}> 没有收藏 </Text>
+            </View>}
+            <Text style={[MstText(schemes),styles.T6, {textAlign:"center", marginBottom:20}]} > 测试版-0.0.4 </Text>
         </View>
     )
 }

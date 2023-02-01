@@ -22,6 +22,7 @@ export const _User = async () => {
         })
         .catch((error) => {
             console.error('用户信息',error);
+            return {}
         });
 }
 
@@ -39,6 +40,7 @@ export const _ListNull = async () => {
         })
         .catch((error) => {
             console.error('获取非好友联系人',error);
+            return []
         });
 }
 
@@ -57,6 +59,7 @@ export const _List = async () => {
         })
         .catch((error) => {
             console.error('获取联系人',error);
+            return []
         });
 }
 
@@ -74,7 +77,8 @@ export const _Emoji = async (item) => {
             return responseJson.json()
         })
         .catch((error) => {
-            console.error(error);
+            console.error('修改表情包',error);
+            return {}
         });
 }
 
@@ -94,7 +98,8 @@ export const _Avatar = async (imgUrl) => {
             return responseJson.json()
         })
         .catch((error) => {
-            console.error(error);
+            console.error('修改头像',error);
+            return {}
         });
 }
 
@@ -111,7 +116,8 @@ export const _Name = async (name) => {
             return responseJson.json()
         })
         .catch((error) => {
-            console.error(error);
+            console.error('修改昵称',error);
+            return {}
         });
 }
 
@@ -127,7 +133,8 @@ export const _StoreLi = async () => {
     }).then((responseJson) => {
         return responseJson.json()
     }).catch((error) => {
-        console.error(error);
+        console.error('收藏列表',error);
+        return []
     });
 }
 
@@ -144,7 +151,8 @@ export const _StoreQuery = async (text) => {
     }).then((responseJson) => {
         return responseJson.json()
     }).catch((error) => {
-        console.error(error);
+        console.error('搜索收藏内容',error);
+        return []
     });
 }
 
@@ -160,7 +168,8 @@ export const _StoreDel =  async (id) => {
     }).then((responseJson) => {
         return responseJson.text()
     }).catch((error) => {
-        console.error(error);
+        console.error('删除收藏',error);
+        return ''
     });
 }
 
@@ -177,9 +186,10 @@ export const _Sms = async (tel) => {
             tel: tel
         })
     }).then((responseJson) => {
-        return responseJson.json()
+        return responseJson.status
     }).catch((error) => {
-        console.error(error);
+        console.error('获取短信验证码',error);
+        return {}
     });
 }
 
@@ -199,7 +209,8 @@ export const _SmsLogin = async (tel, sms) => {
     }).then((responseJson) => {
         return responseJson.json()
     }).catch((error) => {
-        console.error(error);
+        console.error('短信登陆',error);
+        return {}
     });
 }
 
@@ -215,7 +226,8 @@ export const _Query = async (key) =>{
     }).then((responseJson)=>{
         return responseJson.json()
     }).catch((error) => {
-        console.error(error);
+        console.error('搜索用户',error);
+        return []
     });
 }
 
@@ -234,7 +246,8 @@ export const _AddList = async (userId) => {
     }).then((responseJson) => {
         return responseJson.json()
     }).catch((error) => {
-        console.error(error);
+        console.error('添加好友',rror);
+        return {}
     });
 }
 
@@ -251,7 +264,8 @@ export const _AddIm = async (list) => {
     }).then((responseJson) => {
         return responseJson.status
     }).catch((error) => {
-        console.error(error);
+        console.error('同意申请',error);
+        return {}
     });
 }
 
@@ -270,6 +284,7 @@ export const _DelIm = async (list) => {
         return responseJson.status
     }).catch((error) => {
         console.error('拒绝申请',error);
+        return {}
     });
 }
 
@@ -289,6 +304,7 @@ export const _Ims = async (title) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('创建群聊', error);
+        return {}
     })
 }
 
@@ -308,6 +324,7 @@ export const _ListId = async (id) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('信道内容', error);
+        return []
     })
 }
 
@@ -325,6 +342,7 @@ export const _Msg = async (list, page) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('信道内容', error);
+        return []
     })
 }
 
@@ -341,6 +359,7 @@ export const _Column = async (q) => {
         return responseJson.text()
     }).catch((error) => {
         console.error('词裂', error);
+        return ''
     })
 }
 
@@ -361,6 +380,7 @@ export const _Listen = async (im, enQ) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('跟读', error);
+        return {}
     })
 }
 
@@ -377,6 +397,7 @@ export const _OnColumn = async (boolean) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('开关词裂', error);
+        return {}
     })
 }
 
@@ -393,6 +414,7 @@ export const _OnListen = async (boolean) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('开关跟读', error);
+        return {}
     })
 }
 
@@ -409,6 +431,7 @@ export const _ImTime = async (list) => {
         return responseJson.status
     }).catch((error) => {
         console.error('跟新时间戳', error);
+        return {}
     })
 }
 
@@ -425,6 +448,7 @@ export const _Unread = async (list, user) => {
         return responseJson.status
     }).catch((error) => {
         console.error('更新未读', error);
+        return {}
     })
 }
 
@@ -442,6 +466,7 @@ export const _addStore = async (obj) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('新建收藏', error);
+        return {}
     })
 }
 
@@ -458,6 +483,7 @@ export const _QuitIms = async (list, id) => {
         return responseJson.status
     }).catch((error) => {
         console.error('退出群聊', error);
+        return {}
     })
 }
 
@@ -476,6 +502,7 @@ export const _NameIms = async (list, name) => {
         return responseJson.status
     }).catch((error) => {
         console.error('修改群名称', error);
+        return {}
     })
 }
 
@@ -493,6 +520,7 @@ export const _OutIms = async (list) => {
         return responseJson.status
     }).catch((error) => {
         console.error('解散群',error);
+        return {}
     });
 }
 
@@ -510,6 +538,7 @@ export const _Contact = async () => {
         return responseJson.json()
     }).catch((error) => {
         console.error('最近联系人', error);
+        return []
     })
 }
 
@@ -527,6 +556,7 @@ export const _AddIms = async (list, id,) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('加入群聊', error);
+        return {}
     })
 }
 
@@ -543,13 +573,14 @@ export const _Activation = async () => {
         return responseJson.json()
     }).catch((error) => {
         console.error('加入群聊', error);
+        return []
     })
 }
 
-//使用激活码
+//查询激活码
 export const _Ticket = async (Ma) => {
-    return fetch(`${url}/activation/ticket`, {
-        method: 'POST',
+    return fetch(`${url}/activation/ticket/${Ma}`, {
+        method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -559,6 +590,27 @@ export const _Ticket = async (Ma) => {
         return responseJson.json()
     }).catch((error) => {
         console.error('加入群聊', error);
+        return []
+    })
+}
+
+//使用激活码
+export const _UseTicket = async (ticketId) => {
+    return fetch(`${url}/activation/use_ticket`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${await AsyncStorage.getItem('token')}`
+        },
+        body:JSON.stringify({
+            ticketId:ticketId
+        })
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('加入群聊', error);
+        return {}
     })
 }
 

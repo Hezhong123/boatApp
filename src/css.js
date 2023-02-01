@@ -123,7 +123,11 @@ export const styles = StyleSheet.create({
         width: "100%",
         height: 1
     },
-
+    listAdd:{
+        paddingTop:30,
+      justifyContent:'center',
+      alignItems:"center"
+    },
     yan: {
         height: 48,
         flexDirection: "row",

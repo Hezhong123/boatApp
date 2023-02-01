@@ -20,7 +20,7 @@ export function Login({navigation}) {
 
     const [end, setEnd] = useState(true)   //获取验证码
     const [tel, setTel] = useState(Number)   //电话
-    const [code, setCode] = useState(null) //短信验证码
+    const [code, setCode] = useState(Number) //短信验证码
     const [codeBoolean, setCodeBoolean] = useState(false) //登陆严重状态
 
 
@@ -70,7 +70,7 @@ export function Login({navigation}) {
 
             {codeBoolean ? <View style={{width: '40%', marginTop: 20}}>
                 <Text style={[styles.T5, fColor(schemes), styles.bold, {opacity: 0.9}]}><Text
-                    style={styles.LoginRed}>* </Text>输入短信验证码</Text>
+                    style={styles.LoginRed}>* </Text>输入4位验证码</Text>
                 <TextInput
                     style={[fColor(schemes), styles.LoginInputs, inputBorderColor(schemes), styles.T5, {marginBottom: 6}]}
                     keyboardType={'numeric'}
@@ -80,8 +80,11 @@ export function Login({navigation}) {
                 <View>
                     {m ? <Text style={[styles.T6, fColor(schemes), styles.bold, styles.LoginYe]}>{m}秒</Text> :
                         <TouchableOpacity onPress={() => {
-                            setCodeBoolean(true)
-                            mFun()
+                            _Sms(tel).then(r => {
+                                console.log('新短信', r)
+                                mFun()      //计时器起
+                                setCodeBoolean(true)
+                            })
                         }}>
                             <Text style={[styles.T6, fColor(schemes), styles.bold]}>重新获取 </Text>
                         </TouchableOpacity>}
@@ -89,15 +92,15 @@ export function Login({navigation}) {
             </View> : ''}
 
             {/*短信登陆*/}
-            {codeBoolean ? <TouchableOpacity onPress={() => {
+            {code.length==4 ? <TouchableOpacity onPress={() => {
                 _SmsLogin(tel, code).then(async cb => {
                     console.log('登陆信息', cb)
-                    if (cb == '请核对验证码') {
-                        Alert.alert(cb)
-                    } else {
+                    if (cb.code == 200) {
                         await AsyncStorage.setItem('token', cb.token)
                         await AsyncStorage.setItem('tokenIn', String(cb.expiresIn))
                         navigation.navigate('index')
+                    } else {
+                        Alert.alert('请核对短信验证码')
                     }
                 })
             }}>
