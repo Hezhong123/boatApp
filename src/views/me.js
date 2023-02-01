@@ -203,7 +203,7 @@ export function Me({navigation}){
                 renderItem={({item, index}) => <View style={[styles.ImMsg, {marginLeft: 15}]}>
                     <Portrait w={32} h={32} r={7} url={item.user.avatar} t={item.user.emoji}/>
                     <StoreMsg data={item}
-                             i={index}
+                               i={index}
                              on={on}
                              omWord={(cd)=>setWord(cd)}        //点击词典
                              onSound={(i,url)=>playSound(i,url)}

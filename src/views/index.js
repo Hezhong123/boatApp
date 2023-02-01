@@ -105,15 +105,8 @@ export function Index({navigation}) {
                             // 联系人列表
                             setTimeout(async () => {
                                 _List().then(res => {
-                                    if (res.length) {
-                                        setList(res)
-                                    } else {
-                                        setRefresh(true)
-                                        setTimeout(() => {
-                                            setRefresh(false)
-                                            Alert.alert('网络链接错误')
-                                        }, 5000)
-                                    }
+                                    setList(res)
+                                    setRefresh(false)
                                 })
                             }, 100)
 
@@ -214,16 +207,8 @@ export function Index({navigation}) {
                           setRefresh(true)
                           _List().then(async res => {
                               await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
-                              if (res.length) {
-                                  setList(res)
-                                  setRefresh(false)
-                              } else {
-                                  setRefresh(true)
-                                  setTimeout(() => {
-                                      setRefresh(false)
-                                      Alert.alert('网络链接错误')
-                                  }, 5000)
-                              }
+                              setList(res)
+                              setRefresh(false)
                           })
                       }}
                       renderItem={({item}) => <TouchableOpacity
