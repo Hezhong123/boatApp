@@ -1,19 +1,18 @@
 import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, useColorScheme, View} from 'react-native';
+import {AppState, StyleSheet, Text, useColorScheme, View} from 'react-native';
 import {bColor, fColor, headerColor, MstText, styles} from "./src/css";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {NavigationContainer} from "@react-navigation/native";
 import {Index} from "./src/views";
 import {Im} from "./src/views/im";
-import useNotifications from "./src/utils/useNotifications";
+import useNotifications, {pushNotifications} from "./src/utils/useNotifications";
 import {navigationRef} from "./src/utils/rootNavigation";
 import {Ticket} from "./src/views/ticket";
 import {Add} from "./src/views/add";
 import {Login} from "./src/views/login";
 import {Me} from "./src/views/me";
 import {Adds} from "./src/views/adds";
-import NetInfo from '@react-native-community/netinfo';
-import {useEffect, useState} from "react";
+import {createRef} from "react";
 
 const Stack = createNativeStackNavigator();
 

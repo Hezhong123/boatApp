@@ -200,7 +200,7 @@ export function Im({route, navigation}) {
                         _Msg(list, page).then(cd => {
                             console.log('滚动对话、、', cd.length)
                             setMsgArr(cd.reverse())
-                            cd.length ? setTimeout(() => _ref.current.scrollToEnd({animated: true}), 200) : ''
+                            cd.length ? setTimeout(() => _ref.current.scrollToEnd({animated: true}), 300) : ''
                         })
                     })
                 } else {

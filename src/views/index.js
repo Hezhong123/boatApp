@@ -46,16 +46,6 @@ export function Index({navigation}) {
     const isConnectedRef = useRef(isConnected)
     isConnectedRef.current = isConnected
 
-    const [handler, setHandler] = useState('active')   //前后台
-    const handlerRef = useRef(handler)
-    handlerRef.current = handler
-
-    //前后台监听
-    useEffect(() => {
-        AppState.addEventListener("change", async (handler) => {
-            setHandler(handler)
-        })
-    }, [])
 
     // 路由生命周期
     useFocusEffect(
@@ -84,13 +74,6 @@ export function Index({navigation}) {
 
                                 // 接收信息
                                 socket.on(user._id, async li => {
-                                    // 切换到后台监听信息
-                                    console.log('li', handlerRef.current)
-                                    if (handlerRef.current == 'background') {
-                                        await pushNotifications(li.imType == 1 ? li.user.name : li.imTitle, li.text, li._id)
-                                        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)//震动手机
-                                        navigation.navigate('index')
-                                    }
                                     //震动手机
                                     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
                                     let arr = listRef.current
@@ -134,6 +117,8 @@ export function Index({navigation}) {
                     console.log(list)
                     setList([...list])
                     setUser({})
+                    navigation.setOptions({
+                        headerRight: () => ''})
                 }
             });
 

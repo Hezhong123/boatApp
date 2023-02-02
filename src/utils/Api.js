@@ -1,12 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ToastAndroid from "react-native/Libraries/Components/ToastAndroid/ToastAndroid";
+import {Platform} from "react-native";
 
 // export const url = 'http://192.168.2.187:3000'
-// export const wss = 'http://192.168.2.187:3000'
+// export const wss = 'ws://192.168.2.187:3000'
 
 export const url = "https://www.boatim.top"
 export const wss = "wss://www.boatim.top"
 export const oss = 'https://boatim.oss-cn-shanghai.aliyuncs.com'
 
+const ToastShow = (t)=>Platform.OS == 'android'?
+    ToastAndroid.show(t, ToastAndroid.SHORT):
+    ''
 
 //用户信息
 export const _User = async () => {
@@ -22,6 +27,7 @@ export const _User = async () => {
         })
         .catch((error) => {
             console.error('用户信息',error);
+            ToastShow('网络链接错误')
             return {}
         });
 }
@@ -40,6 +46,7 @@ export const _ListNull = async () => {
         })
         .catch((error) => {
             console.error('获取非好友联系人',error);
+            ToastShow('网络链接错误')
             return []
         });
 }
@@ -59,6 +66,7 @@ export const _List = async () => {
         })
         .catch((error) => {
             console.error('获取联系人',error);
+            ToastShow('网络链接错误')
             return []
         });
 }
@@ -78,6 +86,7 @@ export const _Emoji = async (item) => {
         })
         .catch((error) => {
             console.error('修改表情包',error);
+            ToastShow('网络链接错误')
             return {}
         });
 }
@@ -99,6 +108,7 @@ export const _Avatar = async (imgUrl) => {
         })
         .catch((error) => {
             console.error('修改头像',error);
+            ToastShow('网络链接错误')
             return {}
         });
 }
@@ -117,6 +127,7 @@ export const _Name = async (name) => {
         })
         .catch((error) => {
             console.error('修改昵称',error);
+            ToastShow('网络链接错误')
             return {}
         });
 }
@@ -186,6 +197,9 @@ export const _Sms = async (tel) => {
             tel: tel
         })
     }).then((responseJson) => {
+        Platform.OS == 'android'?
+            ToastAndroid.show("短信已发送", ToastAndroid.SHORT):
+            ''
         return responseJson.status
     }).catch((error) => {
         console.error('获取短信验证码',error);
