@@ -224,7 +224,7 @@ export function Me({navigation}) {
                         textAlign: "center"
                     }, MstText(schemes)]}> 没有收藏 </Text>
                 </View>}
-            <Text style={[MstText(schemes), styles.T6, {textAlign: "center", marginBottom: 20}]}> 内测版-0.0.1 </Text>
+            <Text style={[MstText(schemes), styles.T6, {textAlign: "center", marginBottom: 20}]}> 内测版-0.0.2 </Text>
         </View>
     )
 }

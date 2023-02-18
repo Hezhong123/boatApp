@@ -13,6 +13,7 @@ import {BbC, bColor, fColor, lightNsgBcB, MsgColor, MsgColorTouchable, MstText, 
 import {io} from "socket.io-client";
 import {useFocusEffect} from "@react-navigation/native";
 import {useCallback, useEffect, useRef, useState} from "react";
+import * as Clipboard from 'expo-clipboard';
 import {
     _addStore,
     _Column,
@@ -90,8 +91,10 @@ export function Im({route, navigation}) {
     //点击播放
     const soundFun = async (i, im) => {
         setOnIm(i)
+        let reg = /[^\u0000-\u00FF]/
+        let q = reg.test(im.enQ)?im.q:im.enQ
         if (im.url == 'null') {
-            _Listen(im._id, im.enQ).then(async cb => {
+            _Listen(im._id, q).then(async cb => {
                 let arr = msgRef.current
                 arr[i].url = cb.url
                 setMsgArr(arr)
@@ -131,87 +134,93 @@ export function Im({route, navigation}) {
         ])
     }
 
-    useFocusEffect(
-        useCallback(() => {
-            //没有网络同步离线消息
-            NetInfo.fetch().then(async state => {
-                setIsConnected(state.isConnected)
-                if (state.isConnected) {
-                    _User().then(user => {
-                        setUser(user)       //用户信息
-                        //服务到期自动关停
-                        if (!memberBoolean(user.member)) {
-                            _OnColumn(false).then(user => setUser(user))
-                            _OnListen(false).then(user => setUser(user))
+    function addData() {
+        setIsConnected(true)
+        _User().then(user => {
+            setUser(user)       //用户信息
+            //服务到期自动关停
+            if (!memberBoolean(user.member)) {
+                _OnColumn(false).then(user => setUser(user))
+                _OnListen(false).then(user => setUser(user))
+            }
+            // 接收会话信息
+            socket.on(list, async (im) => {
+                let arr = msgRef.current
+                if (im.tIm == 5) {
+                    arr.map((item, index) => {
+                        if (im.q == item._id) {
+                            arr.splice(index, 1)
                         }
-                        // 接收会话信息
-                        socket.on(list, async (im) => {
-                            let arr = msgRef.current
-                            if (im.tIm == 5) {
-                                arr.map((item, index) => {
-                                    if (im.q == item._id) {
-                                        arr.splice(index, 1)
-                                    }
-                                })
-                                setMsgArr([...arr])
-                                return
-                            }
-
-                            arr.push(im)
-                            setMsgArr([...arr])
-                            setTimeout(() => _ref.current.scrollToEnd({animated: true}), im.tIm == 2 ? 500 : 100)
-                            //跟读信号
-                            // console.log('跟读', im)
-                            if (memberBoolean(user.member) && im.url != 'null') {
-                                setOnIm(arr.length - 1)
-                                await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-                                await playSound(im.url)
-                            }
-                        });
-
-                        //信道信息
-                        _ListId(list).then(cb => {
-                            // console.log('信道', cb)
-                            if (cb.imTitle) {
-                                setImTitle(cb.imTitle + `(${cb.userArr.length})`)
-                                navigation.setOptions({
-                                    title: cb.imTitle + `(${cb.userArr.length})`,
-                                    headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold,]}
-                                                             onPress={() => navigation.navigate('adds', {'list': list})}
-                                    >管理</Text>
-                                })
-                                let arr = []
-                                cb.userArr.map(item => arr.push(item._id))
-                                setTo(arr)      //群发对象
-                            } else {
-                                if (cb.userArr[0]._id == user._id) {
-                                    setImTitle(cb.userArr[1].name)
-                                    navigation.setOptions({title: cb.userArr[1].name})
-                                    setTo([cb.userArr[1]._id])
-                                } else {
-                                    setImTitle(cb.userArr[0].name)
-                                    navigation.setOptions({title: cb.userArr[0].name})
-                                    setTo([cb.userArr[0]._id])
-                                }
-                            }
-                        })
-
-                        // 加载对话内容
-                        _Msg(list, page).then(cd => {
-                            console.log('滚动对话、、', cd.length)
-                            setMsgArr(cd.reverse())
-                            cd.length ? setTimeout(() => _ref.current.scrollToEnd({animated: true}), 300) : ''
-                        })
                     })
-                } else {
-                    let user = await AsyncStorage.getItem('user')
-                    setUser(JSON.parse(user))
-                    let imString = await AsyncStorage.getItem(list)
-                    let im = JSON.parse(imString)
-                    setMsgArr(im.msgArr)
-                    navigation.setOptions({title: im.title})
+                    setMsgArr([...arr])
+                    return
+                }
+                arr.push(im)
+                setMsgArr([...arr])
+                if(_ref.current !== null){
+                    _ref.current.scrollToEnd({animated: true})
+                }
+                // setTimeout(() =>
+                //     _ref.current.scrollToEnd({animated: true}), im.tIm == 2 ? 600 : 300)
+                //跟读信号
+                // console.log('跟读', im)
+                if (memberBoolean(user.member) && im.url != 'null') {
+                    setOnIm(arr.length - 1)
+                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+                    await playSound(im.url)
                 }
             });
+
+            //信道信息
+            _ListId(list).then(cb => {
+                console.log('信道', cb)
+                if (cb.imTitle) {
+                    setImTitle(cb.imTitle + `(${cb.userArr.length})`)
+                    navigation.setOptions({
+                        title: cb.imTitle + `(${cb.userArr.length})`,
+                        headerRight: () => <Text style={[styles.T5, MstText(schemes), styles.bold,]}
+                                                 onPress={() => navigation.navigate('adds', {'list': list})}
+                        >管理</Text>
+                    })
+                    let arr = []
+                    cb.userArr.map(item => arr.push(item._id))
+                    setTo(arr)      //群发对象
+                } else {
+                    if (cb.userArr[0]._id == user._id) {
+                        setImTitle(cb.userArr[1].name)
+                        navigation.setOptions({title: cb.userArr[1].name})
+                        setTo([cb.userArr[1]._id])
+                    } else {
+                        setImTitle(cb.userArr[0].name)
+                        navigation.setOptions({title: cb.userArr[0].name})
+                        setTo([cb.userArr[0]._id])
+                    }
+                }
+            })
+
+            // 加载对话内容
+            _Msg(list, page).then(cd => {
+                console.log('滚动对话、、', cd.length)
+                setMsgArr(cd.reverse())
+                cd.length ? setTimeout(() => _ref.current.scrollToEnd({animated: true}), 300) : ''
+            })
+        })
+    }
+
+    async function add_Data() {
+        setIsConnected(false)
+        let user = await AsyncStorage.getItem('user')
+        setUser(JSON.parse(user))
+        let imString = await AsyncStorage.getItem(list)
+        let im = JSON.parse(imString)
+        setMsgArr(im.msgArr)
+        navigation.setOptions({title: im.title})
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+             //没有网络同步离线消息
+            NetInfo.fetch().then(async state => state.isConnected? addData():await add_Data());
 
             return async () => {
                 console.log('断开IM', list)
@@ -256,6 +265,11 @@ export function Im({route, navigation}) {
                     </View>
                 </View> : ''}
 
+            {/*网络中断提示*/}
+            {isConnected ? '' : <View style={[styles.isConnected]}>
+                <Text style={[styles.T5, styles.bold, {color: '#fff'}]}> 当前没有网络哟！！！</Text>
+            </View>}
+
             {/*词典*/}
             <Modal
                 visible={Boolean(word.length)}
@@ -289,21 +303,25 @@ export function Im({route, navigation}) {
                     ref={_ref}
                     refreshing={refresh}
                     onRefresh={() => {
-                        let arr = msgRef.current
-                        console.log('下拉刷新', page)
-                        _Msg(list, page + 1).then(async cd => {
-                            await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-                            if (cd.length) {
-                                setPage(page + 1)
-                                setMsgArr(cd.concat(arr))
-                                setTimeout(() => {
-                                    _ref.current.scrollToIndex({animated: false, index: cd.length})
-                                    setRefresh(false)
-                                }, 360)
-                            } else {
-                                setRefresh(false)
+                        NetInfo.fetch().then(async state => {
+                            if(state.isConnected){
+                                let arr = msgRef.current
+                                console.log('下拉刷新', page)
+                                _Msg(list, page + 1).then(async cd => {
+                                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+                                    if (cd.length) {
+                                        setPage(page + 1)
+                                        setMsgArr(cd.concat(arr))
+                                        setTimeout(() => {
+                                            _ref.current.scrollToIndex({animated: false, index: cd.length})
+                                            setRefresh(false)
+                                        }, 360)
+                                    } else {
+                                        setRefresh(false)
+                                    }
+                                })
                             }
-                        })
+                        });
                     }}
                     data={msgArr}
                     renderItem={({item, index}) => item.user._id == user._id ?
@@ -337,9 +355,8 @@ export function Im({route, navigation}) {
                 />
             </SafeAreaView>
 
-            <View style={[styles.imSend]}>
 
-
+            {isConnected?<View style={[styles.imSend]}>
                 <View style={styles.imFun}>
                     <TouchableOpacity style={user.column ? '' : {opacity: 0.3}}
                                       onPress={() => memberBoolean(user.member) ? _OnColumn(!userRef.current.column).then(cb => {
@@ -400,7 +417,6 @@ export function Im({route, navigation}) {
                                    }
                                    //重制词列
                                    if (start == 0) {
-                                       console.log('重置词列')
                                        setColumnLi([...[]])
                                    }
                                    return
@@ -459,7 +475,7 @@ export function Im({route, navigation}) {
                     }
 
                 </View>
-            </View>
+            </View>:''}
 
         </View>
     )

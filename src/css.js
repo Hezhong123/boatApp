@@ -633,6 +633,9 @@ export const styles = StyleSheet.create({
     darkMsg: {
         backgroundColor: '#333C52'
     },
+    protocol:{
+      lineHeight:23,
+    },
 
     //表情包按钮
     aBtn: {

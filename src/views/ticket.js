@@ -24,8 +24,7 @@ export function Ticket({navigation}) {
                            placeholder={'输入激活码'}
                            placeholderTextColor={placeholderColor(schemes)}
                            onSubmitEditing={({nativeEvent: {text, eventCount, target}}) => _Ticket(text)
-                               .then(cb =>
-                                   Alert.alert(`激活码-${cb.state ? '【未使用】' : '【已过期】'}`, `${cb.text}-${cb.day}天时长`, [
+                               .then(cb =>cb.state? Alert.alert(`激活码-${cb.state ? '【未使用】' : '【已过期】'}`, `${cb.text}-${cb.day}天时长`, [
                                        cb.state?
                                        {
                                            text: '使用',
@@ -34,8 +33,8 @@ export function Ticket({navigation}) {
                                                    {
                                                        text:'确定',
                                                        onPress:()=> _Activation().then(list => {
-                                                               setList(list)
-                                                           })
+                                                           setList(list)
+                                                       })
                                                    }
                                                ])
                                            })
@@ -44,7 +43,7 @@ export function Ticket({navigation}) {
                                            text: '取消',
                                            onPress: () =>{}
                                        }
-                                   ]))}
+                                   ]):Alert.alert('激活码错误'))}
                 />
 
             </View>

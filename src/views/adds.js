@@ -203,7 +203,7 @@ export function Adds({route, navigation}) {
                     data={news}
                     ItemSeparatorComponent={() => <View style={[bColor(schemes), styles.listBbC]}></View>}
                     renderItem={({item, index}) => <TouchableOpacity
-                        onPress={() => Alert.alert('添加群聊', `将${item.name}加入群聊`, [
+                        onPress={() =>users.length < 51? Alert.alert('添加群聊', `将${item.name}加入群聊`, [
                             {
                                 text: '取消',
                             }, {
@@ -212,8 +212,7 @@ export function Adds({route, navigation}) {
                                     _ListId(list).then(cb => setUsers(cb.userArr))
                                 })
                             }
-                        ])}
-                    >
+                        ]):Alert.alert('群已经满了')}>
                         {upUsers(users, item) ? '' : <View style={[styles.ListRow]}>
                             <Portrait w={30} h={30} r={5} t={item.emoji} url={item.avatar}/>
                             <View style={[styles.ListLi]}>

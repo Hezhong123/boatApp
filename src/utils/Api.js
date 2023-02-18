@@ -197,12 +197,11 @@ export const _Sms = async (tel) => {
             tel: tel
         })
     }).then((responseJson) => {
-        Platform.OS == 'android'?
-            ToastAndroid.show("短信已发送", ToastAndroid.SHORT):
-            ''
+        ToastShow('短信已发送')
         return responseJson.status
     }).catch((error) => {
         console.error('获取短信验证码',error);
+        ToastShow('网络错误')
         return {}
     });
 }
@@ -221,6 +220,7 @@ export const _SmsLogin = async (tel, sms) => {
             tel: tel
         })
     }).then((responseJson) => {
+        ToastShow('登陆成功')
         return responseJson.json()
     }).catch((error) => {
         console.error('短信登陆',error);

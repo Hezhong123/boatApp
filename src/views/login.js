@@ -30,7 +30,7 @@ export function Login({navigation}) {
         let intM = setInterval(() => {
             if (refM.current == 1) {
                 clearInterval(intM)
-                setEnd(false)
+                setEnd(true)
             }
             setM(refM.current - 1)
         }, 1000)
@@ -41,7 +41,9 @@ export function Login({navigation}) {
             <Text
                 style={[styles.T1, styles.bold, fColor(schemes), {marginBottom: 10}, {color: '#6A8DE2'}]}>电话登录 </Text>
             <Text style={[styles.T5, fColor(schemes), {opacity: 0.9}, styles.bold]}>使用前请阅读 <Text
-                style={styles.LoginRowColor}>《boatIM使用协议》</Text>，注册或使用代表您同意此协议。 </Text>
+                style={styles.LoginRowColor}
+                onPress={()=>navigation.navigate('protocol')}
+            >《boatIM使用协议》</Text>，注册或使用即代表您同意此协议。 </Text>
 
             <View style={{width: '60%', marginTop: 30}}>
                 <Text style={[styles.T5, fColor(schemes), styles.bold, {opacity: 0.9}]}><Text
@@ -57,6 +59,7 @@ export function Login({navigation}) {
                         let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
                         if (myreg.test(text)) {
                             _Sms(text).then(r => {
+                                setEnd(false)
                                 console.log('短信', r)
                                 mFun()      //计时器起
                                 setCodeBoolean(true)
@@ -81,7 +84,7 @@ export function Login({navigation}) {
                     {m ? <Text style={[styles.T6, fColor(schemes), styles.bold, styles.LoginYe]}>{m}秒</Text> :
                         <TouchableOpacity onPress={() => {
                             _Sms(tel).then(r => {
-                                console.log('新短信', r)
+                                setEnd(false)
                                 mFun()      //计时器起
                                 setCodeBoolean(true)
                             })
