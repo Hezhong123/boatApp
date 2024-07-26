@@ -37,6 +37,7 @@ import NetInfo from "@react-native-community/netinfo";
 import {Asset} from "expo-asset";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
+import {CosImg} from "../utils/cos";
 
 const socket = io(wss)
 
@@ -217,6 +218,7 @@ export function Im({route, navigation}) {
         navigation.setOptions({title: im.title})
     }
 
+
     useFocusEffect(
         useCallback(() => {
              //没有网络同步离线消息
@@ -386,7 +388,7 @@ export function Im({route, navigation}) {
                 {/*发送消息*/}
                 <View style={[styles.imInput, bColor(schemes), {paddingLeft: 10, paddingRight: 10}]}>
                     {/*选择图片发送*/}
-                    <OssImage userID={user._id} cb={(url) => {
+                    <CosImg cb={url=>{
                         let imData = {
                             "user": user._id,
                             "list": list,
@@ -395,7 +397,7 @@ export function Im({route, navigation}) {
                             "tIm": 2
                         }
                         socket.emit('im', imData)
-                    }}/>
+                    }} />
                     <TextInput value={input}
                                multiline={true}
                                style={[styles.imInputSend, styles.T5, MsgColor(schemes), MstText(schemes)]}
