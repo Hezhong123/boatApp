@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastAndroid from "react-native/Libraries/Components/ToastAndroid/ToastAndroid";
 import {Platform} from "react-native";
 
-export const url = 'http://192.168.198.150:3000'
-export const wss = 'ws://192.168.198.150:3000'
+export const url = 'http://192.168.198.129:3000'
+export const wss = 'ws://192.168.198.129:3000'
 
 // export const url = "https://www.boatim.top"
 // export const wss = "wss://www.boatim.top"
