@@ -1,7 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 import {useEffect, useState} from "react";
 import {ActivityIndicator, Image, Text, TouchableOpacity, useWindowDimensions, View} from "react-native";
-import {_Avatar, _DelIm, _ListNull, oss} from "./Api";
+import {_Avatar, _DelIm, _ListNull, oss,url} from "./Api";
 
 
 export const OssImage = (props) => {
@@ -23,13 +23,13 @@ export const OssImage = (props) => {
                 uri: result.assets[0].uri,
                 type: "image/jpeg"
             }
-            formData.append('key', `img/${imgName}.png`)
-            formData.append('OSSAccessKeyId', 'LTAI7KYTQrVQf2gD')
-            formData.append('signature', '1B342WN5/tSE8HAlUQ3QT1J/fk0=')
-            formData.append('policy', 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0wMVQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==')
-            formData.append('success_action_status', 201)
+            // formData.append('key', `img/${imgName}.png`)
+            // formData.append('OSSAccessKeyId', 'LTAI7KYTQrVQf2gD')
+            // formData.append('signature', '1B342WN5/tSE8HAlUQ3QT1J/fk0=')
+            // formData.append('policy', 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0wMVQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==')
+            // formData.append('success_action_status', 201)
             formData.append('file', data)
-            fetch(oss, {
+            fetch(url, {
                 method: 'POST',
                 body: formData
             }).then((responseJson) => {
