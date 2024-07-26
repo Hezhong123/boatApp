@@ -2,14 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastAndroid from "react-native/Libraries/Components/ToastAndroid/ToastAndroid";
 import {Platform} from "react-native";
 
-// export const url = 'http://192.168.2.187:3000'
-// export const wss = 'ws://192.168.2.187:3000'
+export const url = 'http://192.168.198.150:3000'
+export const wss = 'ws://192.168.198.150:3000'
 
-export const url = "https://www.boatim.top"
-export const wss = "wss://www.boatim.top"
+// export const url = "https://www.boatim.top"
+// export const wss = "wss://www.boatim.top"
 export const oss = 'https://boatim.oss-cn-shanghai.aliyuncs.com'
 
-const ToastShow = (t)=>Platform.OS == 'android'?
+export const ToastShow = (t)=>Platform.OS == 'android'?
     ToastAndroid.show(t, ToastAndroid.SHORT):
     ''
 
@@ -304,6 +304,7 @@ export const _DelIm = async (list) => {
 
 //创建群聊
 export const _Ims = async (title) => {
+    console.log('111', title)
     return fetch(`${url}/list/ims`, {
         method: 'POST',
         headers: {
@@ -628,3 +629,22 @@ export const _UseTicket = async (ticketId) => {
     })
 }
 
+
+export const _Authorization = (path,extension)=>{
+    // const extension = file.name.split('.').pop().toLowerCase();
+    return fetch(`${url}/cos/authorization`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "path":path,
+            "key": extension
+        })
+    }).then((responseJson) => {
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('加入群聊', error);
+        return {}
+    })
+}
