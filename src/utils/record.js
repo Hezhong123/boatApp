@@ -2,7 +2,8 @@ import {Audio} from 'expo-av';
 import {useEffect, useRef, useState} from "react";
 import {ActivityIndicator, Button, Pressable, Text, View} from "react-native";
 import {styles} from "../css";
-import {_Avatar, oss} from "./Api";
+import {_Authorization, _Avatar, oss, ToastShow} from "./Api";
+import {upload} from "./cos";
 
 
 export const Record = (props) => {
@@ -40,47 +41,24 @@ export const Record = (props) => {
             console.log('语音时长',`m4a/${audioName}.m4a`, recording._finalDurationMillis)
             stop('null')
             // 上传声音文件
-            const formData = new FormData()
+
+            let cosAuth = await _Authorization('audio', 'm4a')
             let data = {
                 uri: recording.getURI(),
                 type: "audio/webm"
             }
-            formData.append('key', `m4a/${audioName}.m4a`)
-            formData.append('OSSAccessKeyId', 'LTAI7KYTQrVQf2gD')
-            formData.append('signature', '1B342WN5/tSE8HAlUQ3QT1J/fk0=')
-            formData.append('policy', 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0wMVQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==')
-            formData.append('success_action_status', 201)
-            formData.append('file', data)
-            setLoad(true)
-
-            fetch(oss, {
-                method: 'POST',
-                body: formData
-            }).then((responseJson) => {
+            upload(cosAuth,data).then(res=>{
+                cb(res)
+                console.log('声音上传成功',res)
                 setLoad(false)
-                cb(`https://boatim.oss-cn-shanghai.aliyuncs.com/m4a/${audioName}.m4a`)
-            }).catch((error) => {
-                console.error('上传头像失败', error);
-            });
-
-            // await axios.post(oss, formData, {
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data'
-            //     }
-            // }).then(res => {
-            //     console.log('上传语音', res.data)
-            //     setLoad(false)
-            //     cb(`https://boatim.oss-cn-shanghai.aliyuncs.com/m4a/${audioName}.m4a`)
-            // }, err => {
-            //     setLoad(false)
-            //     console.log('上传语音失败', err)
-            // })
+            },err=>{
+                setLoad(false)
+                ToastShow('声音上传失败')
+            })
         }else {
             stop('null')
         }
-
     }
-
     return (
         <View>
             {load ? <ActivityIndicator/> : <Pressable
@@ -92,7 +70,3 @@ export const Record = (props) => {
         </View>
     );
 }
-
-
-
-
