@@ -1,7 +1,7 @@
 import {Alert, Text, TextInput, TouchableOpacity, useColorScheme, View} from "react-native";
 import {BbC, bColor, fColor, inputBorderColor, styles} from "../css";
 import {useRef, useState} from "react";
-import {_Sms, _SmsLogin} from "../utils/Api";
+import {_Sms, _SmsLogin, mail, MailLogin} from "../utils/Api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function Login({navigation}) {
@@ -42,30 +42,32 @@ export function Login({navigation}) {
                 style={[styles.T1, styles.bold, fColor(schemes), {marginBottom: 10}, {color: '#6A8DE2'}]}>电话登录 </Text>
             <Text style={[styles.T5, fColor(schemes), {opacity: 0.9}, styles.bold]}>使用前请阅读 <Text
                 style={styles.LoginRowColor}
-                onPress={()=>navigation.navigate('protocol')}
+                onPress={() => navigation.navigate('protocol')}
             >《boatIM使用协议》</Text>，注册或使用即代表您同意此协议。 </Text>
 
             <View style={{width: '60%', marginTop: 30}}>
                 <Text style={[styles.T5, fColor(schemes), styles.bold, {opacity: 0.9}]}><Text
-                    style={styles.LoginRed}>* </Text>输入电话号码</Text>
+                    style={styles.LoginRed}>* </Text>输入邮箱地址</Text>
                 <TextInput
                     defaultValue={tel}
                     editable={end}
-                    keyboardType={'numeric'}
+                    keyboardType={'email'}
                     style={[fColor(schemes), styles.LoginInputs, inputBorderColor(schemes), styles.T5, {marginBottom: 6}]}
                     value={tel}
                     returnKeyType={"done"}
                     onSubmitEditing={({nativeEvent: {text, eventCount, target}}) => {
                         let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
-                        if (myreg.test(text)) {
-                            _Sms(text).then(r => {
+                        var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                        if (emailRegex.test(text)) {
+                            console.log(text)
+                            mail(text).then(r => {
                                 setEnd(false)
-                                console.log('短信', r)
+                                console.log('邮件', r)
                                 mFun()      //计时器起
                                 setCodeBoolean(true)
                             })
                         } else {
-                            Alert.alert('号码错误', '输入的电话格式不对')
+                            Alert.alert('邮箱错误', '输入的邮箱格式不对')
                         }
                     }}
                     onChangeText={text => setTel(text)}></TextInput>
@@ -83,8 +85,9 @@ export function Login({navigation}) {
                 <View>
                     {m ? <Text style={[styles.T6, fColor(schemes), styles.bold, styles.LoginYe]}>{m}秒</Text> :
                         <TouchableOpacity onPress={() => {
-                            _Sms(tel).then(r => {
+                            mail(text).then(r => {
                                 setEnd(false)
+                                console.log('邮件', r)
                                 mFun()      //计时器起
                                 setCodeBoolean(true)
                             })
@@ -95,8 +98,9 @@ export function Login({navigation}) {
             </View> : ''}
 
             {/*短信登陆*/}
-            {code.length==4 ? <TouchableOpacity onPress={() => {
-                _SmsLogin(tel, code).then(async cb => {
+            {code.length == 4 ? <TouchableOpacity onPress={() => {
+
+                MailLogin(tel, code).then(async cb => {
                     console.log('登陆信息', cb)
                     if (cb.code == 200) {
                         await AsyncStorage.setItem('token', cb.token)
