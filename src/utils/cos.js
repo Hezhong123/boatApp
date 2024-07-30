@@ -1,6 +1,6 @@
 import {ActivityIndicator, Text, TouchableOpacity, View} from "react-native";
 import {useState} from "react";
-import {_Authorization, oss, ToastShow, url} from "./Api";
+import {_Authorization, _Avatar, oss, ToastShow, url} from "./Api";
 import * as ImagePicker from "expo-image-picker";
 
 export function CosImg(props) {
@@ -44,6 +44,31 @@ export function CosImg(props) {
         </TouchableOpacity>}
     </View>
 }
+
+//更新头像
+export const upAvatar = async (userID) => new Promise(async user => {
+    let imgName = userID + Math.random().toString(36).substring(2);
+    let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: "Images",
+        allowsEditing: true,
+        aspect: [3, 3],
+        quality: 0.1,
+    });
+    let cosAuth = await _Authorization('avatar', 'png')
+    if (result.assets) {
+        let data = {
+            uri: result.assets[0].uri,
+            type: "image/jpeg"
+        }
+        upload(cosAuth,data).then(res=>{
+            console.log('上传头像成功',res)
+            _Avatar(res).then(res=>user(res))
+        },err=>{
+            ToastShow('上传失败')
+        })
+
+    }
+})
 
 
 export function  upload(result,file){
