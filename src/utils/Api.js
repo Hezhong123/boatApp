@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastAndroid from "react-native/Libraries/Components/ToastAndroid/ToastAndroid";
 import {Platform} from "react-native";
 
-export const url = 'http://192.168.198.129:3000'
-export const wss = 'ws://192.168.198.129:3000'
+export const url = 'http://172.20.10.7:3000'
+export const wss = 'ws://172.20.10.7:3000'
 
 // export const url = "https://www.boatim.top"
 // export const wss = "wss://www.boatim.top"
@@ -183,6 +183,48 @@ export const _StoreDel =  async (id) => {
         return {}
     });
 }
+
+export const mail =async (mail)=>{
+    return fetch(`${url}/user/mail`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+            mail: mail
+        })
+    }).then((responseJson) => {
+        ToastShow('邮件已发送')
+        return responseJson.status
+    }).catch((error) => {
+        console.error('获取邮件验证码',error);
+        ToastShow('网络错误')
+        return {}
+    });
+}
+
+// 邮箱登陆
+export const MailLogin = async (mail,mailCode) => {
+    return fetch(`${url}/user/mailLogin`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            mailCode: mailCode,
+            mail: mail
+        })
+    }).then((responseJson) => {
+        ToastShow('登陆成功')
+        return responseJson.json()
+    }).catch((error) => {
+        console.error('短信登陆',error);
+        return {}
+    });
+}
+
 
 
 //获取短信验证码
