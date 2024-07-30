@@ -17,7 +17,8 @@ import {Portrait} from "../components/Portrait";
 import {memberFun} from "../utils/time";
 import {Audio} from "expo-av";
 import * as Clipboard from "expo-clipboard";
-import {MsgImg, upAvatar} from "../utils/oss";
+import {MsgImg} from "../utils/oss";
+import {upAvatar} from '../utils/cos'
 import ToastAndroid from "react-native/Libraries/Components/ToastAndroid/ToastAndroid";
 
 export function Me({navigation}) {
