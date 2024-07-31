@@ -39,7 +39,7 @@ export function Login({navigation}) {
     return (
         <View style={[styles.Login, bColor(schemes)]}>
             <Text
-                style={[styles.T1, styles.bold, fColor(schemes), {marginBottom: 10}, {color: '#6A8DE2'}]}>电话登录 </Text>
+                style={[styles.T1, styles.bold, fColor(schemes), {marginBottom: 10}, {color: '#6A8DE2'}]}>邮箱登录 </Text>
             <Text style={[styles.T5, fColor(schemes), {opacity: 0.9}, styles.bold]}>使用前请阅读 <Text
                 style={styles.LoginRowColor}
                 onPress={() => navigation.navigate('protocol')}
