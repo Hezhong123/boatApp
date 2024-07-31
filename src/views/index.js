@@ -58,7 +58,7 @@ export function Index({navigation}) {
                 setLogin(true)
                 _User().then(async user => {
                     await AsyncStorage.setItem('user',JSON.stringify(user))
-                    // console.log('user', user)
+                    console.log('user', user)
                     setUser(user)
                     navigation.setOptions({
                         headerRight: () => user.name ?
@@ -88,6 +88,7 @@ export function Index({navigation}) {
                 // 联系人列表
                 setTimeout(async () => {
                     _List().then(res => {
+                        console.log(res)
                         setList(res)
                         setLoad(true)
                     })
