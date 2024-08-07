@@ -12,9 +12,16 @@
       "channel": "preview",
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "channel": "production"
+    }
   },
   "submit": {
-    "production": {}
+    "production": {},
+    "ios": {
+      "appleId": "626815494@qq.com",
+      "ascAppId": "1234567890",
+      "appleTeamId": "AB12XYZ34S"
+    }
   }
 }

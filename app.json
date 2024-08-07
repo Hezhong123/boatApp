@@ -38,7 +38,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hez2019.boatIm"
     },
     "android": {
       "adaptiveIcon": {

@@ -6,10 +6,8 @@ import * as ImagePicker from "expo-image-picker";
 export function CosImg(props) {
     const {cb}=props
     const [load,setLoad] = useState(false);
-
     async function upImg() {
         setLoad(true)
-
         // console.log('Cos',cosAuth)
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: "Images",
@@ -22,7 +20,6 @@ export function CosImg(props) {
                 uri: result.assets[0].uri,
                 type: "image/jpeg"
             }
-
             upload(cosAuth,data).then(res=>{
                 cb(res)
                 console.log('上传成功',res)
@@ -34,10 +31,7 @@ export function CosImg(props) {
         } else {
             setLoad(false)
         }
-
     }
-
-
     return  <View>
         {load ? <ActivityIndicator/> : <TouchableOpacity onPress={() => upImg()}>
             <Text style={{fontSize: 20, marginRight: 10}}>📷️</Text>
