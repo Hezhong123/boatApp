@@ -5,6 +5,7 @@ import {Platform} from "react-native";
 export const url = 'https://im.xldkeji.com'
 export const wss = 'wss://im.xldkeji.com'
 
+// 626815494@qq.com
 // export const url = "https://www.boatim.top"
 // export const wss = "wss://www.boatim.top"
 export const oss = 'https://boatim.oss-cn-shanghai.aliyuncs.com'

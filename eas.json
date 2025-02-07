@@ -4,24 +4,16 @@
   },
   "build": {
     "development": {
-      "developmentClient": true,
-      "channel": "development",
       "distribution": "internal"
     },
     "preview": {
-      "channel": "preview",
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {
       "channel": "production"
-    }
-  },
-  "submit": {
-    "production": {},
-    "ios": {
-      "appleId": "626815494@qq.com",
-      "ascAppId": "1234567890",
-      "appleTeamId": "AB12XYZ34S"
     }
   }
 }
