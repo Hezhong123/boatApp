@@ -1,0 +1,38 @@
+{
+  "name": "newboat",
+  "license": "0BSD",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/netinfo": "11.4.1",
+    "@react-navigation/native": "^7.0.14",
+    "@react-navigation/native-stack": "^7.1.14",
+    "aws-sdk": "^2.1692.0",
+    "expo": "~52.0.31",
+    "expo-asset": "~11.0.3",
+    "expo-av": "~15.0.2",
+    "expo-clipboard": "~7.0.1",
+    "expo-file-system": "^18.0.10",
+    "expo-haptics": "~14.0.1",
+    "expo-image-picker": "~16.0.5",
+    "expo-media-library": "~17.0.5",
+    "expo-notifications": "~0.29.13",
+    "expo-status-bar": "~2.0.1",
+    "react": "18.3.1",
+    "react-native": "0.76.7",
+    "react-native-safe-area-context": "4.12.0",
+    "socket.io-client": "^4.8.1",
+    "expo-updates": "~0.26.17"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  },
+  "private": true
+}

@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "BoatIm",
+    "slug": "newBoat",
+    "version": "1.0.3",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/splash.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.hez2019.newBoat"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "170840b9-61a2-4fca-aa8b-0a2e2a7f191b"
+      }
+    },
+    "owner": "hez2019",
+    "plugins": [
+      "expo-asset"
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/170840b9-61a2-4fca-aa8b-0a2e2a7f191b"
+    }
+  }
+}
