@@ -1,0 +1,50 @@
+/* pages/order/order.wxss */
+.cat{
+    padding: 10px 20px ;
+    margin: 20px ;
+    background-image: linear-gradient(to right, #66ECC3, #57D0D9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+}
+.cat text{
+    color: #ffffff;
+}
+.tt{
+    font-size: 66px;
+    font-weight: 600;
+}
+.actMa{
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px 5px;
+    border-bottom:1px solid #E7EBED ;
+}
+.actMa input{
+    flex: 1;
+    margin: 0 10px;
+    background-color: #E7EBED;
+    color: #687980;
+    padding: 5px 7px;
+    border-radius: 3px;   
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+.bt1{
+    color: #ffffff;
+    background-color: #70D6C9;
+    padding: 1px 10px;
+    border-radius:3px;
+}
+.item{
+    height: 60vh;
+}
+.items{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 25px;
+    padding: 10px;
+    border-bottom:1px solid #E7EBED ;
+}

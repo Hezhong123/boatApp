@@ -1,0 +1,37 @@
+<!--index.wxml-->
+<view>
+    <view class="top">
+        <text class="ico1" bind:tap="onMode">➕</text>
+        <image class="userImg" bind:tap="navPage" data-page="me" src="{{userImg}}" 
+        mode="aspectFill" alt="" />
+    </view>
+    <scroll-view type="list" scroll-y>
+        <view class="lis" wx:for="{{[1,2,4,5]}}" 
+        bind:tap="navPage" data-page="im">
+            <view class="user">
+                <text class="iconRed" >23</text>
+                <image class='liImg' src="{{userImg}}" mode="aspectFill" alt="" />
+                <view class="line"></view>
+            </view>
+            <view class="textRow">
+                <view class="row">
+                    <text class="t1 titleColor"> 靓仔一号 </text>
+                    <text class="t3 textColor"> 消息内容 </text>
+                </view>
+                <text class="t5 timeColor"> 3分钟前 </text>
+            </view>
+        </view>
+    </scroll-view>
+
+   <view show="true" class="model" wx:if="{{modelA}}" bind:tap="onMode" >
+        <view class="row">
+            <view class="textCol">
+                <text class="t1 titleColor" style="margin-bottom: 10px;"> 学习的路上, \n <text class="t3">On the way to learning,</text> </text>
+                
+                <text class="t1 titleColor"> 与Ta同行 \n <text class="t3">Walk with Ta</text> </text>
+            </view>
+          
+            <button catch:tap="childCatchTap"> 分享 </button>
+        </view>
+   </view>
+</view>

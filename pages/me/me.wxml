@@ -1,0 +1,35 @@
+<!--pages/me/me.wxml-->
+<view>
+    <view class="top">
+        <view class="user">
+            <image class="userImg" src="{{userImg}}" mode="aspectFill" />
+            <text class="icon t5"> 300 </text>
+        </view>
+        <view class="row">
+            <view class="lteft">
+                <text class="t3 titleColor"> 失业程序员 </text>
+                <text class="t5 textColor"> <text>🆔</text> 10023</text>
+            </view>
+            <view class="right" bind:tap="navPage" data-page="order">
+                <text class="t4"> 会员中心 </text>
+            </view>
+        </view>
+    </view>
+
+    <view class="query">
+        <view class="row1">
+            <text class="ico1"> 🔍 </text>
+            <input class="t3" type="text" />
+        </view>
+        <scroll-view>
+            <view class="rigth" wx:for="{{[1,2,3]}}">
+                <view class="msg">
+                    <text class="t3">你好,朋友</text>
+                    <text class="t4"> Hello, friend. </text>
+                </view>
+                <text class="t5">🎵</text>
+            </view>
+        </scroll-view>
+
+    </view>
+</view>

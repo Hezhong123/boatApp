@@ -1,0 +1,19 @@
+<!--pages/order/order.wxml-->
+<view>
+    <view class="cat">
+        <text class="t3"> · 词列不限量 \n  · 跟读不限量 \n · 创建专属学习群</text>
+        <text class="tt">59<text class="t3">¥/年</text> </text>
+    </view>
+
+    <view class="actMa"> 
+        <text class="ico1">🎁</text>
+        <input type="text" placeholder="激活码" />
+        <text class="bt1 t3 "> 兑换 </text>
+    </view>
+    <scroll-view scroll-y class="item" >
+        <view class="items" wx:for="{{[1,2,3,4,5,6]}}">
+            <text class="t3 titleColor"> 开通年费 +365天 </text>
+            <text class="t5 timeColor"> 3天前 </text>
+        </view>
+    </scroll-view>
+</view>

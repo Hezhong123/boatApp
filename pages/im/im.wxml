@@ -1,0 +1,70 @@
+<!--pages/im/im.wxml-->
+<view class="im">
+    <scroll-view class="ims" type="list" scroll-y refresher-enabled>
+        <view wx:for="{{[1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]}}">
+            <view class="left">
+                <image class="userImg" src="{{userImg}}" mode="aspectFill" />
+                <view class="row">
+                    <!-- <text class="userName t3 titleColor">Hez</text> -->
+                    <view class="msg">
+                        <text class="t3">你好,朋友</text>
+                        <text class="t4"> Hello, friend. </text>
+                    </view>
+                </view>
+
+            </view>
+            <view class="rigth">
+                <view class="msg">
+                    <text class="t3">你好,朋友</text>
+                    <text class="t4"> Hello, friend. </text>
+                </view>
+            </view>
+            <view class="tCenter"> <text class="t5 timeColor "> 3分钟前 </text></view>
+        </view>
+
+    </scroll-view>
+    <!-- 页脚输入栏 -->
+    <view class="sends">
+        <view class="actItem">
+            <view class="act">
+                <view>
+                    <text>✍️</text>
+                    <text> 🎵 </text>
+                </view>
+                <text class="setQun" bind:tap="onSetqun">⚙️</text>
+            </view>
+            <view class="ciLi">
+                <text class="ci"> you </text>
+                <text class="ci"> lately </text>
+                <text class="ci"> how about </text>
+            </view>
+        </view>
+        <view class="sendItem">
+            <text class="ico1"> 📷 </text>
+            <textarea show-confirm-bar="{{false}}" type="text" cursor-spacing="{{15}}" auto-height placeholder="" />
+            <text class="ico1">🎙️</text>
+            <!-- <button> 发送 </button> -->
+        </view>
+    </view>
+
+    <page-container show="{{container}}" overlay-style="backdrop-filter: blur(2px)" round class="container" custom-style="padding: 15px;" >
+        <view class="row1">
+            <text class="t2 titleColor"> 群名称 </text>
+            <input type="text"/>
+            <button class="btn1 btnBJ1" style="width: 50px;"> 修改 </button>
+        </view>
+        <view class="row2">
+            <text class="t2 titleColor"> 群成员 10/100 </text>
+            <view class="btnRow">
+                <button class="btn1 btnBJ2" style="width: 70px;"> 邀请新人 </button>
+                <button class="btn1 btnBJ1" style="width: 70px;"> 退出群聊 </button>
+            </view>
+        </view>
+        <view class="row3">
+            <view class="user" wx:for="{{[1,2,3,4,5,6,3,4,5,6]}}">
+                <image class="userImg" src="{{userImg}}" mode="aspectFill"/>
+                <text class="t4 textColor"> 昵称</text>
+            </view>
+        </view>
+    </page-container>
+</view>

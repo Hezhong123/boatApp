@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/im/im",
+    "pages/me/me",
+    "pages/order/order",
+    "pages/logs/logs"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "Weixin",
+    "navigationBarBackgroundColor": "#ffffff"
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,47 @@
+/**app.wxss**/
+.ico1{
+    font-size: 26px;
+}
+.icoShow{
+    opacity: 1;
+}
+.t1{
+    font-size: 18px;
+}
+.t2{
+    font-size: 16px;
+}
+.t3{
+    font-size: 14px;
+}
+.t4{
+    font-size: 12px;
+}
+.t5{
+    font-size: 11px;
+}
+.titleColor{
+    color: #4C4C4C;
+    letter-spacing: 1px;
+}
+.textColor{
+    color: #7D7D7D;
+    letter-spacing: 1px;
+}
+.timeColor{
+    color: #7D7D7D;
+    letter-spacing: 1px;
+}
+.tCenter{
+    width: 100vw;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.btnBJ1{
+    background-image: linear-gradient(to right, #66ECC3, #57D0D9);
+}
+
+.btnBJ2{
+    background-image: linear-gradient(to right, #FF9181, #F28893);
+}
