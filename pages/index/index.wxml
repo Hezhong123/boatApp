@@ -1,27 +1,35 @@
 <!--index.wxml-->
+<wxs src="../../utils/index.wxs" module="utils" />
 <view>
     <view class="top">
         <text class="ico1" bind:tap="onMode">➕</text>
-        <image class="userImg" bind:tap="navPage" data-page="me" src="{{userImg}}" 
+        <image class="userImg" bind:tap="navPage" data-page="me" src="{{user.avatarUrl}}" 
         mode="aspectFill" alt="" />
     </view>
-    <scroll-view type="list" scroll-y>
-        <view class="lis" wx:for="{{[1,2,4,5]}}" 
-        bind:tap="navPage" data-page="im">
+    <scroll-view wx:if="{{ims.length}}" type="list" scroll-y>
+        <view class="lis" wx:for="{{ims}}" wx:key="ims" bind:tap="navIms" 
+        data-title="对话人"
+        data-ims="{{item._id}}">
             <view class="user">
-                <text class="iconRed" >23</text>
-                <image class='liImg' src="{{userImg}}" mode="aspectFill" alt="" />
-                <view class="line"></view>
+                <text class="iconRed" wx:if="{{utils.unread(user.id,item.unread)}}" > {{utils.unread(user.id,item.unread)}}</text>
+                <image wx:if="{{true}}" class='liImg' src="{{utils.userTo(user.id,item.userArr).avatarUrl}}" mode="aspectFill" alt="" />
+                <view wx:else>
+                    <image class='liImg' src="{{userImg}}" mode="aspectFill" alt="" />
+                </view>
+                <view wx:if="{{utils.userTo(user.id,item.userArr).online}}" class="line"></view>
             </view>
             <view class="textRow">
                 <view class="row">
-                    <text class="t1 titleColor"> 靓仔一号 </text>
-                    <text class="t3 textColor"> 消息内容 </text>
+                    <text class="t1 titleColor"> {{utils.userTo(user.id,item.userArr).nickname}} </text>
+                    <text class="t3 textColor"> {{item.newMsg}} </text>
                 </view>
-                <text class="t5 timeColor"> 3分钟前 </text>
+                <text class="t5 timeColor"> {{utils.times(item.updatedAt)}} </text>
             </view>
         </view>
     </scroll-view>
+    <view wx:else> 
+        <text> 没有数据 </text>
+    </view>
 
    <view show="true" class="model" wx:if="{{modelA}}" bind:tap="onMode" >
         <view class="row">
