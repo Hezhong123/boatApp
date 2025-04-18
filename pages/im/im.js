@@ -1,13 +1,19 @@
 // pages/im/im.js
 import io from '../../utils/weapp.socket.io'
+import {imMsg,userMsg} from '../../models/index'
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    container:false,
-    userImg:'https://img.freepik.com/free-photo/asian-man-wearing-glasses-portrait-smiling-face-close-up_53876-139746.jpg'
+    into:'', //滚动矛点
+    container:false, //设置按钮
+    user:{}, //用户悉尼下
+    im:'',  //信道
+    msg:'', //输入内容
+    msgli:[], //对话内容
+    userImg:'https://boattext-1251490080.cos.ap-guangzhou.myqcloud.com/im/user/0.png'
   },
 
   onSetqun:function(){
@@ -15,26 +21,55 @@ Page({
           container: !this.data.container
       })
   },
+
+//   发送文本消息
+  onMsgChange:function(e){
+    let val = e.detail.value
+    this.socket.emit('sendMessage',{
+        "text":val,
+        "type":2,
+        "room":this.data.im,
+        "id":100000
+    })
+  },
+
+  // 滚动秒点随机数
+  intoFun: function (e) {
+    return e + Math.floor(Math.random() * 100 + 1)
+  },
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad(options) {
+  async onLoad(options) {
+    let {im,title} = options
+    let msg = await imMsg(im)
+    console.log('信道Id',im,title,msg);
+    this.setData({
+        msgli:msg,
+        im:im,
+        into:this.intoFun(),
+        user:await userMsg()
+    })
     wx.setNavigationBarTitle({
-        title: '对话内容'
-      })
+        title: title
+    })
     const socket = io('http://192.168.1.6:3000');
     socket.on('connection',msg=>{
-        console.log('socket',msg)
+        console.log('socketIm',msg)
         //加入房间
         socket.emit('joinRoom', {
-            room:'a123'
+            room:im
         })
     })
     socket.on('newMessage', (data) => {
-        console.log(data);
-    });
-    socket.on('a1', (data) => {
-        console.log(data);
+        let msgliArr = this.data.msgli
+        msgliArr.push(data)
+        console.log(data,msgliArr);
+        this.setData({
+            msg:'',
+            into:this.intoFun('im'),
+            msgli:msgliArr
+        })
     });
     this.socket = socket
   },
@@ -66,7 +101,7 @@ Page({
   onUnload() {
     if (this.socket) {
         this.socket.disconnect(); // 断开连接
-        console.log('socket 断开连接');
+        console.log('socketIm 断开连接');
     }
   },
 

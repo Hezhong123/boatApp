@@ -1,27 +1,31 @@
 <!--pages/im/im.wxml-->
 <view class="im">
-    <scroll-view class="ims" type="list" scroll-y refresher-enabled>
-        <view wx:for="{{[1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]}}">
-            <view class="left">
-                <image class="userImg" src="{{userImg}}" mode="aspectFill" />
+    <scroll-view class="ims" type="list" scroll-y refresher-enabled
+    scroll-into-view='{{into}}'>
+        <view wx:for="{{msgli}}" wx:key="msg">
+            <view class="rigth" wx:if="{{item.user.id == user.id}}">
+                <view class="msg">
+                    <text class="t3">{{item.text}}</text>
+                    <text class="t4"> Hello, friend. </text>
+                </view>
+            </view>
+
+            <view wx:else class="left" >
+                <image class="userImg" src="{{item.user.avatarUrl}}" mode="aspectFill" />
                 <view class="row">
                     <!-- <text class="userName t3 titleColor">Hez</text> -->
                     <view class="msg">
-                        <text class="t3">你好,朋友</text>
+                        <text class="t3">{{item.text}}</text>
                         <text class="t4"> Hello, friend. </text>
                     </view>
                 </view>
 
             </view>
-            <view class="rigth">
-                <view class="msg">
-                    <text class="t3">你好,朋友</text>
-                    <text class="t4"> Hello, friend. </text>
-                </view>
-            </view>
-            <view class="tCenter"> <text class="t5 timeColor "> 3分钟前 </text></view>
+           
+            <view class="tCenter" wx:if="{{item.type == 4}}" > <text class="t5 timeColor "> 3分钟前 </text></view>
+           
         </view>
-
+        <view id="{{into}}" class="into"></view>
     </scroll-view>
     <!-- 页脚输入栏 -->
     <view class="sends">
@@ -41,7 +45,9 @@
         </view>
         <view class="sendItem">
             <text class="ico1"> 📷 </text>
-            <textarea show-confirm-bar="{{false}}" type="text" cursor-spacing="{{15}}" auto-height placeholder="" />
+            <textarea show-confirm-bar="{{false}}" type="text" value="{{msg}}"
+            bindblur="onMsgChange"
+             cursor-spacing="{{15}}" auto-height placeholder="" />
             <text class="ico1">🎙️</text>
             <!-- <button> 发送 </button> -->
         </view>

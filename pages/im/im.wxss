@@ -174,3 +174,7 @@ page{
     height: 50px;
     margin-bottom: 5px;
 }
+
+.into{
+    height: 10px;
+}
