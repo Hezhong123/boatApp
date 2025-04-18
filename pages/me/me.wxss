@@ -2,6 +2,7 @@
 page {
     background-color: #ffffff;
 }
+
 .top{
     margin-top: 30px;
     display: flex;
@@ -10,13 +11,21 @@ page {
 }
 .user{
     position: relative;
-    width: 56px;
-    height: 56px;
+    width: 56px !important;
+    height: 56px !important;
 }
 .userImg{
-    width: 100%;
-    height: 100%;
+    width: 56px !important;
+    height: 56px !important;
     border-radius: 56px;
+    padding: 0;
+}
+
+
+.avatar {
+  display: block;
+  width: 56px;
+  height: 56px;
 }
 .user .icon{
     position: absolute;

@@ -2,13 +2,18 @@
 <view>
     <view class="top">
         <view class="user">
-            <image class="userImg" src="{{userImg}}" mode="aspectFill" />
+            <button class="userImg" open-type="chooseAvatar" bind:chooseavatar="bindGetUserInfo">
+                <image class="avatar" src="{{userMsg.avatarUrl}}" mode="aspectFill" />
+            </button>
             <text class="icon t5"> 300 </text>
         </view>
         <view class="row">
             <view class="lteft">
-                <text class="t3 titleColor"> 失业程序员 </text>
-                <text class="t5 textColor"> <text>🆔</text> 10023</text>
+                <input wx:if="{{nickenme}}" class="weui-input t3 titleColor" auto-focus placeholder="修改昵称"
+                bindblur="onNikenmeBlur"
+                />
+                <text wx:else class="t3 titleColor" bind:tap="onNikenme" > {{userMsg.nickname}} </text>
+                <text class="t5 textColor"> <text>🆔</text> {{userMsg.id}}</text>
             </view>
             <view class="right" bind:tap="navPage" data-page="order">
                 <text class="t4"> 会员中心 </text>

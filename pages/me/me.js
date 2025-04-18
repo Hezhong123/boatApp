@@ -1,27 +1,71 @@
 // pages/me/me.js
+import {userMsg,upUserMsg} from '../../models/index'
+import {upload}  from '../../models/cos'
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    userImg:'https://img.freepik.com/free-photo/asian-man-wearing-glasses-portrait-smiling-face-close-up_53876-139746.jpg'
+    nickenme:false,
+    userMsg:{}
   },
-  navPage:function(e){
-    let page = e.currentTarget.dataset.page
-    console.log(page);
-    wx.navigateTo({
-      url: `/pages/${page}/${page}`,
-    })
-  },
+
+    //   修改昵称
+    onNikenme: function(){
+        this.setData({
+            nickenme:true
+        })
+    },
+    // 取消修改昵称
+    onNikenmeBlur:function(e){
+        let val = e.detail.value
+        if(val){
+            upUserMsg({nickname:val}).then(async res=>{
+                this.setData({
+                    userMsg: await userMsg()
+                })
+            })
+        }
+    },
+
+    //修改头像
+    bindGetUserInfo (e) {
+        let newAvatarUrl = e.detail.avatarUrl
+        console.log(newAvatarUrl);
+        upload(newAvatarUrl,'im/user',cb=>{
+            if(cb){
+                console.log('修改头像',cb);
+                upUserMsg({avatarUrl:cb}).then(async res=>{
+                    this.setData({
+                        userMsg: await userMsg()
+                    })
+                })      
+            }
+        })
+    },
+
+    navPage:function(e){
+        let page = e.currentTarget.dataset.page
+        console.log(page);
+        wx.navigateTo({
+        url: `/pages/${page}/${page}`,
+        })
+    },
+
+ 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad(options) {
-    wx.setNavigationBarTitle({
-        title: '我的'
-      })
-  },
+    async onLoad(options) {
+        wx.setNavigationBarTitle({
+            title: '我的'
+        })
+        this.setData({
+            userMsg:await userMsg()
+        })
+    },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
