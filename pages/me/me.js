@@ -1,6 +1,6 @@
 // pages/me/me.js
 import {userMsg,upUserMsg} from '../../models/index'
-import {upload}  from '../../models/cos'
+import {uploadCOS}  from '../../models/cos'
 
 Page({
 
@@ -9,7 +9,7 @@ Page({
    */
   data: {
     nickenme:false,
-    userMsg:{}
+    user:{}
   },
 
     //   修改昵称
@@ -24,7 +24,7 @@ Page({
         if(val){
             upUserMsg({nickname:val}).then(async res=>{
                 this.setData({
-                    userMsg: await userMsg()
+                    user: await userMsg()
                 })
             })
         }
@@ -34,12 +34,14 @@ Page({
     bindGetUserInfo (e) {
         let newAvatarUrl = e.detail.avatarUrl
         console.log(newAvatarUrl);
-        upload(newAvatarUrl,'im/user',cb=>{
+        uploadCOS(newAvatarUrl,'im/user',cb=>{
             if(cb){
                 console.log('修改头像',cb);
                 upUserMsg({avatarUrl:cb}).then(async res=>{
+                    let user = await userMsg()
+                    console.log(user);
                     this.setData({
-                        userMsg: await userMsg()
+                        user: user
                     })
                 })      
             }
@@ -59,11 +61,13 @@ Page({
    * 生命周期函数--监听页面加载
    */
     async onLoad(options) {
+        let user = await userMsg()
+        console.log(user);
         wx.setNavigationBarTitle({
             title: '我的'
         })
         this.setData({
-            userMsg:await userMsg()
+            user: user
         })
     },
 
