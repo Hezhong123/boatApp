@@ -1,32 +1,58 @@
 <!--pages/im/im.wxml-->
+<wxs src="../../utils/index.wxs" module="utils" />
 <view class="im">
-    <scroll-view class="ims" type="list" scroll-y refresher-enabled
-    scroll-into-view='{{into}}'>
+    <scroll-view class="ims" type="list" scroll-y refresher-enabled scroll-into-view='{{into}}'>
         <view wx:for="{{msgli}}" wx:key="msg">
             <view class="rigth" wx:if="{{item.user.id == user.id}}">
-                <view class="msg">
-                    <text class="t3">{{item.text}}</text>
-                    <text class="t4"> Hello, friend. </text>
+                <view class="YinRow" wx:if="{{item.type==1}}">
+                    <text class="t5"  wx:if="{{aideoId == item._id}}"> 🎵 </text>
+                    <view class="msg">
+                        <text class="t4">{{item.text}}</text>
+                        <text class="t5"> Hello, friend. </text>
+                    </view>
+                </view>
+                <image class="imImg" wx:if="{{item.type==2}}" src="{{item.text}}" mode="widthFix" />
+                <view class="YinRow" wx:if="{{item.type==3}}">
+                    <text class="t5 flashing-element" wx:if="{{aideoId == item._id}}"> 🎵 </text>
+                    <view class="msg"  bind:tap="onAideo" data-id="{{item._id}}"
+                     data-url="{{utils.aidoeUrl(item.text,true)}}">
+                        <text> {{utils.aidoeUrl(item.text,false)}} " </text>
+                    </view>
+
                 </view>
             </view>
 
-            <view wx:else class="left" >
-                <image class="userImg" src="{{item.user.avatarUrl}}" mode="aspectFill" />
-                <view class="row">
-                    <!-- <text class="userName t3 titleColor">Hez</text> -->
-                    <view class="msg">
-                        <text class="t3">{{item.text}}</text>
-                        <text class="t4"> Hello, friend. </text>
+            <view wx:else class="left">
+                <image wx:if="{{item.user.id == msgli[index-1].user.id }}" class="userImg" src="" mode="aspectFill" />
+                <image wx:else="" class="userImg" src="{{item.user.avatarUrl}}" mode="aspectFill" />
+
+                <view class="YinRow" wx:if="{{item.type==1}}">
+                        <view class="msg" >
+                            <text class="t4">{{item.text}}</text>
+                            <text class="t5"> Hello, friend. </text>
+                        </view>
+                        <text class="t5" wx:if="{{aideoId == item._id}}" > 🎵 </text>
+                    </view>
+
+                <image class="imImg" wx:if="{{item.type==2}}" src="{{item.text}}" mode="widthFix" />
+
+                <view class="YinRow">
+                    <view class="msg" wx:if="{{item.type==3}}">
+                        <text>{{utils.aidoeStr(item.text,false)}} " </text>
+                        <text wx:if="{{aideoId == item._id}}" > 🎵 </text>
                     </view>
                 </view>
 
             </view>
-           
-            <view class="tCenter" wx:if="{{item.type == 4}}" > <text class="t5 timeColor "> 3分钟前 </text></view>
-           
+
+            <view class="tCenter" wx:if="{{item.type == 4}}"> 
+                <text class="t5 timeColor "> {{utils.times(item.text)}} </text>
+            </view>
+
         </view>
         <view id="{{into}}" class="into"></view>
     </scroll-view>
+    
     <!-- 页脚输入栏 -->
     <view class="sends">
         <view class="actItem">
@@ -35,8 +61,9 @@
                     <text>✍️</text>
                     <text> 🎵 </text>
                 </view>
-                <text class="setQun" bind:tap="onSetqun">⚙️</text>
+                <text wx:if="{{set}}" class="setQun" bind:tap="onSetqun">⚙️</text>
             </view>
+            <!-- 词列 -->
             <view class="ciLi">
                 <text class="ci"> you </text>
                 <text class="ci"> lately </text>
@@ -44,19 +71,30 @@
             </view>
         </view>
         <view class="sendItem">
-            <text class="ico1"> 📷 </text>
-            <textarea show-confirm-bar="{{false}}" type="text" value="{{msg}}"
-            bindblur="onMsgChange"
-             cursor-spacing="{{15}}" auto-height placeholder="" />
-            <text class="ico1">🎙️</text>
-            <!-- <button> 发送 </button> -->
+            <text class="ico1" bind:tap="onChooseMessage"> 📷 </text>
+
+            <!-- 声音波纹 -->
+            <view wx:if="{{aideo}}" class="waveform-container">
+                <view class="wave wave-1"></view>
+                <view class="wave wave-2"></view>
+                <view class="wave wave-3"></view>
+                <view class="wave wave-4"></view>
+                <view class="wave wave-5"></view>
+                <!-- <text> {{aideTime}}" </text> -->
+            </view>
+
+            <textarea wx:else show-confirm-bar="{{false}}" type="text" value="{{msg}}" bindinput="onMsgChange" 
+            cursor-spacing="{{15}}" auto-height placeholder="" />
+
+            <button wx:if="{{msg}}" bind:tap="onMsgSend" > 发送 </button> 
+            <view wx:else class="ico1" bind:longpress="startAideo" longpress-duration="800" bind:touchend="stopAideo">🎙️</view>
         </view>
     </view>
 
-    <page-container show="{{container}}" overlay-style="backdrop-filter: blur(2px)" round class="container" custom-style="padding: 15px;" >
+    <page-container show="{{container}}" overlay-style="backdrop-filter: blur(2px)" round class="container" custom-style="padding: 15px;">
         <view class="row1">
             <text class="t2 titleColor"> 群名称 </text>
-            <input type="text"/>
+            <input type="text" />
             <button class="btn1 btnBJ1" style="width: 50px;"> 修改 </button>
         </view>
         <view class="row2">
@@ -68,7 +106,7 @@
         </view>
         <view class="row3">
             <view class="user" wx:for="{{[1,2,3,4,5,6,3,4,5,6]}}">
-                <image class="userImg" src="{{userImg}}" mode="aspectFill"/>
+                <image class="userImg" src="{{userImg}}" mode="aspectFill" />
                 <text class="t4 textColor"> 昵称</text>
             </view>
         </view>

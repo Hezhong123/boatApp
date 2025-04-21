@@ -11,7 +11,7 @@ page{
 }
 .ims{
     flex-grow: 1;
-    min-height: 90vh;
+    min-height: 100vh;
 }
 .left{
     display: flex;
@@ -19,8 +19,8 @@ page{
     margin-bottom: 10px;
 }
 .left .userImg{
-    width: 43px;
-    height: 43px;
+    width: 35px;
+    height: 35px;
     border-radius:50px;
 }
 .left .row{
@@ -39,9 +39,19 @@ page{
     padding: 5px 10px;
     border-radius: 5px;
 }
+.YinRow{
+    display: flex;
+    align-items: center;
+}
 .msg text{
     color: #646464;
 }
+.imImg{
+    max-width: 55%;
+    border-radius:5px;
+    margin: 0 10px;
+  }
+  
 .rigth{
     display: flex;
     justify-content: flex-end;
@@ -50,15 +60,15 @@ page{
 
 .sends{
     width: 100vw;
-    position: relative;
+    flex: 1;
+    position: fixed;
+        bottom: 1px;
+    flex-direction: column;
 }
 .actItem{
-    height: 98px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    position: absolute;
-        top: -100px;
 }
 .act{
     margin-left: 15px;
@@ -170,11 +180,94 @@ page{
     text-align: center;
 }
 .container .row3  .userImg{
-    width: 50px;
+    width: 40px;
     height: 50px;
     margin-bottom: 5px;
 }
 
 .into{
-    height: 10px;
+    height: 80px;
 }
+
+.waveform-container {
+    display: flex;
+    justify-content: space-around; /* 使波纹均匀分布 */
+    align-items: center;
+    height: 30px; /* 调整高度 */
+    width: 100px;
+  }
+  .waveform-container text{
+      color: #007aff;
+      font-size: 25px;
+      font-weight: 600;
+      margin-left: 6px;
+  }
+  .wave {
+    width: 8px; /* 波纹的宽度 */
+    height: 20px; /* 初始高度 */
+    background-color: #007aff; /* 波纹颜色 */
+    border-radius: 4px;
+    opacity: 0.6;
+    transform-origin: bottom center; /* 动画基点 */
+    animation: wave-animation 1.2s infinite alternate; /* 定义动画 */
+  }
+  
+  .wave-1 {
+    animation-delay: 0.1s;
+  }
+  
+  .wave-2 {
+    animation-delay: 0.3s;
+  }
+  
+  .wave-3 {
+    animation-delay: 0.5s;
+  }
+  .wave-3 {
+    animation-delay: 0.7s;
+  }
+  .wave-3 {
+    animation-delay: 0.1s;
+  }
+  
+  /* 定义波纹动画 */
+  @keyframes wave-animation {
+    0% {
+      transform: scaleY(0.4);
+      opacity: 0.6;
+    }
+    100% {
+      transform: scaleY(1.2);
+      opacity: 1;
+    }
+  }
+
+  /* 英标动画 */
+  .flashing-element {
+    /* 元素的其他样式 */
+    text-align: center;
+    animation: flash 1s infinite alternate; /* 定义动画名称、时长、循环次数和播放方式 */
+  }
+  
+  @keyframes flash {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      25% {
+        opacity: 0.5;
+        transform: translateY(-5px); /* 向左抖动 */
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(5px);  /* 向右抖动 */
+      }
+      75% {
+        opacity: 0.5;
+        transform: translateY(-3px); /* 再次向左抖动 */
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+  }
