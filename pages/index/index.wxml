@@ -8,7 +8,7 @@
     </view>
     <scroll-view wx:if="{{ims.length}}" type="list" scroll-y>
         <view class="lis" wx:for="{{ims}}" wx:key="ims" bind:tap="navIms" 
-        data-title="对话人"
+        data-title="{{utils.userTo(user.id,item.userArr).nickname}}"
         data-ims="{{item._id}}">
             <view class="user">
                 <text class="iconRed" wx:if="{{utils.unread(user.id,item.unread)}}" > {{utils.unread(user.id,item.unread)}}</text>
