@@ -1,4 +1,5 @@
 <!--pages/order/order.wxml-->
+<wxs src="../../utils/index.wxs" module="utils" />
 <view>
     <view class="cat">
         <text class="t3"> · 词列不限量 \n  · 跟读不限量 \n · 创建专属学习群</text>
@@ -7,13 +8,13 @@
 
     <view class="actMa"> 
         <text class="ico1">🎁</text>
-        <input type="text" placeholder="激活码" />
-        <text class="bt1 t3 "> 兑换 </text>
+        <input type="text" value="{{code}}" placeholder="激活码" bindchange="setCode" />
+        <text class="bt1 t3 " bind:tap="onGetCode"> 兑换 </text>
     </view>
     <scroll-view scroll-y class="item" >
-        <view class="items" wx:for="{{[1,2,3,4,5,6]}}">
-            <text class="t3 titleColor"> 开通年费 +365天 </text>
-            <text class="t5 timeColor"> 3天前 </text>
+        <view class="items" wx:for="{{codeLi}}" wx:key="code">
+            <text class="t3 titleColor"> {{item.type==1?item.payText:utils.strSlice(item.payText)}} + {{item.time}}天 </text>
+            <text class="t5 timeColor"> {{utils.times(item.createdAt)}} </text>
         </view>
     </scroll-view>
 </view>
