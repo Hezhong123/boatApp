@@ -2,7 +2,7 @@ import {cosToken} from './index'
 import {request} from './request'
 import COS from '../utils/cos-wx-sdk-v5.min'
 
-export const upload =  async(filePath,path,cb) =>{
+export const uploadCOS =  async(filePath,path,cb) =>{
     let result = await cosToken(getFileExtension(filePath),path)
     const { credentials = {}, startTime, expiredTime, bucket, region, key } = result;
     const { tmpSecretId, tmpSecretKey, sessionToken } = credentials;
