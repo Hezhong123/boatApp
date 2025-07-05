@@ -28,6 +28,7 @@ Page({
         let _this = this
         if (code.length == 11) {
             getCode(this.data.code).then(res => {
+                console.log(res);
                 if (res) {
                     wx.showModal({
                         title: '激活提示',

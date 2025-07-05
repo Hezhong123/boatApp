@@ -2,7 +2,11 @@
 <wxs src="../../utils/index.wxs" module="utils" />
 <view>
     <view class="cat">
-        <text class="t3"> · 词列不限量 \n  · 跟读不限量 \n · 创建专属学习群</text>
+        <view class="catTextColl" >
+            <text class="t3"> · 词列不限量 </text>
+            <text class="t3"> · 跟读不限量 </text>
+            <text class="t3"> · 创建专属学习群</text>
+        </view >
         <text class="tt">59<text class="t3">¥/年</text> </text>
     </view>
 
