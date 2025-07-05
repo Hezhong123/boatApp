@@ -6,6 +6,7 @@
     "pages/order/order",
     "pages/logs/logs"
   ],
+  "requiredBackgroundModes": ["audio"],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "Weixin",
