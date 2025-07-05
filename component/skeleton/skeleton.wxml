@@ -1,0 +1,56 @@
+<!--component/skeleton/skeleton.wxml-->
+<view>
+    
+    <!-- 联系人列表 -->
+    <view class="skeleton" wx:if="{{scene =='index'}}">
+        <view class="skeleton-user"></view>
+        <view style="flex: 1;">
+            <view class="skeleton-header"></view>
+            <view class="skeleton-title"></view>
+            <view class="skeleton-line"></view>
+        </view>
+    </view>
+
+    <!-- 对话列表 -->
+    <view style="display: flex;" wx:if="{{scene =='im'}}">
+        <view class="skeleton-user"></view>
+        <view style="flex: 1;">
+            <view class="skeleton-header"></view>
+            <view class="skeleton-title"></view>
+            <view class="skeleton-content">
+                <view class="skeleton-line"></view>
+                <view class="skeleton-line"></view>
+                <view class="skeleton-line long"></view>
+            </view>
+        </view>
+    </view>
+
+    <!-- 个人中心 -->
+    <view style="width: 90vw;margin-left: 5vw; display: flex;align-items: center;" wx:if="{{scene =='me'}}">
+        <view class="skeleton-user"></view>
+        <view style="flex: 1;">
+            <view class="skeleton-header"></view>
+            <view class="skeleton-title"></view>
+        </view>
+        <view class="skeleton-header"></view>
+    </view>
+
+    <!-- 收藏 -->
+    <view style="width: 90vw;margin-left: 5vw;margin-top: 10vh;" wx:if="{{scene =='collect'}}">
+        <view class="skeleton-header"></view>
+        <view class="skeleton-title"></view>
+        <view class="skeleton-header"></view>
+        <view class="skeleton-title"></view>
+    </view>
+
+    <!-- 激活列表 -->
+    <view wx:if="{{scene  =='orders' }}">
+        <view class="skeleton-title"></view>
+        <view class="skeleton-content">
+            <view class="skeleton-line"></view>
+            <view class="skeleton-line"></view>
+            <view class="skeleton-line long"></view>
+        </view>
+    </view>
+
+</view>
