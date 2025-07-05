@@ -17,10 +17,11 @@ page{
     display: flex;
     margin-left: 15px;
     margin-bottom: 10px;
+    position: relative;
 }
 .left .userImg{
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
     border-radius:50px;
 }
 .left .row{
@@ -32,6 +33,7 @@ page{
     margin-bottom: 1px;
 }
 .msg{
+    max-width: 70%;
     background-color: #fff;
     display: flex;
     flex-direction: column;
@@ -56,8 +58,24 @@ page{
     display: flex;
     justify-content: flex-end;
     margin-bottom: 10px;
+    position: relative;
 }
-
+.action{
+    background-color: #fff;
+    padding: 0 6px;
+    position: absolute;
+        bottom: -50px;
+    display: flex;
+    flex-direction: column;  
+    color: #646464; 
+    z-index: 99; 
+}
+.action text{
+    padding: 3px 0;
+}
+.action .actRow{
+    border-bottom:1px solid #bfbfbf ;
+}
 .sends{
     width: 100vw;
     flex: 1;
@@ -79,6 +97,9 @@ page{
 .act text{
     font-size: 20px;
     margin-right: 10px;
+}
+.act .start{
+    opacity: 0.2;
 }
 .ciLi{
     width: 100vw;
@@ -104,18 +125,19 @@ page{
 .sendItem textarea{
     background-color: #E7EBED;
     flex: 1;
-    padding: 3px 6px;
+    padding: 6px 6px;
     border-radius: 3px;
+    letter-spacing: 2px;
     margin: 0 10px;
     color: #687980;
     font-size: 18px;
     letter-spacing: 1px;
 }
 .sendItem button{
-    width: 40px;
-    font-size: 13px;
+    width: 60px;
+    font-size: 15px;
     margin: 0;
-    padding: 0 4px;
+    padding: 3px;
     letter-spacing: 2px;
     color: #fff;
     background-image: linear-gradient(to right, #66ECC3, #57D0D9);

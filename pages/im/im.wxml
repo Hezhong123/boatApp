@@ -1,24 +1,27 @@
 <!--pages/im/im.wxml-->
 <wxs src="../../utils/index.wxs" module="utils" />
-<view class="im">
+<skeleton wx:if="{{Loading}}" scene="im" />
+<view wx:else class="im">
     <scroll-view class="ims" type="list" scroll-y refresher-enabled scroll-into-view='{{into}}'>
         <view wx:for="{{msgli}}" wx:key="msg">
             <view class="rigth" wx:if="{{item.user.id == user.id}}">
-                <view class="YinRow" wx:if="{{item.type==1}}">
-                    <text class="t5"  wx:if="{{aideoId == item._id}}"> 🎵 </text>
-                    <view class="msg">
-                        <text class="t4">{{item.text}}</text>
-                        <text class="t5"> Hello, friend. </text>
+                <view class="YinRow" wx:if="{{item.type==1}}" bindlongpress="actMsg" data-index="{{index}}">
+                    <text class="t5 flashing-element" wx:if="{{aideoId == item._id}}"> 🎵 </text>
+                    <view class="msg" bind:tap="onAideo" data-id="{{item._id}}" data-url="{{item.url}}" data-enQ="{{item.en}}" data-type="1">
+                        <text class="t3">{{item.text}}</text>
+                        <text class="t4">{{item.en}}</text>
                     </view>
                 </view>
                 <image class="imImg" wx:if="{{item.type==2}}" src="{{item.text}}" mode="widthFix" />
                 <view class="YinRow" wx:if="{{item.type==3}}">
                     <text class="t5 flashing-element" wx:if="{{aideoId == item._id}}"> 🎵 </text>
-                    <view class="msg"  bind:tap="onAideo" data-id="{{item._id}}"
-                     data-url="{{utils.aidoeUrl(item.text,true)}}">
+                    <view class="msg" bind:tap="onAideo" data-id="{{item._id}}" data-url="{{utils.aidoeUrl(item.text,true)}}" data-type="3">
                         <text> {{utils.aidoeUrl(item.text,false)}} " </text>
                     </view>
-
+                </view>
+                <view class="action" wx:if="{{index == rmMsg}}" style="right: 30px;">
+                    <text class="t4 actRow" bind:tap="onMsgPut" data-id="{{item._id}}"> 收藏</text>
+                    <text class="t4" bind:tap="onMsgDel" data-id="{{item._id}}"> 删除 </text>
                 </view>
             </view>
 
@@ -26,48 +29,50 @@
                 <image wx:if="{{item.user.id == msgli[index-1].user.id }}" class="userImg" src="" mode="aspectFill" />
                 <image wx:else="" class="userImg" src="{{item.user.avatarUrl}}" mode="aspectFill" />
 
-                <view class="YinRow" wx:if="{{item.type==1}}">
-                        <view class="msg" >
-                            <text class="t4">{{item.text}}</text>
-                            <text class="t5"> Hello, friend. </text>
-                        </view>
-                        <text class="t5" wx:if="{{aideoId == item._id}}" > 🎵 </text>
+                <view class="YinRow" wx:if="{{item.type==1}}" bindlongpress="actMsg" data-index="{{index}}" >
+                    <view class="msg" bind:tap="onAideo" data-id="{{item._id}}" data-url="{{item.url}}" data-enQ="{{item.en}}" data-type="1">
+                        <!-- <text wx:if="{{true}}" > 🎵 </text> -->
+                        <text class="t3">{{item.text}}</text>
+                        <text class="t4">{{item.en}}</text>
                     </view>
+                    <text class="t5" wx:if="{{aideoId == item._id}}"> 🎵 </text>
+                </view>
 
                 <image class="imImg" wx:if="{{item.type==2}}" src="{{item.text}}" mode="widthFix" />
 
                 <view class="YinRow">
                     <view class="msg" wx:if="{{item.type==3}}">
                         <text>{{utils.aidoeStr(item.text,false)}} " </text>
-                        <text wx:if="{{aideoId == item._id}}" > 🎵 </text>
+                        <text wx:if="{{aideoId == item._id}}"> 🎵 </text>
                     </view>
                 </view>
-
+                <view class="action" wx:if="{{index == rmMsg}}" style="left: 70px;">
+                    <text class="t4 actRow" bind:tap="onMsgPut" data-id="{{item._id}}"> 收藏</text>
+                    <text class="t4" bind:tap="onMsgDel" data-id="{{item._id}}"> 删除 </text>
+                </view>
             </view>
 
-            <view class="tCenter" wx:if="{{item.type == 4}}"> 
+            <view class="tCenter" wx:if="{{item.type == 4}}">
                 <text class="t5 timeColor "> {{utils.times(item.text)}} </text>
             </view>
 
         </view>
         <view id="{{into}}" class="into"></view>
     </scroll-view>
-    
+
     <!-- 页脚输入栏 -->
     <view class="sends">
         <view class="actItem">
             <view class="act">
                 <view>
-                    <text>✍️</text>
-                    <text> 🎵 </text>
+                    <text class="{{user.word?'':'start'}}" bind:tap="onChoose" data-act="word">✍️</text>
+                    <text class="{{user.follow?'':'start'}}" bind:tap="onChoose" data-act="follow"> 🎵 </text>
                 </view>
                 <text wx:if="{{set}}" class="setQun" bind:tap="onSetqun">⚙️</text>
             </view>
             <!-- 词列 -->
             <view class="ciLi">
-                <text class="ci"> you </text>
-                <text class="ci"> lately </text>
-                <text class="ci"> how about </text>
+                <text class="ci" wx:for="{{word}}"> {{item}} </text>
             </view>
         </view>
         <view class="sendItem">
@@ -83,10 +88,9 @@
                 <!-- <text> {{aideTime}}" </text> -->
             </view>
 
-            <textarea wx:else show-confirm-bar="{{false}}" type="text" value="{{msg}}" bindinput="onMsgChange" 
-            cursor-spacing="{{15}}" auto-height placeholder="" />
+            <textarea wx:else show-confirm-bar="{{false}}" type="text" bindinput="onMsgChange" bindfocus="rmWord" value="{{msg}}" cursor-spacing="{{15}}" auto-height placeholder="" />
 
-            <button wx:if="{{msg}}" bind:tap="onMsgSend" > 发送 </button> 
+            <button wx:if="{{msg}}" bind:tap="onMsgSend"> 发送 </button>
             <view wx:else class="ico1" bind:longpress="startAideo" longpress-duration="800" bind:touchend="stopAideo">🎙️</view>
         </view>
     </view>

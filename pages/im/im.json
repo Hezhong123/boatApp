@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+      "skeleton":"../../component/skeleton/skeleton"
+  },
   "navigationBarBackgroundColor":"#E7EBED"
 }
