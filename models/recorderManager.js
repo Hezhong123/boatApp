@@ -5,6 +5,8 @@ const innerAudioContext = wx.createInnerAudioContext({
     useWebAudioImplement: true 
 })
 
+const backgroundAudioManager = wx.getBackgroundAudioManager()
+
 export const startAidoe = (cb)=>{
       recorderManager.start({
         duration: 10000,
@@ -28,7 +30,6 @@ export const stopAidoe  = (cb) =>{
         cb(null)
         if(duration){
             uploadCOS(res.tempFilePath, 'im/aideo', call=>{
-                console.log(call);
                 cb(JSON.stringify({
                     url:call,
                     duration:duration
@@ -45,14 +46,12 @@ export const stopAidoe  = (cb) =>{
 }
 
 export const backgroundAudio = (url,cb)=>{
-    innerAudioContext.src =url
-    innerAudioContext.play() // 播放
-    innerAudioContext.onSeeked(c=>{
-        console.log(1111);
-    })
-    // 播放完毕
-    innerAudioContext.onEnded(c=>{
-        console.log(1111,c);
+   
+    backgroundAudioManager.src =url
+    backgroundAudioManager.title = '跟读'; // 音樂標題
+    backgroundAudioManager.play()
+    backgroundAudioManager.onEnded(() => {
+        console.log('播放結束');
         cb()
-    })
+    });
 }
