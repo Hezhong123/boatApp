@@ -1,14 +1,18 @@
 // pages/me/me.js
-import {userMsg,upUserMsg} from '../../models/index'
+import {userMsg,upUserMsg,getCollect,delCollect} from '../../models/index'
 import {uploadCOS}  from '../../models/cos'
-
+import { backgroundAudio } from '../../models/recorderManager' //录音
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    collect:[], //收藏消息
+    aideoId:null,    //播放声音
     nickenme:false,
+    loadig:true,    //用户加载
+    loadigCollect:true, //收藏加载
     user:{}
   },
 
@@ -48,6 +52,37 @@ Page({
         })
     },
 
+    //删除收藏
+    rmCollect(e){
+        let {id} = e.currentTarget.dataset
+        let _this = this
+        wx.showModal({
+            title:'警告⚠️',
+            content:'删除这条收藏',
+            success:(res)=>{
+                delCollect(id).then(async r=>{
+                    let collect = await getCollect()
+                    _this.setData({collect:collect})
+                })
+            }
+        })
+        console.log(111, id);
+    },
+    // 播放声音
+    onUrl(e){
+        let {url,index} = e.currentTarget.dataset
+        this.setData({
+            aideoId:index
+        })
+        console.log(url);
+        backgroundAudio(url, cb => {
+            this.setData({
+                aideoId: null,
+            })
+        })
+    },
+    
+
     navPage:function(e){
         let page = e.currentTarget.dataset.page
         console.log(page);
@@ -61,14 +96,19 @@ Page({
    * 生命周期函数--监听页面加载
    */
     async onLoad(options) {
+        let collect = await getCollect()
         let user = await userMsg()
-        console.log(user);
+        console.log(user,collect);
         wx.setNavigationBarTitle({
             title: '我的'
         })
         this.setData({
-            user: user
+            user: user,
+            loadig:false,   
+            collect:collect, 
+            loadigCollect:false,
         })
+        
     },
 
   /**

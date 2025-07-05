@@ -1,38 +1,47 @@
 <!--pages/me/me.wxml-->
 <view>
-    <view class="top">
+    <skeleton  wx:if="{{loadig}}"  scene="me" />
+    <view wx:else class="top">
         <view class="user">
             <button class="userImg" open-type="chooseAvatar" bind:chooseavatar="bindGetUserInfo">
                 <image class="avatar" src="{{user.avatarUrl}}" mode="aspectFill" />
             </button>
-            <text class="icon t5" wx:if="{{user.vip}}" > {{user.vip}} </text>
+            <!-- <text class="icon t5" wx:if="{{user.vip}}" > {{user.vip}} </text> -->
         </view>
         <view class="row">
             <view class="lteft">
                 <input wx:if="{{nickenme}}" class="weui-input t3 titleColor" auto-focus placeholder="修改昵称"
                 bindblur="onNikenmeBlur"
                 />
-                <text wx:else class="t3 titleColor" bind:tap="onNikenme" > {{user.nickname}} </text>
-                <text class="t5 textColor"> <text>🆔</text> {{user.id}}</text>
+                <text wx:else class="t2 titleColor" bind:tap="onNikenme" > {{user.nickname}} </text>
+                <text class="t4 textColor"> <text>🆔</text> {{user.id}}</text>
             </view>
-            <view class="right" bind:tap="navPage" data-page="order">
-                <text class="t4"> 会员中心 </text>
+            <view  wx:if="{{user.vip <= 0}}" class="right" bind:tap="navPage" data-page="order">
+                <text class="t3"> 开通功能 </text>
+            </view>
+            <view  wx:else="" class="right" bind:tap="navPage" data-page="order">
+                <text class="t3"> {{user.vip}}day </text>
             </view>
         </view>
     </view>
 
-    <view class="query">
+    <skeleton  wx:if="{{loadigCollect}}"  scene="collect" />
+    <view wx:else class="query">
         <view class="row1">
             <text class="ico1"> 🔍 </text>
             <input class="t3" type="text" />
         </view>
         <scroll-view>
-            <view class="rigth" wx:for="{{[1,2,3]}}">
+            <view class="rigth" wx:for="{{collect}}" wx:key="item" bind:tap="onUrl"
+            bindlongpress="rmCollect"
+            data-id="{{item._id}}"
+            data-index="{{index}}"
+             data-url="{{item.url}}">
                 <view class="msg">
-                    <text class="t3">你好,朋友</text>
-                    <text class="t4"> Hello, friend. </text>
+                    <text class="t3">{{item.text}}</text>
+                    <text class="t4">{{item.en}}</text>
                 </view>
-                <text class="t5">🎵</text>
+                <text class="t5" wx:if="{{aideoId == index}}" >🎵</text>
             </view>
         </scroll-view>
 

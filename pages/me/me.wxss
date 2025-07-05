@@ -51,11 +51,12 @@ page {
 .right{
     background-image: linear-gradient(to right, #66ECC3, #57D0D9);
     color: #ffffff;
-    width: 60px;
-    height: 20px;
+    padding: 2px 10px;
+    border-radius: 15px;
     text-align: center;
     line-height: 18px;
     letter-spacing: 1px;
+    font-weight:bold;
 }
 
 
