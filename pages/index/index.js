@@ -4,7 +4,8 @@ import {
     upUserMsg,
     socketUrl,
     postIm,
-    rmIm
+    rmIm,
+    userQRCode
 } from '../../models/index'
 import io from '../../utils/weapp.socket.io'
 const app = getApp()
@@ -20,12 +21,11 @@ Page({
         ims: [], //信道
         _ims: [], //信道下标
         user: null, //用户信息
-        imtype:1, //对话类型 1对话 2群聊
+        imtype: 1, //对话类型 1对话 2群聊
         startX: 0,
         moveX: 0,
         threshold: 40, // 滑动多少距离显示删除按钮
         currentIndex: -1 // 当前滑动的列表项索引
-
     },
 
     // 滑动触控
@@ -110,7 +110,7 @@ Page({
         })
     },
 
-    
+
 
     // 打开分享
     addIms: function (e) {
@@ -118,10 +118,17 @@ Page({
         wx.showActionSheet({
             itemList: ['创建对话', '创建群聊'],
             success(res) {
-                console.log(res.tapIndex+1)
-                _this.setData({
-                    modelA: true,
-                    imtype:res.tapIndex+1
+                let type = res.tapIndex + 1
+                userQRCode(type).then(code => {
+                    console.log(socketUrl+code);
+                    wx.downloadFile({
+                        url: socketUrl + code,
+                        success: (res) => {
+                            wx.showShareImageMenu({
+                                path: res.tempFilePath
+                            })
+                        }
+                    })
                 })
             },
             fail(res) {
@@ -130,20 +137,13 @@ Page({
         })
     },
 
-    onMode:function(){
+    onMode: function () {
         this.setData({
             modelA: !this.data.modelA,
         })
     },
 
-    //分享联系人
-    childCatchTap() {
-        console.log('分享');
-        wx.showShareMenu({
-            withShareTicket: true,
-            menus: ['shareAppMessage', 'shareTimeline']
-        })
-    },
+
 
     navPage: function (e) {
         let page = e.currentTarget.dataset.page
@@ -200,15 +200,25 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        let {
+            im,
+            id
+        } = options
+        if (id) {
+            postIm(im, id).then(res => {
+                console.log(1111, res);
+            })
+        }
+        console.log(options);
         const systemInfo = wx.getWindowInfo();
         const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
         this.setData({
             headerHeight: menuButtonInfo.top,
-            headerRight: menuButtonInfo.width+20,
+            headerRight: menuButtonInfo.width + 20,
             availableWidth: systemInfo.screenWidth,
             availableHeight: systemInfo.windowHeight - (menuButtonInfo.top + menuButtonInfo.height) - 7,
         })
-        console.log('处理链接参数',menuButtonInfo,this.data.headerHeight,this.data.availableWidth,this.data.availableHeight);
+        console.log('处理链接参数', menuButtonInfo, this.data.headerHeight, this.data.availableWidth, this.data.availableHeight);
     },
 
     /**
@@ -275,18 +285,13 @@ Page({
      */
     onShareAppMessage: function () {
         console.log("触发用户转发,");
-        postIm(1).then(res => {
-            console.log(111, res);
-        })
+        // postIm(1).then(res => {
+        //     console.log(111, res);
+        // })
         // return {
         //     title: '转发标题',
+        //     imageUrl:'http://localhost:3007/code/100003-1.png',
         //     path: '/page/index?id=123'
         // }
-    },
-    onPostIm() {
-        //模拟转发
-        postIm(1).then(ims => {
-            console.log('新建信道', ims._id);
-        })
     }
 })

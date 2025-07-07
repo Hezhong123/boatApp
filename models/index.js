@@ -11,6 +11,13 @@ export const userMsg  = () =>{
     })
 }  
 
+//获取小程序吗
+export const userQRCode  = (type) =>{
+    return request({
+        url:`/user/qrCode/${type}`,
+        method: 'POST',
+    })
+}  
 // 修改用户信息
 export const upUserMsg  = (obj) =>{
     return request({
@@ -29,9 +36,9 @@ export const Ims = () => {
 }
 
 // 创建信道
-export const postIm = (type) =>{
+export const postIm = (type,id) =>{
     return request({
-        url:`/ims`,
+        url:`/ims/${type}/${id}`,
         method: 'POST',
         data:{"type":type}
     })
@@ -41,7 +48,7 @@ export const postIm = (type) =>{
 export const rmIm =(im) =>{
     return request({
         url:`/ims/rm/${im}`,
-        method: 'POST'
+        method: 'PATCH'
     })
 }
 //信道ID
@@ -135,6 +142,13 @@ export const postCode =(key)=>{
     return request({
         url:`/orders/code/${key}`,
         method: 'POST'
+    })
+}
+
+export const PayParams = (key)=>{
+    return request({
+        url:`/orders/PayParams`,
+        method: 'GET'
     })
 }
 

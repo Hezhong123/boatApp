@@ -2,7 +2,8 @@
 import {
     getCode,
     postCode,
-    orderLi
+    orderLi,
+    PayParams
 } from '../../models/index'
 Page({
 
@@ -62,6 +63,12 @@ Page({
 
     },
 
+    //购买
+    async onPay(){
+        let Params= await PayParams()
+        console.log(111,Params);
+    },
+    //查询订单
     async getOrders() {
         let li = await orderLi()
         console.log(li);

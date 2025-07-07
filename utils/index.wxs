@@ -3,6 +3,20 @@ var userTo = function(id,userArr){
     return userArr[0].id == id?userArr[1]:userArr[0]
 }
 
+//群头像宽度
+var imgArrlength = function(imgArr){
+    var length = imgArr.length
+    if(length <= 4){
+        return '50%'
+    }else{
+        return '33%'
+    }
+}
+
+var imgArr = function(imgArr){
+    return imgArr.slice(0, 9)
+}
+
 // 未读消息
 var unread = function(id,arr){
     var _i = 0
@@ -75,5 +89,7 @@ module.exports = {
     unread:unread,
     times:times,
     aidoeUrl:aidoeUrl,
-    strSlice:strSlice
+    strSlice:strSlice,
+    imgArr:imgArr,
+    imgArrlength:imgArrlength
 }

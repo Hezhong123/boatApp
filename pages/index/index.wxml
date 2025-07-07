@@ -7,21 +7,27 @@
         <image class="userImg" bind:tap="navPage" data-page="me" src="{{user.avatarUrl}}" mode="aspectFill" alt="" />
     </view>
 
+    <view wx:if="{{im.type==2 & ims.lentgh}}" class="model">
+       <video controls="{{false}}" autoplay object-fit="cover" src="http://localhost:3007/chrome.webm" > </video>
+    </view>
+
     <skeleton wx:if="{{loadin}}" scene="index" />
     <view wx:else class="list" style="height: {{availableHeight}}px;">
         <view class="list-item" wx:for="{{ims}}" wx:key="index" data-index="{{index}}" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="transform: translateX({{item.translateX}}px);">
             <view class="item-content" bind:tap="navIms" data-title="{{utils.userTo(user.id,item.userArr).nickname}}" data-ims="{{item._id}}">
                 <view class="user">
                     <text class="iconRed" wx:if="{{utils.unread(user.id,item.unread)}}"> {{utils.unread(user.id,item.unread)}}</text>
-                    <image wx:if="{{true}}" class='liImg' src="{{utils.userTo(user.id,item.userArr).avatarUrl}}" mode="aspectFill" alt="" />
-                    <view wx:else>
-                        <image class='liImg' src="{{userImg}}" mode="aspectFill" alt="" />
+                    <image wx:if="{{item.type==1}}" class='liImg' src="{{utils.userTo(user.id,item.userArr).avatarUrl}}" mode="aspectFill" alt="" />
+                    <view wx:else class="imgArr">
+                        <image wx:for="{{utils.imgArr(item.userArr)}}" wx:for-item="imgArr"
+                        style="width: {{utils.imgArrlength(item.userArr)}};height: {{utils.imgArrlength(item.userArr)}};"
+                         wx:key="userImg" class='liImgs' src="{{imgArr.avatarUrl}}" mode="aspectFill" alt="" />
                     </view>
-                    <view wx:if="{{utils.userTo(user.id,item.userArr).online}}" class="line"></view>
+                    <view wx:if="{{item.type==1 && utils.userTo(user.id,item.userArr).online}}" class="line"></view>
                 </view>
                 <view class="textRow">
                     <view class="row">
-                        <text class="t2 titleColor"> {{utils.userTo(user.id,item.userArr).nickname}}  </text>
+                        <text class="t2 titleColor">{{item.type==1?utils.userTo(user.id,item.userArr).nickname:item.imName}}  </text>
                         <text class="t4 textLin textColor"> {{item.newMsg}} </text>
                     </view>
                     <text class="t5 timeColor"> {{utils.times(item.updatedAt)}} </text>
@@ -31,19 +37,5 @@
         </view>
     </view>
 
-    <view wx:if="{{ims.length == 0 && !loadin }}">
-        <text> 空 </text>
-    </view>
-    
-    <view show="true" class="model" wx:if="{{modelA}}" bind:tap="onMode">
-        <view class="row">
-            <view class="textCol">
-                <text class="t1 titleColor"> 学习的路上, </text>
-                <text class="t3 titleColor" style="margin-bottom: 10px;"> On the way to learning, </text>
-                <text class="t1 titleColor"> 与Ta同行, </text>
-                <text class="t3 titleColor"> Walk with Ta, </text>
-            </view>
-            <button open-type="share" bind:tap="onPostIm"> 分享 </button>
-        </view>
-    </view>
+
 </view>

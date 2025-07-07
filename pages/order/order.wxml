@@ -1,7 +1,7 @@
 <!--pages/order/order.wxml-->
 <wxs src="../../utils/index.wxs" module="utils" />
 <view>
-    <view class="cat">
+    <view class="cat" bind:tap="onPay">
         <view class="catTextColl" >
             <text class="t3"> · 词列不限量 </text>
             <text class="t3"> · 跟读不限量 </text>

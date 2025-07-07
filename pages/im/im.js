@@ -25,6 +25,7 @@ Page({
         container: false, //设置按钮
         user: {}, //用户信息
         im: '', //信道
+        length:null, //群长度 
         msg: '', //输入内容
         word: [], //词列
         msgli: [], //对话内容
@@ -245,11 +246,12 @@ Page({
             Loading:false,
             msgli: msgli,
             im: imData,
+            length:imData.userArr.length,
             into: this.intoFun('im'),
             user: user
         })
         wx.setNavigationBarTitle({
-            title: title
+            title:imData.type==1?title:imData.imName
         })
         const socket = io(socketUrl);
         socket.on('connection', msg => {

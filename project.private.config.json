@@ -9,6 +9,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "id=68063d578f2d9d34626e049e&im=2",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/im/im",
           "pathName": "pages/im/im",
           "query": "im=6801db1458f1ee8e25148473&title=对话",
