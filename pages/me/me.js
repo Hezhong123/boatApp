@@ -18,20 +18,26 @@ Page({
 
     //   修改昵称
     onNikenme: function(){
-        this.setData({
-            nickenme:true
-        })
-    },
-    // 取消修改昵称
-    onNikenmeBlur:function(e){
-        let val = e.detail.value
-        if(val){
-            upUserMsg({nickname:val}).then(async res=>{
-                this.setData({
-                    user: await userMsg()
+        let _this = this
+        console.log(111,_this.data.user.nickname);
+        wx.showModal({
+            title: '修改昵称',
+            placeholderText: _this.data.user.nickname,
+            editable:true,
+            success (res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+                upUserMsg({nickname:res.content}).then(async user=>{
+                    _this.setData({
+                        user: await userMsg()
+                    })
                 })
-            })
-        }
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+       
     },
 
     //修改头像
