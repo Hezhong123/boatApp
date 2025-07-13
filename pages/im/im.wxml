@@ -68,7 +68,7 @@
                     <text class="{{user.word?'':'start'}}" bind:tap="onChoose" data-act="word">✍️</text>
                     <text class="{{user.follow?'':'start'}}" bind:tap="onChoose" data-act="follow"> 🎵 </text>
                 </view>
-                <text wx:if="{{im.type==2 && user.id == im.userArr[0].id}}" class="setQun" bind:tap="onSetqun">⚙️</text>
+                <text wx:if="{{im.type==2}}" class="setQun" bind:tap="onSetqun">⚙️</text>
             </view>
             <!-- 词列 -->
             <view class="ciLi">
@@ -95,23 +95,25 @@
         </view>
     </view>
 
+    <!-- 群聊模块 -->
     <page-container show="{{container}}" overlay-style="backdrop-filter: blur(2px)" round class="container" custom-style="padding: 15px;">
         <view class="row1">
-            <text class="t2 titleColor"> 群名称 </text>
-            <input type="text" value="{{im.imName}}" />
-            <button class="btn1 btnBJ1" style="width: 50px;"> 修改 </button>
+            <text class="t2 titleColor"> 群名称:  </text>
+            <input type="text" value="{{im.imName}}" disabled />
+            <button wx:if="{{user.id == im.userArr[0].id}}" class="btn1 btnBJ1" style="width: 50px;" bind:tap="onIms" > 修改 </button>
         </view>
         <view class="row2">
-            <text class="t2 titleColor"> 群成员: {{length}}/100 </text>
+            <text class="t2 titleColor"> 群成员: {{im.userArr.length}}/100 </text>  
             <view class="btnRow">
-                <button class="btn1 btnBJ2" style="width: 70px;"> 邀请新人 </button>
-                <button class="btn1 btnBJ1" style="width: 70px;"> 退出群聊 </button>
+                <button class="btn1 btnBJ2" style="width: 70px;" open-type="share" > 邀请新人 </button>
+                <!-- <button class="btn1 btnBJ1" style="width: 70px;"> 退出群聊 </button> -->
             </view>
         </view>
         <view class="row3">
-            <view class="user" wx:for="{{im.userArr}}">
+            <view class="user" wx:for="{{im.userArr}}" bindlongpress="rmImUser" data-id="{{item._id}}" data-name="{{item.nickname}}" >
                 <image class="userImg" src="{{item.avatarUrl}}" mode="aspectFill" />
-                <text class="t5 textColor">{{item.nickname}}</text>
+                <text class="t5 textColor multi-line-ellipsis2">{{item.nickname}}</text>
+                <view wx:if="{{user._id == item._id}}" class="imsKind" > 群主 </view>
             </view>
         </view>
     </page-container>

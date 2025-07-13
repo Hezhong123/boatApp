@@ -193,6 +193,7 @@ page{
 .container .row3  .user{
     width: 50px;
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
     margin: 5px 3px;
@@ -206,6 +207,20 @@ page{
     height: 40px;
     border-radius: 3px;
     margin-bottom: 5px;
+}
+/* 群主 */
+.imsKind{
+    width: 30px;
+    text-align: center;
+    position: absolute;
+        top: -5px;
+        right: 1px;
+    font-size: 10px;
+    color:#fff;
+    border-radius: 5px;
+    padding: 1px 0;
+    margin: 0;
+    background-color: #ec6f09;   
 }
 
 .into{

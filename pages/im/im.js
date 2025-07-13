@@ -8,7 +8,7 @@ import {
     stopAidoe,
     backgroundAudio
 } from '../../models/recorderManager' //录音
-import {imMsg,userMsg,imsUnread,ImsId,upUserMsg,msgWord,msgTts,socketUrl,postCollect,delMsg} from '../../models/index'
+import {imMsg,userMsg,imsUnread,ImsId,ImsName,upUserMsg,msgWord,msgTts,socketUrl,rmImUser,postCollect,delMsg} from '../../models/index'
 
 Page({
 
@@ -229,6 +229,56 @@ Page({
         })
     },
 
+    // 修改群昵称
+    onIms(){
+        let _this = this
+        wx.showModal({
+            title: '修改群昵称',
+            placeholderText: this.data.im.imName,
+            editable:true,
+            success (res) {
+              if (res.confirm) {
+                // console.log('用户点击确定',res,_this.data.im.imName,)
+                ImsName(_this.data.im._id,res.content).then(async im=>{
+                        console.log('修改群名称',im.imName);
+                        wx.setNavigationBarTitle({
+                            title:im.imName
+                        })
+                        _this.setData({
+                            im: await ImsId(im._id)
+                        })
+                })
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        console.log('修改群名称');
+    },
+
+    //移除群成员
+    rmImUser(e){
+        let {id,name} = e.currentTarget.dataset
+        let _this = this
+        wx.showModal({
+            title:'移除群成员',
+            content:`确定将${name}移出群聊`,
+            success (res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                  rmImUser(_this.data.im._id,id).then(async r=>{
+                    _this.setData({
+                        im: await ImsId(_this.data.im._id)
+                    })
+                  })
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+              }
+        })
+        console.log(1111, e);
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -246,7 +296,6 @@ Page({
             Loading:false,
             msgli: msgli,
             im: imData,
-            length:imData.userArr.length,
             into: this.intoFun('im'),
             user: user
         })
@@ -337,7 +386,13 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage() {},
+    onShareAppMessage() {
+        return {
+            title:` ${this.data.user.nickname}邀请你加入${this.data.im.imName}群聊`,
+            path:`pages/index/index?id=${this.data.im._id}&im=2`
+        }
+        console.log('用户分享');
+    },
 
     // 滚动秒点随机数
     intoFun: function (e) {
