@@ -1,5 +1,5 @@
-export const baseURL = 'http://192.168.1.8:3007'; // 您的 API 根地址
-// const baseURL = 'https://im.xldkeji.com'; // 您的 API 根地址
+// export const baseURL = 'http://192.168.1.4:3007'; // 您的 API 根地址
+const baseURL = 'https://im.xldkeji.com'; // 您的 API 根地址
 
 export const request = (options) => {
   return new Promise((resolve, reject) => {
