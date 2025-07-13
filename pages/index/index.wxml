@@ -7,8 +7,8 @@
         <image class="userImg" bind:tap="navPage" data-page="me" src="{{user.avatarUrl}}" mode="aspectFill" alt="" />
     </view>
 
-    <view wx:if="{{im.type==2 & ims.lentgh}}" class="model">
-       <video controls="{{false}}" autoplay object-fit="cover" src="http://localhost:3007/chrome.webm" > </video>
+    <view wx:if="{{!loadin && !ims.length}}" class="model">
+       <video  autoplay object-fit="cover" src="https://im.xldkeji.com/chrome.webm" > </video>
     </view>
 
     <skeleton wx:if="{{loadin}}" scene="index" />

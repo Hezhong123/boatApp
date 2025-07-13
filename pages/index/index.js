@@ -2,8 +2,8 @@ import {
     userMsg,
     Ims,
     upUserMsg,
-    socketUrl,
-    postIm,
+    socketUrl,postImUser,postImUsers,
+    postIm,postIms,addIms,
     rmIm,
     userQRCode
 } from '../../models/index'
@@ -11,7 +11,6 @@ import io from '../../utils/weapp.socket.io'
 const app = getApp()
 
 Page({
-
     /**
      * 页面的初始数据
      */
@@ -27,62 +26,6 @@ Page({
         threshold: 40, // 滑动多少距离显示删除按钮
         currentIndex: -1 // 当前滑动的列表项索引
     },
-
-    // 滑动触控
-    touchStart: function (e) {
-        this.setData({
-            startX: e.changedTouches[0].clientX,
-            moveX: 0,
-            currentIndex: e.currentTarget.dataset.index
-        });
-        // 关闭之前已经展开的删除按钮
-        this.data.ims.forEach((item, index) => {
-            if (index !== this.data.currentIndex && item.translateX < 0) {
-                item.translateX = 0;
-            }
-        });
-        this.setData({
-            ims: this.data.ims
-        });
-    },
-
-    //滑动出现删除
-    touchMove: function (e) {
-        const moveX = e.changedTouches[0].clientX;
-        const diffX = moveX - this.data.startX;
-        const translateX = Math.max(-80, Math.min(0, diffX)); // 控制滑动范围
-        const {
-            ims,
-            currentIndex
-        } = this.data;
-        if (currentIndex !== -1) {
-            ims[currentIndex].translateX = translateX;
-            this.setData({
-                ims
-            });
-        }
-    },
-
-    // 滑动结束
-    touchEnd: function (e) {
-        const {
-            ims,
-            currentIndex,
-            threshold
-        } = this.data;
-        if (currentIndex !== -1) {
-            if (ims[currentIndex].translateX < -threshold) {
-                ims[currentIndex].translateX = -80; // 完全显示删除按钮
-            } else {
-                ims[currentIndex].translateX = 0; // 恢复到初始位置
-            }
-            this.setData({
-                ims,
-                currentIndex: -1
-            });
-        }
-    },
-
     //点击删除
     deleteItem: function (e) {
         const {
@@ -98,7 +41,9 @@ Page({
                     rmIm(im).then(async res => {
                         console.log(1111, index, im, res);
                         let ims = await Ims()
-                        ims[index].translateX = 0;
+                        if(ims.length){
+                            ims[index].translateX = 0;
+                        }
                         _this.setData({
                             ims
                         });
@@ -110,26 +55,52 @@ Page({
         })
     },
 
-
-
-    // 打开分享
+    // 打开添加
     addIms: function (e) {
         let _this = this
         wx.showActionSheet({
-            itemList: ['创建对话', '创建群聊'],
+            itemList: ['小船名片', '创建群聊'],
             success(res) {
-                let type = res.tapIndex + 1
-                userQRCode(type).then(code => {
-                    console.log(socketUrl+code);
-                    wx.downloadFile({
-                        url: socketUrl + code,
-                        success: (res) => {
-                            wx.showShareImageMenu({
-                                path: res.tempFilePath
+                let type = res.tapIndex
+                if (type) {
+                    console.log('创建群聊');
+                    wx.showModal({
+                        title: '创建群聊',
+                        placeholderText: _this.data.user.nickname+'创建的群聊',
+                        editable:true,
+                        success (res) {
+                          if (res.confirm) {
+                            let name = res.content.length?res.content:_this.data.user.nickname+'创建的群聊'
+                            console.log('用户创建群聊',name)
+                            postIms(name).then(async res=>{
+                                console.log(111,res);
+                                let ims = await Ims()
+                                _this.setData({
+                                    ims:ims
+                                })
                             })
+                          } else if (res.cancel) {
+                            console.log('用户点击取消')
+                          }
                         }
+                      })
+                } else {
+                    wx.showLoading({
+                        title: '名片生成中.',
+                      })
+                    userQRCode().then(code => {
+                        console.log(code);
+                        wx.downloadFile({
+                            url: socketUrl + code,
+                            success: (res) => {
+                                wx.hideLoading()
+                                wx.showShareImageMenu({
+                                    path: res.tempFilePath
+                                })
+                            }
+                        })
                     })
-                })
+                }
             },
             fail(res) {
                 console.log(res.errMsg)
@@ -137,14 +108,7 @@ Page({
         })
     },
 
-    onMode: function () {
-        this.setData({
-            modelA: !this.data.modelA,
-        })
-    },
-
-
-
+    // 路由跳转
     navPage: function (e) {
         let page = e.currentTarget.dataset.page
         console.log(page);
@@ -200,16 +164,64 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        let {
-            im,
-            id
-        } = options
-        if (id) {
-            postIm(im, id).then(res => {
-                console.log(1111, res);
+        let {id,im} = options
+        let _this = this
+        if(im==1){
+            console.log('添加好友');
+            postImUser(id).then(name=>{
+                if(name){
+                    wx.showModal({
+                        title:'好友添加',
+                        content:`添加${name}为好友`,
+                        success:function(res){
+                            if (res.confirm) {
+                                console.log('用户点击确定')
+                                postIm(id).then(_res => {
+                                    console.log('添加好友', _res);
+                                    _this.loadData()
+                                })
+                              } else if (res.cancel) {
+                                console.log('用户点击取消')
+                              }
+                            
+                        }
+                    })
+                }else{
+                    wx.showToast({
+                        icon:'none',
+                        title:'已经是好友了'
+                    })
+                }
             })
         }
-        console.log(options);
+        if(im==2){
+            postImUsers(id).then(res=>{
+                console.log('加入群聊',res);
+                if(res){
+                    wx.showModal({
+                        title:'加入群聊',
+                        content:`加入${res.imName}群聊`,
+                        success:function(res){
+                            if (res.confirm) {
+                                console.log('用户点击确定')
+                                addIms(id).then(_res => {
+                                    console.log('加入群聊', _res);
+                                    _this.loadData()
+                                })
+                              } else if (res.cancel) {
+                                console.log('用户点击取消')
+                              }
+                        }
+                    })
+                }else{
+                    wx.showToast({
+                        icon:'none',
+                        title:'已加入群聊了'
+                    })
+                }
+            })
+        }
+     
         const systemInfo = wx.getWindowInfo();
         const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
         this.setData({
@@ -293,5 +305,60 @@ Page({
         //     imageUrl:'http://localhost:3007/code/100003-1.png',
         //     path: '/page/index?id=123'
         // }
-    }
+    },
+
+    // 滑动触控
+    touchStart: function (e) {
+        this.setData({
+            startX: e.changedTouches[0].clientX,
+            moveX: 0,
+            currentIndex: e.currentTarget.dataset.index
+        });
+        // 关闭之前已经展开的删除按钮
+        this.data.ims.forEach((item, index) => {
+            if (index !== this.data.currentIndex && item.translateX < 0) {
+                item.translateX = 0;
+            }
+        });
+        this.setData({
+            ims: this.data.ims
+        });
+    },
+
+    //滑动出现删除
+    touchMove: function (e) {
+        const moveX = e.changedTouches[0].clientX;
+        const diffX = moveX - this.data.startX;
+        const translateX = Math.max(-80, Math.min(0, diffX)); // 控制滑动范围
+        const {
+            ims,
+            currentIndex
+        } = this.data;
+        if (currentIndex !== -1) {
+            ims[currentIndex].translateX = translateX;
+            this.setData({
+                ims
+            });
+        }
+    },
+
+    // 滑动结束
+    touchEnd: function (e) {
+        const {
+            ims,
+            currentIndex,
+            threshold
+        } = this.data;
+        if (currentIndex !== -1) {
+            if (ims[currentIndex].translateX < -threshold) {
+                ims[currentIndex].translateX = -80; // 完全显示删除按钮
+            } else {
+                ims[currentIndex].translateX = 0; // 恢复到初始位置
+            }
+            this.setData({
+                ims,
+                currentIndex: -1
+            });
+        }
+    },
 })
