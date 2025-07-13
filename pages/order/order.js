@@ -59,14 +59,23 @@ Page({
 
                 }
             })
+        }else{
+            wx.showToast({
+                icon:'none',
+                title:'激活码错误'
+            })
         }
 
     },
 
     //购买
     async onPay(){
-        let Params= await PayParams()
-        console.log(111,Params);
+        wx.showToast({
+            icon:'none',
+            title:'订阅服务暂未开放'
+        })
+        // let Params= await PayParams()
+        // console.log(111,Params);
     },
     //查询订单
     async getOrders() {
