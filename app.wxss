@@ -45,3 +45,11 @@
 .btnBJ2{
     background-image: linear-gradient(to right, #FF9181, #F28893);
 }
+.multi-line-ellipsis2 {
+    display: -webkit-box; /* 必须设置，将对象作为弹性伸缩盒子模型显示 */
+    -webkit-box-orient: vertical; /* 必须设置，从上到下垂直排列子元素 */
+    -webkit-line-clamp: 2; /* 指定行数，这里设置为3行 */
+    overflow: hidden; /* 隐藏超出容器的内容 */
+    text-overflow: ellipsis; /* 在溢出时显示省略号 */
+    word-break: break-all; /* 允许在单词内换行，解决长单词溢出问题 */
+  }
