@@ -1,7 +1,7 @@
 import {request} from './request'
 
-export const socketUrl= 'http://192.168.1.8:3007'
-// export const  socketUrl= "https://im.xldkeji.com"
+// export const socketUrl= 'http://192.168.1.4:3007'
+export const  socketUrl= "https://im.xldkeji.com"
 
 // 获取用户信息
 export const userMsg  = () =>{
@@ -12,9 +12,9 @@ export const userMsg  = () =>{
 }  
 
 //获取小程序吗
-export const userQRCode  = (type) =>{
+export const userQRCode  = () =>{
     return request({
-        url:`/user/qrCode/${type}`,
+        url:`/user/qrCode`,
         method: 'POST',
     })
 }  
@@ -35,12 +35,46 @@ export const Ims = () => {
     })
 }
 
-// 创建信道
-export const postIm = (type,id) =>{
+//查看名片邀请
+export const postImUser = (id) =>{
     return request({
-        url:`/ims/${type}/${id}`,
+        url:`/ims/user/${id}`,
+        method: 'GET'
+    })
+}
+
+//链接加群
+export const postImUsers = (id) =>{
+    return request({
+        url:`/ims/users/${id}`,
+        method: 'GET'
+    })
+}
+
+// 加入对话信道
+export const postIm = (id) =>{
+    return request({
+        url:`/ims/add/${id}`,
+        method: 'POST'
+    })
+}
+
+
+
+//创建群聊
+export const postIms = (name) =>{
+    return request({
+        url:`/ims/adds`,
         method: 'POST',
-        data:{"type":type}
+        data:{imName:name}
+    })
+}
+
+//加入群聊
+export const addIms = (id) =>{
+    return request({
+        url:`/ims/adds/${id}`,
+        method: 'POST'
     })
 }
 
@@ -51,11 +85,30 @@ export const rmIm =(im) =>{
         method: 'PATCH'
     })
 }
+
+//删除信道
+export const rmImUser =(im,user) =>{
+    return request({
+        url:`/ims/rmIms/${im}/${user}`,
+        method: 'PATCH'
+    })
+}
+
+
 //信道ID
 export const ImsId = (id) => {
     return request({
         url:`/ims/id/${id}`,
         method: 'GET'
+    })
+}
+
+//修改信道名称
+export const ImsName = (id,name) => {
+    return request({
+        url:`/ims/name/${id}`,
+        method: 'PUT',
+        data:{imName:name}
     })
 }
 //信道消息
